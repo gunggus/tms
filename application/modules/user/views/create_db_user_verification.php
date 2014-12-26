@@ -1,0 +1,1 @@
+Finish Instalation Create DB Verification 100%<br><div class="progress progress-striped active">  <div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width:100%">    <span class="sr-only">Install Table : Session</span>  </div></div>
