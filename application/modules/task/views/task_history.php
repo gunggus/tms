@@ -4,13 +4,13 @@
             <div class="icon">
                 <span class="ico-arrow-right"></span>
             </div>
-            <h1>Task</h1>
+            <h1>Task History</h1>
         </div>
 
       <!-- row title -->
       <div class="row">
         <div class="col-lg-12">
-          <h4 class="page-title"><?php echo anchor('task/dashboard', 'TMS', 'title="Task Management System Dashboard"');?> <i class="fa fa-angle-double-right">TASK LIST</i> </h4>
+          <h4 class="page-title"><?php echo anchor('task/dashboard', 'TMS', 'title="Task Management System Dashboard"');?> <i class="fa fa-angle-double-right">TASK HISTORY</i> </h4>
         </div>
       </div>
       <!-- row -->
@@ -25,7 +25,7 @@
           <div class="block">
             <div class="head purple">
                 <div class="icon"><span class="ico-location"></span></div>
-                <h2>Task List</h2>     
+                <h2>Task History</h2>     
                 <ul class="buttons">
                     <li><a href="#" onClick="source('table_hover'); return false;"><div class="icon"><span class="ico-info"></span></div></a></li>
                 </ul>                                                          
@@ -48,7 +48,7 @@
 								<td>Duration</td>
 								<td>Status</td>
 								<td>By</td>
-								<td>Action </td>
+								<td>On</td>
 							</tr>
 						</thead>
                   	    <tbody>
@@ -56,9 +56,8 @@
 							$i = 0;
 							foreach($result as $row){ 
 							$i++;
-							$current = mdate('%Y-%m-%d %H:%i:%s',time());
 							?>
-							<tr <?php if(($row->task_sch_finish < $current) AND ( $row->task_status != "completed" OR $row->task_status != "closed")){echo "background='#FF0000'";} ?>>
+							<tr>
 								<td><?php echo $i;?></td>
 								<td><?php echo strtoupper($row->task_category);?></td>
 								<td><?php echo strtoupper($row->task_name);?></td>
@@ -66,36 +65,13 @@
 								<td><?php echo strtoupper($row->task_sch_start);?></td>
 								<td><?php echo strtoupper($row->task_sch_finish);?></td>
 								<td><?php echo strtoupper($row->task_sch_duration);?></td>
-								<td><?php echo strtoupper($row->task_status);?></td>
-								<td><?php echo strtoupper($row->task_update_by);?></td>
-								<td><?php 
-									echo "<div class='row'>";
-									echo "<div class='span8'>";
-									echo anchor("task/manage/history/".$row->task_id,"<input type='button' value='history' >","target='_blank'");
-									echo "</div>";
-									if($row->task_status == "open" OR $row->task_status == "reopen")
-									{ 
-										echo " &nbsp; &nbsp;";	
-										echo "<div class='span8'>";
-										echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take");echo form_close();
-										echo "</div>";
-									}
-									echo " &nbsp; &nbsp;";	
-									echo "<div class='span8'>";
-									echo anchor("task/action/add/child/".$row->task_id."/".$row->task_master_id,"<input type='button' value='child' >");
-									echo "</div>";
-									echo "</div>";
-									?>
-								</td>
+								<td><?php echo strtoupper($row->tsh_status);?></td>
+								<td><?php echo strtoupper($row->tsh_update_by);?></td>
+								<td><?php echo strtoupper($row->tsh_update_on);?></td>
 							</tr>
 							<?php } ?>
 						</tbody>
-						<tfoot>
-							<tr>
-								<td colspan="10"> <?php echo $this->pagination->create_links();?> </td>
-							</tr>
-						</tfoot>						
-                    </table>
+					</table>
         			<?php } ?>
         
  			</div>

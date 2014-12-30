@@ -72,6 +72,27 @@ class Manage extends CI_Controller {
 		$this->load->view('task_list', $data);
 	}
 	
+	function history()
+	{
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$task_id = $this->uri->segment(4);
+		
+		#data preparing
+		$data['result'] = $this->task_model->get_task_history($task_id);
+		
+		# sidebar nav 
+		$data['menu_task'] = 'class="current"' ;
+		$data['view_manage_history'] = 'class="current"' ;
+		
+		# call views		
+		$this->load->view('task_history', $data);
+	}
+	
+	
+	
 }
 
 /* End of file manage.php */
