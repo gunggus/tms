@@ -15,11 +15,11 @@ class Task_model extends CI_Model
 		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
 		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
 		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		if($limit > 0){ $where.=" 	LIMIT $offset,$limit ";}
 		$query = " 	SELECT * FROM task 
 					JOIN task_access ON tac_category = task_category
 					WHERE tac_nipp = '$nipp'
 					$where
-					LIMIT $offset,$limit
 				";
 		$query = $this->db->query($query);
 		return $query->result();
@@ -57,6 +57,16 @@ class Task_model extends CI_Model
 		$query = "	SELECT * FROM task_master WHERE tm_id = $master_id ";
 		$query = $this->db->query($query);
 		if($query->num_rows() > 0){ $row = $query->row(); return $row->tm_category; }
+	}
+	
+	# get task history
+	public function get_task_history($task_id)
+	{
+		$query = "	SELECT * FROM task_status_history 
+					JOIN task ON tsh_task_id = task_id
+					WHERE tsh_task_id = '$task_id' ";
+		$query = $this->db->query($query);
+		return $query->result();
 	}
 
 	# insert data

@@ -4,13 +4,13 @@
             <div class="icon">
                 <span class="ico-arrow-right"></span>
             </div>
-            <h1>Add Task</h1>
+            <h1>Add Child Task</h1>
         </div>
 
       <!-- row title -->
       <div class="row">
         <div class="col-lg-12">
-          <h4 class="page-title"><?php echo anchor('task/manage', 'TMS', 'title="Task Management System"');?> <i class="fa fa-angle-double-right"></i> ADD TASK</h4>
+          <h4 class="page-title"><?php echo anchor('task/manage', 'TMS', 'title="Task Management System"');?> <i class="fa fa-angle-double-right"></i> ADD CHILD TASK</h4>
         </div>
       </div>
       <!-- row -->
@@ -31,9 +31,9 @@
             		<?php if(isset($message)){echo '<div class="badge-warning"><p class="text-danger">&nbsp; message : '.$message.'</p></div>';} ?>
             		<?php if(validation_errors()){echo '<div class="badge-warning">'.validation_errors().'</div>';} ?>
                     
-                  	<?php echo form_open('task/action/save_task', 'class="form-horizontal"'); 
-					echo  form_hidden("master_id",$master_id);
-					echo  form_hidden("parent_id",$parent_id);
+                  	<?php echo form_open('task/action/save_child_task', 'class="form-horizontal"'); 
+					echo  form_hidden("task_master_id",$master_id);
+					echo  form_hidden("task_parent_id",$parent_id);
 					?>
                     
                     <div class="row-form">
@@ -41,6 +41,10 @@
                         <div class="span4 col-sm-4">
                           <input type="text" class="form-control" placeholder="Task Name" name="task_name">
                         </div>
+						<label for="inputDuration" class="span2 col-sm-2 control-label"> Duration  </label>
+                        <div class="span4 col-sm-4">
+                          <?php echo form_input("task_sch_duration",""," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+						</div>
                     </div>  
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
@@ -53,9 +57,7 @@
 							echo form_dropdown("task_category",$var_category,$cat);	
 							?>
 						</div>
-                    </div>  
-					<div class="row-form">
-                        <label for="inputPoint" class="span2 col-sm-2 control-label"> Point </label>
+						<label for="inputPoint" class="span2 col-sm-2 control-label"> Point </label>
                         <div class="span4 col-sm-4">
                           <?php echo form_input("task_point","","class='form-control'"); ?>
 						</div>
@@ -65,17 +67,9 @@
                         <div class="span4 col-sm-4">
                           <?php echo form_input("task_sch_start",""," id='inputStart' class='mask_date'"); ?>
 						</div>
-                    </div>  
-					<div class="row-form">
                         <label for="inputFinish" class="span2 col-sm-2 control-label"> Scheduled Finish On </label>
                         <div class="span4 col-sm-4">
                           <?php echo form_input("task_sch_finish",""," id='inputFinish' class='mask_date'"); ?>
-						</div>
-                    </div>  
-					<div class="row-form">
-                        <label for="inputDuration" class="span2 col-sm-2 control-label"> Duration  </label>
-                        <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_duration",""," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
 						</div>
                     </div>  
 					<div class="row-form">
@@ -83,18 +77,70 @@
                         <div class="span4 col-sm-4">
                           <?php echo form_textarea("task_description","","class='form-control'"); ?>
 						</div>
-                    </div>  
-						
-					<div class="row-form">
-                        <div class="span6 col-sm-offset-4 col-sm-6">			
+						<div class="span6 col-sm-offset-4 col-sm-6">			
                             <button class="btn btn-primary pull-right" type="submit">Save</button> 
                         </div>
-                    </div>            
-                                            
+                    </div>  
 				<?php echo form_close(); ?>                    
                     
         			<?php } ?>
-        
+				
+				<table cellpadding="0" cellspacing="0" width="100%" class="table table-hover">
+                        <thead>
+							<tr>
+								<td>No</td>
+								<td>Category</td>
+								<td>Name</td>
+								<td>Point</td>
+								<td>Start</td>
+								<td>Finish</td>
+								<td>Duration</td>
+								<td>Status</td>
+								<td>By</td>
+								<td>Action </td>
+							</tr>
+						</thead>
+                  	    <tbody>
+							<?php 
+							$i = 0;
+							foreach($result as $row){ 
+							$i++;
+							?>
+							<tr>
+								<td><?php echo $i;?></td>
+								<td><?php echo strtoupper($row->task_category);?></td>
+								<td><?php echo strtoupper($row->task_name);?></td>
+								<td><?php echo strtoupper($row->task_point);?></td>
+								<td><?php echo strtoupper($row->task_sch_start);?></td>
+								<td><?php echo strtoupper($row->task_sch_finish);?></td>
+								<td><?php echo strtoupper($row->task_sch_duration);?></td>
+								<td><?php echo strtoupper($row->task_status);?></td>
+								<td><?php echo strtoupper($row->task_update_by);?></td>
+								<td><?php 
+									echo "<div class='row'>";
+									echo "<div class='span8'>";
+									echo anchor("task/manage/history/".$row->task_id,"<input type='button' value='history' >","target='_blank'");
+									echo "</div>";
+									if($row->task_status == "open" OR $row->task_status == "reopen")
+									{ 
+										echo " &nbsp; &nbsp;";	
+										echo "<div class='span8'>";
+										echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take");echo form_close();
+										echo "</div>";
+									}
+									echo " &nbsp; &nbsp;";	
+									echo "<div class='span8'>";
+									echo anchor("task/manage/add/child/".$row->task_id,"<input type='button' value='child' >","target='_blank'");
+									echo "</div>";
+									echo "</div>";
+									?>
+								</td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				
+				
  			</div>
             <!-- wigget content -->
             
