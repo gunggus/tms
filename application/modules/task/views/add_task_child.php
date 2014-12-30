@@ -31,7 +31,10 @@
             		<?php if(isset($message)){echo '<div class="badge-warning"><p class="text-danger">&nbsp; message : '.$message.'</p></div>';} ?>
             		<?php if(validation_errors()){echo '<div class="badge-warning">'.validation_errors().'</div>';} ?>
                     
-                  	<?php echo form_open('task/action/save_child_task', 'class="form-horizontal"'); 
+                  	<?php 
+					foreach($parent_task as $row_parent){
+					if($row_parent->task_closed == "no"){
+					echo form_open('task/action/save_child_task', 'class="form-horizontal"'); 
 					echo  form_hidden("task_master_id",$master_id);
 					echo  form_hidden("task_parent_id",$parent_id);
 					?>
@@ -81,7 +84,10 @@
                             <button class="btn btn-primary pull-right" type="submit">Save</button> 
                         </div>
                     </div>  
-				<?php echo form_close(); ?>                    
+				<?php echo form_close();
+					}
+					}
+				?>                    
                     
         			<?php } ?>
 				

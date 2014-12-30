@@ -12,33 +12,38 @@ class Task_model extends CI_Model
 	public function get_task($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
 	{
 		$where = "";
+		$limited = "";
 		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
 		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
 		if($task_id > 0){$where.= " AND task_id = $task_id";}
-		if($limit > 0){ $where.=" 	LIMIT $offset,$limit ";}
+		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
 		$query = " 	SELECT * FROM task 
 					JOIN task_access ON tac_category = task_category
 					WHERE tac_nipp = '$nipp'
 					$where
+					ORDER BY task_id DESC
+					$limited
 				";
 		$query = $this->db->query($query);
 		return $query->result();
 	}
 	
-	# count task
-	public function count_task($nipp,$master_id,$parent_id,$task_id)
+	# task master list
+	public function get_master_task($nipp,$master_id,$limit,$offset)
 	{
 		$where = "";
-		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
-		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
-		if($task_id > 0){$where.= " AND task_id = $task_id";}
-		$query = " 	SELECT * FROM task 
-					JOIN task_access ON tac_category = task_category
+		$limited = "";
+		if($master_id > 0){$where.= " AND tm_id = $master_id";}
+		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
+		$query = " 	SELECT * FROM task_master 
+					JOIN task_access ON tac_category = tm_category
 					WHERE tac_nipp = '$nipp'
 					$where
+					ORDER BY tm_id DESC
+					$limited
 				";
 		$query = $this->db->query($query);
-		return $query->num_rows();
+		return $query->result();
 	}
 	
 	# get task category
@@ -69,6 +74,36 @@ class Task_model extends CI_Model
 		return $query->result();
 	}
 
+	# count task
+	public function count_task($nipp,$master_id,$parent_id,$task_id)
+	{
+		$where = "";
+		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	
+	# count master task
+	public function count_master_task($nipp,$master_id)
+	{
+		$where = "";
+		if($master_id > 0){$where.= " AND tm_id = $master_id";}
+		$query = " 	SELECT * FROM task_master 
+					JOIN task_access ON tac_category = tm_category
+					WHERE tac_nipp = '$nipp'
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	
 	# insert data
 	public function save_data($tabel,$data)
 	{

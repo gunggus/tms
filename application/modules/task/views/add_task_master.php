@@ -4,13 +4,13 @@
             <div class="icon">
                 <span class="ico-arrow-right"></span>
             </div>
-            <h1>Add Task Master</h1>
+            <h1>Add Master Task</h1>
         </div>
 
       <!-- row title -->
       <div class="row">
         <div class="col-lg-12">
-          <h4 class="page-title"><?php echo anchor('task/manage', 'TMS', 'title="Task Management System"');?> <i class="fa fa-angle-double-right"></i> ADD MEMO</h4>
+          <h4 class="page-title"><?php echo anchor('task/manage', 'TMS', 'title="Task Management System"');?> <i class="fa fa-angle-double-right"></i> ADD MASTER TASK</h4>
         </div>
       </div>
       <!-- row -->
@@ -31,7 +31,7 @@
             		<?php if(isset($message)){echo '<div class="badge-warning"><p class="text-danger">&nbsp; message : '.$message.'</p></div>';} ?>
             		<?php if(validation_errors()){echo '<div class="badge-warning">'.validation_errors().'</div>';} ?>
                     
-                  	<?php echo form_open('task/action/save_task_master', 'class="form-horizontal"'); ?>
+                  	<?php echo form_open('task/action/save_master_task', 'class="form-horizontal"'); ?>
                     
                     <div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Task Name </label>
@@ -63,12 +63,12 @@
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Start Time </label>
                         <div class="span1 col-sm-2">
-                          <input type="text" class="mask_date" placeholder="" name="tm_start_time">
+                          <input type="text" class="mask_date" placeholder="yyyy-mm-dd" name="tm_start_time" value="<?php echo mdate("%Y-%m-%d",time());?>">
                         </div>
 						<div class="span4 col-sm-2">
-							<input type="text" class="span1" placeholder="hh" name="tm_start_hour">:
-							<input type="text" class="span1" placeholder="mm" name="tm_start_minute">:
-							<input type="text" class="span1" placeholder="ss" name="tm_start_second">
+							<input type="text" class="span1" placeholder="hh" name="tm_start_hour" value="<?php echo mdate("%H",time());?>">:
+							<input type="text" class="span1" placeholder="mm" name="tm_start_minute" value="<?php echo mdate("%i",time());?>">:
+							<input type="text" class="span1" placeholder="ss" name="tm_start_second" value="<?php echo "00";?>">
 						</div>
                     </div>  
 					<div class="row-form">

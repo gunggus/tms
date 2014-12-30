@@ -5,13 +5,14 @@
                 <span class="ico-arrow-right"></span>
             </div>
             <h1>Task</h1>
-        </div>
+        	<?php echo "<div align='right'>".anchor("task/action/add/","<input type='button' value='add new task' >")."</div>"; ?>
+		</div>
 
       <!-- row title -->
       <div class="row">
         <div class="col-lg-12">
-          <h4 class="page-title"><?php echo anchor('task/dashboard', 'TMS', 'title="Task Management System Dashboard"');?> <i class="fa fa-angle-double-right">TASK LIST</i> </h4>
-        </div>
+			<h4 class="page-title"><?php echo anchor('task/dashboard', 'TMS', 'title="Task Management System Dashboard"');?> <i class="fa fa-angle-double-right">TASK LIST</i> </h4>
+		</div>
       </div>
       <!-- row -->
       
@@ -70,6 +71,7 @@
 								<td><?php echo strtoupper($row->task_update_by);?></td>
 								<td><?php 
 									echo "<div class='row'>";
+									echo " &nbsp; &nbsp;";	
 									echo "<div class='span8'>";
 									echo anchor("task/manage/history/".$row->task_id,"<input type='button' value='history' >","target='_blank'");
 									echo "</div>";
@@ -84,6 +86,18 @@
 									echo "<div class='span8'>";
 									echo anchor("task/action/add/child/".$row->task_id."/".$row->task_master_id,"<input type='button' value='child' >");
 									echo "</div>";
+									if($row->task_closed == "no"){
+										echo " &nbsp; &nbsp;";	
+										echo "<div class='span8'>";
+										echo form_open("task/action/closed"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","close");echo form_close();
+										echo "</div>";
+									}else{
+										echo " &nbsp; &nbsp;";	
+										echo "<div class='span8'>";
+										echo form_open("task/action/reopen"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","reopen");echo form_close();
+										echo "</div>";
+									}
+									
 									echo "</div>";
 									?>
 								</td>
