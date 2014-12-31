@@ -90,6 +90,11 @@
 						</div>
                     </div>  
 					<div class="row-form">
+                        <label for="inputPoint" class="span2 col-sm-2 control-label"> Duration </label>
+                        <div class="span1" ><?php echo form_input("tm_duration",""); ?></div>
+						<div class="span1" > minutes</div>
+                    </div>  
+					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Description  </label>
                         <div class="span4 col-sm-4">
                           <?php echo form_textarea("tm_description","","class='form-control'"); ?>

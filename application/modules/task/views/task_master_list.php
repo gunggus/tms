@@ -45,6 +45,7 @@
 								<td rowspan="2">Point</td>
 								<td colspan="4"><div align="center">Every</div></td>
 								<td rowspan="2">Run Time</td>
+								<td rowspan="2">Duration</td>
 								<td rowspan="2">Category</td>
 								<td rowspan="2">Description</td>
 								<td rowspan="2">Update By</td>
@@ -75,6 +76,7 @@
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_day);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_hour);?></td>
 								<td <?php echo $bg;?>><?php if($row->tm_run_time == "0000-00-00 00:00:00"){echo strtoupper($row->tm_start_time);}else{echo strtoupper($row->tm_run_time);} ?></td>
+								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_duration);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_category);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_description);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_update_by);?></td>

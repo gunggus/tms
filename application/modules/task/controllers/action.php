@@ -79,12 +79,8 @@ class Action extends CI_Controller {
 		$data['ui_nama'] = $ui_nama;
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
-		
-		if($this->input->post('tm_start_time') == ""){$tm_start_time = mdate("%Y-%m-%d",time());}else{$tm_start_time = $this->input->post('tm_start_time');}
-		if($this->input->post('tm_start_hour') == ""){$tm_start_hour = "00";}elseif($this->input->post('tm_start_hour') < 10){$tm_start_hour = "0".$this->input->post('tm_start_hour');}else{$tm_start_hour = $this->input->post('tm_start_hour');}
-		if($this->input->post('tm_start_minute') == ""){$tm_start_minute = "00";}elseif($this->input->post('tm_start_minute') < 10){$tm_start_minute = "0".$this->input->post('tm_start_minute');}else{$tm_start_minute = $this->input->post('tm_start_minute');}
-		if($this->input->post('tm_start_second') == ""){$tm_start_second = "00";}elseif($this->input->post('tm_start_second') < 10){$tm_start_second = "0".$this->input->post('tm_start_second');}else{$tm_start_second = $this->input->post('tm_start_second');}
-
+	
+		$tm_start_time = mdate("%Y-%m-%d %H:%i:%s",(strtotime( $this->input->post('tm_start_time') )  +  ( 3600 * $this->input->post('tm_start_hour') ) + (60 * $this->input->post('tm_start_minute')) + $this->input->post('tm_start_second')));
 		$data = array(
 			'tm_task' => $this->input->post('tm_task'),
 			'tm_point' => $this->input->post('tm_point'),
@@ -92,7 +88,9 @@ class Action extends CI_Controller {
 			'tm_month' => $this->input->post('tm_month'),
 			'tm_day' => $this->input->post('tm_day'),
 			'tm_hour' => $this->input->post('tm_hour'),
-			'tm_start_time' => $tm_start_time." ".$tm_start_hour.":".$tm_start_minute.":".$tm_start_second,
+			'tm_start_time' => $tm_start_time,
+			'tm_run_time' => $tm_start_time,
+			'tm_duration' => $this->input->post('tm_duration'),
 			'tm_category' => $this->input->post('tm_category'),
 			'tm_description' => $this->input->post('tm_description'), 
 			'tm_created_by' => $ui_nama, 

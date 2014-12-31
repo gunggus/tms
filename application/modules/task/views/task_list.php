@@ -75,18 +75,18 @@
 									echo "<div class='span8'>";
 									echo anchor("task/manage/history/".$row->task_id,"<input type='button' value='history' >","target='_blank'");
 									echo "</div>";
-									if($row->task_status == "open" OR $row->task_status == "reopen")
-									{ 
-										echo " &nbsp; &nbsp;";	
-										echo "<div class='span8'>";
-										echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take");echo form_close();
-										echo "</div>";
-									}
 									echo " &nbsp; &nbsp;";	
 									echo "<div class='span8'>";
 									echo anchor("task/action/add/child/".$row->task_id."/".$row->task_master_id,"<input type='button' value='child' >");
 									echo "</div>";
 									if($row->task_closed == "no"){
+										if($row->task_status == "open" OR $row->task_status == "reopen")
+										{ 
+											echo " &nbsp; &nbsp;";	
+											echo "<div class='span8'>";
+											echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take");echo form_close();
+											echo "</div>";
+										}
 										echo " &nbsp; &nbsp;";	
 										echo "<div class='span8'>";
 										echo form_open("task/action/closed"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","close");echo form_close();

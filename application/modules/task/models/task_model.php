@@ -8,6 +8,69 @@ class Task_model extends CI_Model
         parent::__construct();
     }
 	
+	public function generate_task()
+	{
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$currtime = mdate("%Y-%m-%d %H:%i:%s",time());
+		$query = " SELECT * FROM task_master WHERE tm_active = 'yes' AND tm_run_time < '$currtime' ";
+		$query = $this->db->query($query);
+		$result = $query->result();
+		foreach($result as $row){
+			
+			$sch_finish = $row->tm_start_time;
+			$sch_finish = mdate("%Y-%m-%d %H:%i:%s", (strtotime($sch_finish) + ( 60 * $row->tm_duration)));
+			
+			$data = array(
+				'task_master_id' => $row->tm_id,
+				'task_status' => 'open',
+				'task_name' => $row->tm_task,
+				'task_category' => $row->tm_category,
+				'task_point' => $row->tm_point,
+				'task_sch_start' => $row->tm_start_time,
+				'task_sch_finish' => $sch_finish,
+				'task_sch_duration' => $row->tm_duration,
+				'task_description' => $row->tm_description, 
+				'task_created' => $ui_id, 
+				'task_created_by' => $ui_nama, 
+				'task_created_on' => date("Y-m-d H:i:s"), 
+				'task_update_by' => $ui_nama, 
+				'task_update_on' => date("Y-m-d H:i:s"), 
+			);
+			$this->db->insert("task",$data);
+			$task_id = $this->db->insert_id();
+		
+			$data = array(
+				'tsh_task_id' => $task_id, 
+				'tsh_status' => "open", 
+				'tsh_update_by' => $ui_nama, 
+				'tsh_update_on' => date("Y-m-d H:i:s"), 
+			);
+			$this->db->insert("task_status_history",$data);
+			
+			# set next run time 
+			$run_time = $row->tm_run_time;
+			$run_time = mdate("%Y-%m-%d %H:%i:%s", strtotime(mdate("%Y-%m-%d %H:%i:%s", strtotime($run_time)) . " + ". $row->tm_year ."year"));
+			$run_time = mdate("%Y-%m-%d %H:%i:%s", strtotime(mdate("%Y-%m-%d %H:%i:%s", strtotime($run_time)) . " + ". $row->tm_month ."month"));
+			$run_time = mdate("%Y-%m-%d %H:%i:%s", strtotime(mdate("%Y-%m-%d %H:%i:%s", strtotime($run_time)) . " + ". $row->tm_day ."day"));
+			$run_time = mdate("%Y-%m-%d %H:%i:%s", strtotime(mdate("%Y-%m-%d %H:%i:%s", strtotime($run_time)) . " + ". $row->tm_hour ."hour"));
+			$update = array("tm_run_time" => $run_time );
+			$where  = array("tm_id" => $row->tm_id ); 
+			$this->db->where($where);
+			$this->db->update("task_master",$update);
+				
+		}
+	}
+	
 	# task list
 	public function get_task($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
 	{
@@ -20,6 +83,7 @@ class Task_model extends CI_Model
 		$query = " 	SELECT * FROM task 
 					JOIN task_access ON tac_category = task_category
 					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
 					$where
 					ORDER BY task_id DESC
 					$limited
@@ -27,6 +91,28 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
+	
+	# closed task list
+	public function get_closed_task($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
+	{
+		$where = "";
+		$limited = "";
+		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'yes'
+					$where
+					ORDER BY task_id DESC
+					$limited
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
 	
 	# task master list
 	public function get_master_task($nipp,$master_id,$limit,$offset)
@@ -84,6 +170,24 @@ class Task_model extends CI_Model
 		$query = " 	SELECT * FROM task 
 					JOIN task_access ON tac_category = task_category
 					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	
+	# closed task
+	public function count_closed_task($nipp,$master_id,$parent_id,$task_id)
+	{
+		$where = "";
+		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'yes'
 					$where
 				";
 		$query = $this->db->query($query);

@@ -5,7 +5,7 @@
             <div class="icon">
                 <span class="ico-locked"></span>
             </div>
-            <h1>Password Login <small>ONLINE DOCUMENT SYSTEM</small></h1>
+            <h1>Password Login <small>TASK MANAGEMENT SYSTEM</small></h1>
         </div>        
         
         <div class="row-fluid">
