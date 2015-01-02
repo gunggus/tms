@@ -217,6 +217,7 @@ class Action extends CI_Controller {
 			'task_taken' => $ui_id, 
 			'task_taken_by' => $ui_nama, 
 			'task_taken_on' => date("Y-m-d H:i:s"), 
+			'task_act_start' => date("Y-m-d H:i:s"), 
  		);
 		$where = array(
 			'task_id'	=>	$task_id, 
@@ -297,7 +298,64 @@ class Action extends CI_Controller {
 		$this->task_model->save_data("task_status_history",$data);
 		redirect('task/manage/','refresh');
 	}
-	
+	function complete()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+		$data['task_id'] = $this->input->post("task_id");
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$data['result'] = $this->task_model->get_task($ui_nipp,0,0,$data['task_id'],0,0);
+		$this->load->view("form_complete",$data);
+	}
+	public function do_complete()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$data = array(
+			'task_status' => 'complete',
+			'task_act_finish' => mdate("%Y-%m-%d %H:%i:%s",time()),
+			'task_act_duration' => round(((time() - strtotime($this->input->post('task_act_start')))/60),0),
+			'task_report' => $this->input->post('task_report'), 
+			'task_update_by' => $ui_nama, 
+			'task_update_on' => date("Y-m-d H:i:s"), 
+ 		);
+		$where = array(
+			'task_id' => $this->input->post('task_id'),
+		);
+		$this->task_model->update_data("task",$data,$where);
+		
+		$data = array(
+			'tsh_task_id' => $this->input->post('task_id'), 
+			'tsh_status' => "complete", 
+			'tsh_report'	=> $this->input->post('task_report'),	
+			'tsh_update_by' => $ui_nama, 
+			'tsh_update_on' => date("Y-m-d H:i:s"), 
+		);
+		$this->task_model->save_data("task_status_history",$data);
+		redirect('task/manage/','refresh');
+	}
 	function enable_master()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]

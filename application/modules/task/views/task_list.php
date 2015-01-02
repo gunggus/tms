@@ -58,42 +58,64 @@
 							foreach($result as $row){ 
 							$i++;
 							$current = mdate('%Y-%m-%d %H:%i:%s',time());
+							if($row->task_status == 'complete'){$bg=" style=' background-color: #CCFFCC' ";}
+							else if(($row->task_status != 'complete') AND ($row->task_sch_finish < $current) AND ($row->task_act_finish == "0000-00-00 00:00:00")){$bg=" style=' background-color: #FFFFDD' ";}
+							else if(($row->task_status == 'complete') AND ($row->task_sch_finish < $row->task_act_finish)){$bg=" style=' background-color: #FFDDDD' ";}
+							else{$bg="";}
+							
 							?>
-							<tr <?php if(($row->task_sch_finish < $current) AND ( $row->task_status != "completed" OR $row->task_status != "closed")){echo "background='#FF0000'";} ?>>
-								<td><?php echo $i;?></td>
-								<td><?php echo strtoupper($row->task_category);?></td>
-								<td><?php echo strtoupper($row->task_name);?></td>
-								<td><?php echo strtoupper($row->task_point);?></td>
-								<td><?php echo strtoupper($row->task_sch_start);?></td>
-								<td><?php echo strtoupper($row->task_sch_finish);?></td>
-								<td><?php echo strtoupper($row->task_sch_duration);?></td>
-								<td><?php echo strtoupper($row->task_status);?></td>
-								<td><?php echo strtoupper($row->task_update_by);?></td>
-								<td><?php 
+							<tr>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo $i;?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_name);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_point);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_start);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_finish);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_duration);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_status);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_update_by);?></td>
+								<td <?php echo "$bg";?>><?php 
 									echo "<div class='row'>";
-									echo " &nbsp; &nbsp;";	
-									echo "<div class='span8'>";
+									echo " &nbsp;&nbsp;";	
+									echo "<div class='span4'>";
 									echo anchor("task/manage/history/".$row->task_id,"<input type='button' value='history' >","target='_blank'");
 									echo "</div>";
-									echo " &nbsp; &nbsp;";	
-									echo "<div class='span8'>";
+									echo " &nbsp;&nbsp;";	
+									echo "<div class='span4'>";
 									echo anchor("task/action/add/child/".$row->task_id."/".$row->task_master_id,"<input type='button' value='child' >");
 									echo "</div>";
+									echo "</div>";
+									?>
+								</td>
+							</tr>
+							<tr>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_act_start);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_act_finish);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_act_duration);?></td>
+								<td <?php echo "$bg";?>><?php 
+									echo "<div class='row'>";
 									if($row->task_closed == "no"){
+										echo " &nbsp;&nbsp;";	
+										echo "<div class='span4'>";
+										echo form_open("task/action/closed"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","close");echo form_close();
+										echo "</div>";
 										if($row->task_status == "open" OR $row->task_status == "reopen")
 										{ 
-											echo " &nbsp; &nbsp;";	
-											echo "<div class='span8'>";
+											echo " &nbsp;&nbsp;";	
+											echo "<div class='span4'>";
 											echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take");echo form_close();
 											echo "</div>";
 										}
-										echo " &nbsp; &nbsp;";	
-										echo "<div class='span8'>";
-										echo form_open("task/action/closed"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","close");echo form_close();
-										echo "</div>";
+										if($row->task_status == "taken")
+										{	
+											echo " &nbsp;&nbsp;";	
+											echo "<div class='span4'>";
+											echo form_open("task/action/complete"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","complete");echo form_close();
+											echo "</div>";
+										}
 									}else{
-										echo " &nbsp; &nbsp;";	
-										echo "<div class='span8'>";
+										echo " &nbsp;&nbsp;";	
+										echo "<div class='span4'>";
 										echo form_open("task/action/reopen"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","reopen");echo form_close();
 										echo "</div>";
 									}
