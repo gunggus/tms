@@ -26,8 +26,7 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		$result = $query->result();
 		foreach($result as $row){
-			
-			$sch_finish = $row->tm_start_time;
+			$sch_finish = $row->tm_run_time;
 			$sch_finish = mdate("%Y-%m-%d %H:%i:%s", (strtotime($sch_finish) + ( 60 * $row->tm_duration)));
 			
 			$data = array(
@@ -36,7 +35,7 @@ class Task_model extends CI_Model
 				'task_name' => $row->tm_task,
 				'task_category' => $row->tm_category,
 				'task_point' => $row->tm_point,
-				'task_sch_start' => $row->tm_start_time,
+				'task_sch_start' => $row->tm_run_time,
 				'task_sch_finish' => $sch_finish,
 				'task_sch_duration' => $row->tm_duration,
 				'task_description' => $row->tm_description, 
@@ -131,6 +130,24 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
+
+	# task message list
+	public function get_task_message($nipp,$task_message_id,$limit,$offset)
+	{
+		$where = "";
+		$limited = "";
+		if($task_message_id > 0){$where.= " AND task_message_id = $task_message_id";}
+		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
+		$query = " 	SELECT * FROM task_message 
+					JOIN task_access ON tac_category = tmg_category
+					WHERE (tac_nipp = '$nipp'  OR  tmg_category = 'other')
+					$where
+					ORDER BY tmg_id DESC
+					$limited
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
 	
 	# get task category
 	public function get_task_category()
@@ -206,6 +223,78 @@ class Task_model extends CI_Model
 				";
 		$query = $this->db->query($query);
 		return $query->num_rows();
+	}
+	
+	# count task message
+	public function count_task_message($nipp,$task_message_id)
+	{
+		$where = "";
+		if($task_message_id > 0){$where.= " AND task_message_id = $task_message_id";}
+		$query = " 	SELECT * FROM task_message 
+					JOIN task_access ON tac_category = tmg_category
+					WHERE (tac_nipp = '$nipp'  OR  tmg_category = 'other')
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	
+	# search
+	public function get_task_search($nipp)
+	{
+		$where = "";
+		if($this->input->post("task_name") != ""){$where .= " AND task_name = '%". $this->input->post('task_name') ."%' ";}
+		if($this->input->post("task_category") != ""){$where .= " AND task_category = '". $this->input->post('task_category') ."' ";}
+		if($this->input->post("task_status") != ""){$where .= " AND task_status = '". $this->input->post('task_status') ."' ";}
+		if($this->input->post("task_closed") != ""){$where .= " AND task_closed = '". $this->input->post('task_closed') ."' ";}
+		if($this->input->post("task_point") != ""){$where .= " AND task_point = ". $this->input->post('task_point') ." ";}
+		if($this->input->post("task_sch_duration_1") != ""){$where .= " AND task_sch_duration >= ". $this->input->post('task_sch_duration_1') ." ";}
+		if($this->input->post("task_sch_duration_2") != ""){$where .= " AND task_sch_duration <= ". $this->input->post('task_sch_duration_2') ." ";}
+		if($this->input->post("task_act_duration_1") != ""){$where .= " AND task_act_duration >= ". $this->input->post('task_act_duration_1') ." ";}
+		if($this->input->post("task_act_duration_2") != ""){$where .= " AND task_act_duration <= ". $this->input->post('task_act_duration_2') ." ";}
+		# start
+		if($this->input->post("task_sch_start_date_1") != ""){
+			$sch_start_date_1 = mdate("%Y-%m-%d %H:%i:%s",(strtotime($this->input->post("task_sch_start_date_1")." ".$this->input->post("task_sch_start_time_1"))));
+			$where .= " AND task_sch_start >= '".$sch_start_date_1."' ";
+		}
+		if($this->input->post("task_sch_start_date_2") != ""){
+			$sch_start_date_2 = mdate("%Y-%m-%d %H:%i:%s",(strtotime($this->input->post("task_sch_start_date_2")." ".$this->input->post("task_sch_start_time_2"))));
+			$where .= " AND task_sch_start <= '".$sch_start_date_2."' ";
+		}
+		if($this->input->post("task_act_start_date_1") != ""){
+			$act_start_date_1 = mdate("%Y-%m-%d %H:%i:%s",(strtotime($this->input->post("task_act_start_date_1")." ".$this->input->post("task_act_start_time_1"))));
+			$where = " AND task_act_start >= '".$act_start_date_1."' ";
+		}
+		if($this->input->post("task_act_start_date_2") != ""){
+			$act_start_date_2 = mdate("%Y-%m-%d %H:%i:%s",(strtotime($this->input->post("task_act_start_date_2")." ".$this->input->post("task_act_start_time_2"))));
+			$where = " AND task_act_start <= '".$act_start_date_2."' ";
+		}
+		# finish
+		if($this->input->post("task_sch_finish_date_1") != ""){
+			$sch_finish_date_1 = mdate("%Y-%m-%d %H:%i:%s",(strtotime($this->input->post("task_sch_finish_date_1")." ".$this->input->post("task_sch_finish_time_1"))));
+			$where = " AND task_sch_finish >= '".$sch_finish_date_1."' ";
+		}
+		if($this->input->post("task_sch_finish_date_2") != ""){
+			$sch_finish_date_2 = mdate("%Y-%m-%d %H:%i:%s",(strtotime($this->input->post("task_sch_finish_date_2")." ".$this->input->post("task_sch_finish_time_2"))));
+			$where = " AND task_sch_finish <= '".$sch_finish_date_2."' ";
+		}
+		if($this->input->post("task_act_finish_date_1") != ""){
+			$act_finish_date_1 = mdate("%Y-%m-%d %H:%i:%s",(strtotime($this->input->post("task_act_finish_date_1")." ".$this->input->post("task_act_finish_time_1"))));
+			$where = " AND task_act_finish >= '".$act_finish_date_1."' ";
+		}
+		if($this->input->post("task_act_finish_date_2") != ""){
+			$act_finish_date_2 = mdate("%Y-%m-%d %H:%i:%s",(strtotime($this->input->post("task_act_finish_date_2")." ".$this->input->post("task_act_finish_time_2"))));
+			$where = " AND task_act_finish <= '".$act_finish_date_2."' ";
+		}
+		
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					$where
+					ORDER BY task_id DESC 
+				";
+		$query = $this->db->query($query);
+		return $query->result();
 	}
 	
 	# insert data
