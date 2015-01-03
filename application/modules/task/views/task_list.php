@@ -5,7 +5,7 @@
                 <span class="ico-arrow-right"></span>
             </div>
             <h1>Task</h1>
-        	<?php echo "<div align='right'>".anchor("task/action/add/","<input type='button' value='add new task' >")."</div>"; ?>
+        	<?php echo "<div align='right'>".anchor("task/action/add/task","<input type='button' value='add new task' >")."</div>"; ?>
 		</div>
 
       <!-- row title -->
@@ -29,8 +29,8 @@
                 <h2>Task List</h2>     
                 <ul class="buttons">
                     <li><a href="#" onClick="source('table_hover'); return false;"><div class="icon"><span class="ico-info"></span></div></a></li>
-                </ul>                                                          
-            </div>  
+                </ul>
+			</div>  
             <!-- wigget content -->
             <div class="data-fluid">
 								
@@ -58,7 +58,7 @@
 							foreach($result as $row){ 
 							$i++;
 							$current = mdate('%Y-%m-%d %H:%i:%s',time());
-							if($row->task_status == 'complete'){$bg=" style=' background-color: #CCFFCC' ";}
+							if($row->task_status == 'complete'){$bg = " style=' background-color: #CCFFCC' ";}
 							else if(($row->task_status != 'complete') AND ($row->task_sch_finish < $current) AND ($row->task_act_finish == "0000-00-00 00:00:00")){$bg=" style=' background-color: #FFFFDD' ";}
 							else if(($row->task_status == 'complete') AND ($row->task_sch_finish < $row->task_act_finish)){$bg=" style=' background-color: #FFDDDD' ";}
 							else{$bg="";}
@@ -74,7 +74,8 @@
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_duration);?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_status);?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_update_by);?></td>
-								<td <?php echo "$bg";?>><?php 
+								<td <?php echo "$bg";?>>
+									<?php 
 									echo "<div class='row'>";
 									echo " &nbsp;&nbsp;";	
 									echo "<div class='span4'>";
@@ -99,7 +100,7 @@
 										echo "<div class='span4'>";
 										echo form_open("task/action/closed"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","close");echo form_close();
 										echo "</div>";
-										if($row->task_status == "open" OR $row->task_status == "reopen")
+										if(($row->task_status == "open" OR $row->task_status == "reopen") AND $row->task_sch_start < $current)
 										{ 
 											echo " &nbsp;&nbsp;";	
 											echo "<div class='span4'>";

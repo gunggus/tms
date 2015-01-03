@@ -28,7 +28,7 @@ class Action extends CI_Controller {
 		$data['master_id'] = $this->input->post('master_id');
 		$data['parent_id'] = $this->input->post('parent_id');
 		$data['task_id'] = $this->uri->segment(5, 0);
-		$data['main_field'] = $this->uri->segment(4, "master");
+		$data['main_field'] = $this->uri->segment(4, "task");
 		
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
