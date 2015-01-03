@@ -43,6 +43,9 @@ $(document).ready(function(){
         $("input.mask_date").mask('9999-99-99',{completed:function(){
                                                 //action
                                               }});
+        $("input.mask_time").mask('99:99:99',{completed:function(){
+                                                //action
+                                              }});
         $("input.mask_product").mask('a*-999-a999',{completed:function(){
                                                 //action
                                               }});
