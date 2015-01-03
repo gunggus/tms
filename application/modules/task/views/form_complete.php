@@ -79,7 +79,7 @@
                           <?php echo form_input("task_sch_finish_date",$row->task_sch_finish," id='inputFinish' class='mask_date' readonly "); ?>
 						</div>
 						<div class="span1 col-sm-2">
-                          <?php echo form_input("task_sch_finish_time",$row->task_sch_finish," id='inputFinish' class='mask_date' readonly "); ?>
+                          <?php echo form_input("task_sch_finish_time",$row->task_sch_finish," id='inputFinish' readonly "); ?>
 						</div>
 						<label for="inputStart" class="span2 col-sm-2 control-label"> Actual Finish On </label>
                         <div class="span1 col-sm-2">
