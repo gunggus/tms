@@ -61,6 +61,9 @@ class Action extends CI_Controller {
 				$data['result'] = $this->task_model->get_task($ui_nipp,0,$data['parent_id'],0,$limit,$offset);
 				$this->load->view("add_task_child",$data);
 		}
+		elseif($data['main_field'] == "message"){
+				$this->load->view("add_task_message",$data);
+		}
 		else{$this->load->view("add_task",$data);}
 	}
 	
@@ -193,6 +196,45 @@ class Action extends CI_Controller {
 		
 		redirect('task/manage/','refresh');
 	}
+	public function save_task_message()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$data = array(
+			'tmg_org' => $this->input->post('tmg_org'),
+			'tmg_name' => $this->input->post('tmg_name'),
+			'tmg_category' => $this->input->post('tmg_category'),
+			'tmg_type' => $this->input->post('tmg_type'),
+			'tmg_date' => $this->input->post('task_date'),
+			'tmg_description' => $this->input->post('tmg_description'), 
+			'tmg_report' => $this->input->post('tmg_report'), 
+			'tmg_from' => $this->input->post('tmg_from'), 
+			'tmg_created_by' => $ui_nama, 
+			'tmg_created_on' => date("Y-m-d H:i:s"), 
+ 			'tmg_update_by' => $ui_nama, 
+			'tmg_update_on' => date("Y-m-d H:i:s"), 
+ 		);
+		if($this->input->post('complete') == 'yes'){
+			$data['tmg_status'] = 'complete';
+		}else{
+			$data['tmg_status'] = 'open';
+		}	
+		$this->task_model->save_data("task_message",$data);
+		redirect('task/manage/message','refresh');
+	}
+	
 	function take()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
@@ -263,6 +305,56 @@ class Action extends CI_Controller {
 			'tsh_update_on' => date("Y-m-d H:i:s"), 
 		);
 		$this->task_model->save_data("task_status_history",$data);
+		redirect('task/manage/','refresh');
+	}
+	
+	public function enable_task_message()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+		$task_id = $this->input->post("task_id");
+		
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		# close task
+		$data = array("tmg_closed" => "yes", "tmg_update_by" => $ui_nama, "tmg_update_on" => mdate("%Y-%m-%d %H:%i:%s", time()));
+		$where = array("tmg_id" => $task_id,);
+		$this->task_model->update_data("task_message",$data,$where);
+		
+		redirect('task/manage/','refresh');
+	}
+	
+	public function disable_task_message()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+		$task_id = $this->input->post("task_id");
+		
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		# close task
+		$data = array("tmg_closed" => "no", "tmg_update_by" => $ui_nama, "tmg_update_on" => mdate("%Y-%m-%d %H:%i:%s", time()));
+		$where = array("tmg_id" => $task_id,);
+		$this->task_model->update_data("task_message",$data,$where);
+		
 		redirect('task/manage/','refresh');
 	}
 	

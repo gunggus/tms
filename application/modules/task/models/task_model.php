@@ -176,7 +176,39 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
-
+	
+	# get performance task
+	public function get_performance_task($nama,$start,$end,$limit,$offset)
+	{
+		$where = "";
+		if($nama != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
+		if($start != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
+		if($end != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
+		if($where != ""){$where = " WHERE  ".substr($where,4);}
+		$query = "	SELECT * FROM task 
+					$where
+					ORDER BY task_id DESC
+					LIMIT $offset,$limit	
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
+	# count performance task
+	public function count_performance_task($nama,$start,$end)
+	{
+		$where = "";
+		if($nama != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
+		if($start != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
+		if($end != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
+		if($where != ""){$where = " WHERE  ".substr($where,4);}
+		$query = "	SELECT * FROM task 
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	
 	# count task
 	public function count_task($nipp,$master_id,$parent_id,$task_id)
 	{

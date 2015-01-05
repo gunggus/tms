@@ -285,6 +285,63 @@ class Manage extends CI_Controller {
 		$this->load->view('task_message_list', $data);
 	}
 	
+	function performance()
+	{
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		  
+		$ui_email = $session_data['ui_email'];
+		$data['ui_email'] = $ui_email;
+		
+		$ui_level = $session_data['ui_level'];
+		$station = substr($ui_level,4,2);
+		$lvl = substr($ui_level,6);  
+
+		$nama = "ALL";
+		$start = "ALL";
+		$end = "ALL";
+		
+		if($this->uri->segment(4) > 0){
+			$nama = $this->input->post('ui_nama');
+			$start = $this->input->post('start');
+			$end = $this->input->post('end');
+		}else{
+			$nama = $this->uri->segment(4, "ALL");
+			$start = $this->uri->segment(5, "ALL");
+			$end = $this->uri->segment(6, "ALL");
+		}
+		
+		#pagination config
+		$search = "";
+		$config['base_url'] = base_url()."member/manage/performance/$nama/$start/$end"; 
+		$config['total_rows'] = $this->task_model->count_performance_task($nama,$start,$end); 
+		$config['per_page'] = 50; 
+		$config['uri_segment'] = 7; 
+		$this->pagination->initialize($config);
+		$page = ($this->uri->segment(7)) ? $this->uri->segment(7) : 0;
+		
+		#data preparing
+		$data['result'] = $this->task_model->get_performance_task($nama,$start,$end,$config['per_page'],$page);
+		$data['count']	= $config['total_rows'];
+		$data['page'] = $page;
+		
+		# sidebar nav 
+		$data['menu_task'] = 'class="current"' ;
+		$data['view_manage_task'] = 'class="current"' ;
+		
+		# call views		
+		$this->load->view('performance_list', $data);
+	
+	}
+	
+	
 }
 
 /* End of file manage.php */
