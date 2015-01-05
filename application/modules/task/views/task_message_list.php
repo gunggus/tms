@@ -68,7 +68,7 @@
 							?>
 							<tr>
 								<td rowspan="2" <?php echo $bg;?>><?php echo $i;?></td>
-								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_task);?></td>
+								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_name);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_type);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_org);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_category);?></td>

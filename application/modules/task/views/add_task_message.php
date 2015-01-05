@@ -31,8 +31,7 @@
             		<?php if(isset($message)){echo '<div class="badge-warning"><p class="text-danger">&nbsp; message : '.$message.'</p></div>';} ?>
             		<?php if(validation_errors()){echo '<div class="badge-warning">'.validation_errors().'</div>';} ?>
                     
-                  	<?php echo form_open('task/action/save_task', 'class="form-horizontal"'); 
-					echo  form_hidden("task_message_id",$task_message_id);
+                  	<?php echo form_open('task/action/save_message_task', 'class="form-horizontal"'); 
 					?>
                     
                     <div class="row-form">
@@ -89,34 +88,19 @@
                           <?php echo form_textarea("tmg_report",""," id='inputReport' "); ?>
 						</div>
                     </div>  
+					<div class="row-form">
+                        <label for="inputFrom" class="span2 col-sm-2 control-label"> From </label>
+                        <div class="span4 col-sm-4">
+                          <?php echo form_input("tmg_from",""," id='inputFrom' "); ?>
+						</div>
+                    </div>
+					<div class="row-form">
+                        <label for="inputStatus" class="span2 col-sm-2 control-label"> Complete </label>
+                        <div class="span4 col-sm-4">
+                          <?php echo form_checkbox("complete","yes",false)." check if this task done "; ?>
+						</div>
+                    </div>  
 					
-					
-					
-					<div class="row-form">
-                        <label for="inputStart" class="span2 col-sm-2 control-label"> Scheduled Start On </label>
-                        <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_start",""," id='inputStart' class='mask_date'"); ?>
-						</div>
-                    </div>  
-					<div class="row-form">
-                        <label for="inputFinish" class="span2 col-sm-2 control-label"> Scheduled Finish On </label>
-                        <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_finish",""," id='inputFinish' class='mask_date'"); ?>
-						</div>
-                    </div>  
-					<div class="row-form">
-                        <label for="inputDuration" class="span2 col-sm-2 control-label"> Duration  </label>
-                        <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_duration",""," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
-						</div>
-                    </div>  
-					<div class="row-form">
-                        <label for="inputNama" class="span2 col-sm-2 control-label"> Description  </label>
-                        <div class="span4 col-sm-4">
-                          <?php echo form_textarea("task_description","","class='form-control'"); ?>
-						</div>
-                    </div>  
-						
 					<div class="row-form">
                         <div class="span6 col-sm-offset-4 col-sm-6">			
                             <button class="btn btn-primary pull-right" type="submit">Save</button> 
