@@ -181,9 +181,9 @@ class Task_model extends CI_Model
 	public function get_performance_task($nama,$start,$end,$limit,$offset)
 	{
 		$where = "";
-		if($nama != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
-		if($start != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
-		if($end != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
+		if($nama != "ALL"){$where.=" AND task_taken_by LIKE '$nama' ";}
+		if($start != "ALL"){$where.=" AND task_taken_on >= '$start' ";}
+		if($end != "ALL"){$where.=" AND task_taken_on <= '$end' ";}
 		if($where != ""){$where = " WHERE  ".substr($where,4);}
 		$query = "	SELECT * FROM task 
 					$where
@@ -198,9 +198,9 @@ class Task_model extends CI_Model
 	public function count_performance_task($nama,$start,$end)
 	{
 		$where = "";
-		if($nama != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
-		if($start != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
-		if($end != "ALL"){$where.=" AND task_taken_by = '$nama' ";}
+		if($nama != "ALL"){$where.=" AND task_taken_by LIKE '$nama' ";}
+		if($start != "ALL"){$where.=" AND task_taken_by >= '$start' ";}
+		if($end != "ALL"){$where.=" AND task_taken_by <= '$end' ";}
 		if($where != ""){$where = " WHERE  ".substr($where,4);}
 		$query = "	SELECT * FROM task 
 					$where
@@ -325,6 +325,13 @@ class Task_model extends CI_Model
 					$where
 					ORDER BY task_id DESC 
 				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
+	function get_user()
+	{
+		$query = " SELECT * FROM user_identity ";
 		$query = $this->db->query($query);
 		return $query->result();
 	}

@@ -308,15 +308,12 @@ class Manage extends CI_Controller {
 		$start = "ALL";
 		$end = "ALL";
 		
-		if($this->uri->segment(4) > 0){
-			$nama = $this->input->post('ui_nama');
-			$start = $this->input->post('start');
-			$end = $this->input->post('end');
-		}else{
-			$nama = $this->uri->segment(4, "ALL");
-			$start = $this->uri->segment(5, "ALL");
-			$end = $this->uri->segment(6, "ALL");
-		}
+		if($this->uri->segment(4) > 0){	$nama = str_replace("%20","_",$this->uri->segment(4, "ALL"));}
+		if($this->input->post('user') != ""){$nama = $this->input->post('user');}
+		if($this->uri->segment(5) > 0){$start = $this->uri->segment(5, "ALL");}
+		if($this->input->post('start_date') != ""){$start = $this->input->post('start_date');}
+		if($this->uri->segment(6) > 0){$end = $this->uri->segment(6, "ALL");}
+		if($this->input->post('end_date') != ""){$end = $this->input->post('end_date');}
 		
 		#pagination config
 		$search = "";
@@ -331,6 +328,7 @@ class Manage extends CI_Controller {
 		$data['result'] = $this->task_model->get_performance_task($nama,$start,$end,$config['per_page'],$page);
 		$data['count']	= $config['total_rows'];
 		$data['page'] = $page;
+		$data['list_user'] = $this->task_model->get_user();
 		
 		# sidebar nav 
 		$data['menu_task'] = 'class="current"' ;

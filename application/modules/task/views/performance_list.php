@@ -24,13 +24,36 @@
           
           <!-- widget -->
           <div class="block">
-            <div class="head purple">
+            <div class="data-fluid">
+				<div class="row">
+					<?php echo form_open("task/manage/performance"); ?>
+					<div class="span6"></div>
+					<div class="span2"> 
+						<?php 
+							$var_user[""]="";
+							foreach($list_user as $lu){
+								$usr = $this->encrypt->decode($lu->ui_nama,$this->config->item('encryption_key'));
+								$var_user[$usr] = $usr;
+							}
+							echo form_dropdown("user",$var_user,"");
+						?>
+					</div>
+					<div class="span1"> <?php echo form_input("start_date",""," id='inputStart' class='mask_date' placeholder='start date' "); ?></div>
+					<div align="center" class="span1"> <?php echo "s/d"; ?></div>
+					<div class="span1"> <?php echo form_input("end_date",""," id='inputStart' class='mask_date' placeholder='end date' "); ?></div>
+					<div align="right" class="span1"> <?php echo form_submit("submit","Search"); ?></div>
+					<?php echo form_close();?>
+				</div>
+				<div class="row"> <br><br></div>
+			</div>
+			<div class="head purple">
                 <div class="icon"><span class="ico-location"></span></div>
                 <h2>Task List</h2>     
                 <ul class="buttons">
                     <li><a href="#" onClick="source('table_hover'); return false;"><div class="icon"><span class="ico-info"></span></div></a></li>
                 </ul>
 			</div>  
+			
             <!-- wigget content -->
             <div class="data-fluid">
 								
