@@ -53,7 +53,7 @@ class Manage extends CI_Controller {
 		
 		#pagination config
 		$search = "";
-		$config['base_url'] = base_url().'member/manage/task/'; 
+		$config['base_url'] = base_url().'task/manage/task/'; 
 		$config['total_rows'] = $this->task_model->count_task($ui_nipp,$master_id,$parent_id,$task_id); 
 		$config['per_page'] = 50; 
 		$config['uri_segment'] = 4; 
@@ -72,7 +72,144 @@ class Manage extends CI_Controller {
 		# call views		
 		$this->load->view('task_list', $data);
 	}
-	
+	# list open task
+	function open()
+	{
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		  
+		$ui_email = $session_data['ui_email'];
+		$data['ui_email'] = $ui_email;
+		
+		$ui_level = $session_data['ui_level'];
+		$station = substr($ui_level,4,2);
+		$lvl = substr($ui_level,6);  
+
+		$master_id = 0;
+		$parent_id = 0;
+		$task_id = 0;
+		$status = 'open';
+		
+		#pagination config
+		$search = "";
+		$config['base_url'] = base_url().'task/manage/open/'; 
+		$config['total_rows'] = $this->task_model->count_status_task($ui_nipp,$ui_nama,$status,$master_id,$parent_id,$task_id,$status); 
+		$config['per_page'] = 50; 
+		$config['uri_segment'] = 4; 
+		$this->pagination->initialize($config);
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		
+		#data preparing
+		$data['result'] = $this->task_model->get_status_task($ui_nipp,$ui_nama,$status,$master_id,$parent_id,$task_id,$config['per_page'],$page);
+		$data['count']	= $config['total_rows'];
+		$data['page'] = $page;
+		
+		# sidebar nav 
+		$data['menu_task'] = 'class="current"' ;
+		$data['view_manage_task'] = 'class="current"' ;
+		
+		# call views		
+		$this->load->view('task_list', $data);
+	}
+	# list open task
+	function taken()
+	{
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		  
+		$ui_email = $session_data['ui_email'];
+		$data['ui_email'] = $ui_email;
+		
+		$ui_level = $session_data['ui_level'];
+		$station = substr($ui_level,4,2);
+		$lvl = substr($ui_level,6);  
+
+		$master_id = 0;
+		$parent_id = 0;
+		$task_id = 0;
+		$status = 'taken';
+		
+		#pagination config
+		$search = "";
+		$config['base_url'] = base_url().'task/manage/taken/'; 
+		$config['total_rows'] = $this->task_model->count_status_task($ui_nipp,$ui_nama,$status,$master_id,$parent_id,$task_id,$status); 
+		$config['per_page'] = 50; 
+		$config['uri_segment'] = 4; 
+		$this->pagination->initialize($config);
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		
+		#data preparing
+		$data['result'] = $this->task_model->get_status_task($ui_nipp,$ui_nama,$status,$master_id,$parent_id,$task_id,$config['per_page'],$page);
+		$data['count']	= $config['total_rows'];
+		$data['page'] = $page;
+		
+		# sidebar nav 
+		$data['menu_task'] = 'class="current"' ;
+		$data['view_manage_task'] = 'class="current"' ;
+		
+		# call views		
+		$this->load->view('task_list', $data);
+	}
+	# list complete task
+	function complete()
+	{
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		  
+		$ui_email = $session_data['ui_email'];
+		$data['ui_email'] = $ui_email;
+		
+		$ui_level = $session_data['ui_level'];
+		$station = substr($ui_level,4,2);
+		$lvl = substr($ui_level,6);  
+
+		$master_id = 0;
+		$parent_id = 0;
+		$task_id = 0;
+		$status = 'complete';
+		
+		#pagination config
+		$search = "";
+		$config['base_url'] = base_url().'task/manage/complete/'; 
+		$config['total_rows'] = $this->task_model->count_status_task($ui_nipp,$ui_nama,$status,$master_id,$parent_id,$task_id,$status); 
+		$config['per_page'] = 50; 
+		$config['uri_segment'] = 4; 
+		$this->pagination->initialize($config);
+		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		
+		#data preparing
+		$data['result'] = $this->task_model->get_status_task($ui_nipp,$ui_nama,$status,$master_id,$parent_id,$task_id,$config['per_page'],$page);
+		$data['count']	= $config['total_rows'];
+		$data['page'] = $page;
+		
+		# sidebar nav 
+		$data['menu_task'] = 'class="current"' ;
+		$data['view_manage_task'] = 'class="current"' ;
+		
+		# call views		
+		$this->load->view('task_list', $data);
+	}
 	# closed task
 	function closed_task()
 	{
@@ -99,7 +236,7 @@ class Manage extends CI_Controller {
 		
 		#pagination config
 		$search = "";
-		$config['base_url'] = base_url().'member/manage/task/'; 
+		$config['base_url'] = base_url().'task/manage/task/'; 
 		$config['total_rows'] = $this->task_model->count_closed_task($ui_nipp,$master_id,$parent_id,$task_id); 
 		$config['per_page'] = 50; 
 		$config['uri_segment'] = 4; 
@@ -164,7 +301,7 @@ class Manage extends CI_Controller {
 		
 		#pagination config
 		$search = "";
-		$config['base_url'] = base_url().'member/manage/master/'; 
+		$config['base_url'] = base_url().'task/manage/master/'; 
 		$config['total_rows'] = $this->task_model->count_master_task($ui_nipp,$master_id); 
 		$config['per_page'] = 50; 
 		$config['uri_segment'] = 4; 
@@ -265,7 +402,7 @@ class Manage extends CI_Controller {
 		
 		#pagination config
 		$search = "";
-		$config['base_url'] = base_url().'member/manage/task/'; 
+		$config['base_url'] = base_url().'task/manage/task/'; 
 		$config['total_rows'] = $this->task_model->count_task_message($ui_nipp,$task_message_id); 
 		$config['per_page'] = 50; 
 		$config['uri_segment'] = 4; 
@@ -317,7 +454,7 @@ class Manage extends CI_Controller {
 		
 		#pagination config
 		$search = "";
-		$config['base_url'] = base_url()."member/manage/performance/$nama/$start/$end"; 
+		$config['base_url'] = base_url()."task/manage/performance/$nama/$start/$end"; 
 		$config['total_rows'] = $this->task_model->count_performance_task($nama,$start,$end); 
 		$config['per_page'] = 50; 
 		$config['uri_segment'] = 7; 

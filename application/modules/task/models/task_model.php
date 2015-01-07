@@ -71,6 +71,30 @@ class Task_model extends CI_Model
 	}
 	
 	# task list
+	public function get_status_task($nipp,$username,$status,$master_id,$parent_id,$task_id,$limit,$offset)
+	{
+		$where = "";
+		$limited = "";
+		if($status == 'taken'){ $where .= " AND task_taken_by = '$username' ";}
+		if($status == 'complete'){ $where .= " AND task_update_by = '$username' ";}
+		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					AND task_status = '$status'
+					$where
+					ORDER BY task_id DESC
+					$limited
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
+	# task list
 	public function get_task($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
 	{
 		$where = "";
@@ -225,7 +249,25 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->num_rows();
 	}
-	
+	# count status task
+	public function count_status_task($nipp,$username,$status,$master_id,$parent_id,$task_id)
+	{
+		$where = "";
+		if($status == 'taken'){ $where .= " AND task_taken_by = '$username' ";}
+		if($status == 'complete'){ $where .= " AND task_update_by = '$username' ";}
+		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					AND task_status = '$status'
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
 	# closed task
 	public function count_closed_task($nipp,$master_id,$parent_id,$task_id)
 	{
