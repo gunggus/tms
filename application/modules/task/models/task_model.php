@@ -391,4 +391,62 @@ class Task_model extends CI_Model
 		$this->db->where($where);
 		$this->db->update($tabel,$data);
 	}
+	
+	# get absensi
+	public function get_absensi($user,$start_date,$end_date,$limit,$offset)
+	{
+		$where = "";
+		if($user != 'ALL'){ $where .= " AND abs_nama LIKE '$nama' ";}
+		if($start_date != 'ALL'){ $where .= " AND DATE(abs_in)>='$start_date' ";}
+		if($end_date != 'ALL'){ $where .= " AND DATE(abs_in)<='$end_date' ";}
+		if($where != ''){$where = " WHERE ".substr($where,4);}
+		$query = " 	SELECT * 
+					FROM absensi
+					$where 
+					ORDER BY abs_in DESC
+					LIMIT $offset,$limit	
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
+	# count absensi
+	public function count_absensi($user,$start_date,$end_date)
+	{
+		$where = "";
+		if($user != 'ALL'){ $where .= " AND abs_nama LIKE '$nama' ";}
+		if($start_date != 'ALL'){ $where .= " AND DATE(abs_in)>='$start_date' ";}
+		if($end_date != 'ALL'){ $where .= " AND DATE(abs_in)<='$end_date' ";}
+		if($where != ''){$where = " WHERE ".substr($where,4);}
+		$query = " 	SELECT * 
+					FROM absensi
+					$where 
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	public function get_absensi_by_id($abs_id)
+	{
+		$query = " SELECT * FROM absensi WHERE abs_id = $abs_id ";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	public function get_task_by_abs_id($abs_id,$date)
+	{
+		$query = " 	SELECT * FROM absensi 
+					JOIN task ON ( (task_complete_by = abs_nama)  AND (abs_in < task_complete_on  AND  task_complete_on < '$date'))	
+					WHERE abs_id = $abs_id 
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	public function get_minimum_point()
+	{
+		$query = " SELECT * FROM var_absensi_master";
+		$query = $this->db->query($query);
+		$result = $query->result();
+		$minpoint = 0;
+		foreach($result as $row){$minpoint = $row->min_point_out;}
+		return $minpoint;
+	}
 }

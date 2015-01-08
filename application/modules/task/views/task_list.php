@@ -73,7 +73,13 @@
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_finish);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_duration);?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_status);?></td>
-								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_update_by);?></td>
+								<td rowspan="2" <?php echo "$bg";?>>
+									<?php 
+										if($row->task_status == 'open'){echo strtoupper($row->task_created_by);}
+										if($row->task_status == 'taken'){echo strtoupper($row->task_taken_by);}
+										if($row->task_status == 'complete'){echo strtoupper($row->task_complete_by);}
+									?>
+								</td>
 								<td <?php echo "$bg";?>>
 									<?php 
 									echo "<div class='row'>";
@@ -100,7 +106,7 @@
 										echo "<div class='span4'>";
 										echo form_open("task/action/closed"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","close");echo form_close();
 										echo "</div>";
-										if(($row->task_status == "open" OR $row->task_status == "reopen") AND $row->task_sch_start < $current)
+										if(($row->task_status == "open" OR $row->task_status == "reopen") AND ($row->task_sch_start < $current) AND ($row->task_is_child == 'yes'))
 										{ 
 											echo " &nbsp;&nbsp;";	
 											echo "<div class='span4'>";

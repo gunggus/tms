@@ -430,7 +430,10 @@ class Action extends CI_Controller {
 			'task_act_finish' => mdate("%Y-%m-%d %H:%i:%s",time()),
 			'task_act_duration' => round(((time() - strtotime($this->input->post('task_act_start')))/60),0),
 			'task_report' => $this->input->post('task_report'), 
-			'task_update_by' => $ui_nama, 
+			'task_complete' => $ui_id, 
+			'task_complete_by' => $ui_nama, 
+			'task_complete_on' => date("Y-m-d H:i:s"), 
+ 			'task_update_by' => $ui_nama, 
 			'task_update_on' => date("Y-m-d H:i:s"), 
  		);
 		$where = array(
@@ -498,6 +501,85 @@ class Action extends CI_Controller {
 		$this->task_model->update_data("task_master",$data,$where);
 	
 		redirect("task/manage/master");
+	}
+
+	public function absensi()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+		
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		  
+		$ui_email = $session_data['ui_email'];
+		$data['ui_email'] = $ui_email;
+		
+		$ui_level = $session_data['ui_level'];
+		$station = substr($ui_level,4,2);
+		$lvl = substr($ui_level,6);  
+
+		# get option data
+		if($this->uri->segment(4,0) == "in"){$this->load->view("absensi_in",$data);}
+		else{
+			$abs_id = $this->uri->segment(5,0);
+			$date = mdate('%Y-%m-%d %H:%i:%s',time());
+			$data['result'] = $this->task_model->get_absensi_by_id($abs_id);
+			$data['result_task'] = $this->task_model->get_task_by_abs_id($abs_id,$date);
+			$data['minpoint'] = $this->task_model->get_minimum_point();
+			$this->load->view("absensi_out",$data);
+		}
+	}
+		
+	public function do_absensi()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+	
+		if($this->uri->segment(4) == 'in'){ 
+			$data = array(
+				"abs_in"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
+				"abs_shift"	=>	$this->input->post('abs_shift'),
+				"abs_nama"	=>	$ui_nama,
+				"abs_hp_std"	=>	$this->input->post('abs_hp_std'),
+				"abs_hp_pdw"	=>	$this->input->post('abs_hp_pdw'),
+				"abs_ym"	=>	$this->input->post('abs_ym'),
+				"abs_skype"	=>	$this->input->post('abs_skype'),
+				"abs_listrik"	=>	$this->input->post('abs_listrik'),
+				"abs_plan"	=>	$this->input->post('abs_plan'),
+				"abs_update_by"	=>	$ui_nama,
+				"abs_update_on"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
+			);
+			$this->task_model->save_data("absensi",$data);
+		}else{
+			$data = array(
+				"abs_out"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
+				"abs_report"	=>	$this->input->post('abs_plan'),
+				"abs_update_by"	=>	$ui_nama,
+				"abs_update_on"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
+			);
+			$where = array('abs_id' => $this->input->post('abs_id') );
+			$this->task_model->update_data("absensi",$data,$where);
+		}
+		
+		redirect('task/manage/absensi','refresh');
 	}
 	
 }

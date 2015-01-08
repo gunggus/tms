@@ -61,6 +61,9 @@ $(document).ready(function(){
         $("input.mask_percent").mask('99%',{completed:function(){
                                                 //action
                                               }});   
+		$("input.mask_pulsa").mask('999.99',{completed:function(){
+                                                //action
+                                              }});   
     }
     
     // Multiselect    

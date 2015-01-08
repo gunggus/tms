@@ -5,6 +5,9 @@
 		<div class="body">
             <ul class="navigation">
                 <li>
+                    <?php echo anchor('task/manage/absensi',' <div class="icon"><span class="ico-clipboard-2"></span></div><div class="name">Absensi</div>', 'class="button red"');?>
+				</li>
+                <li>
                     <?php echo anchor('task/manage/master',' <div class="icon"><span class="ico-folder-close"></span></div><div class="name">Master Task List</div>', 'class="button red"');?>
 				</li>
                 <li>
