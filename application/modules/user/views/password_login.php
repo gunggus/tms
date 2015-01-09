@@ -28,8 +28,11 @@
                 </div>                
             </div>
             <div class="row-form">
-                <div class="span12">
+                <div class="span6" align="left">
 					<?php echo anchor("user/pin_login",'<span class="ico-loop icon-white" title="Change To Pin Login"></span> PIN Login');?>
+                </div>
+				<div class="span6" align="right">
+					<?php echo anchor("user/registration",'<span class="ico-edit-2 icon-red" title="Register Here"></span> Register');?>
                 </div>                
             </div>
 			<?php echo form_close();?>
