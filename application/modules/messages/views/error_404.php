@@ -6,7 +6,7 @@
     <!--[if gt IE 8]>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />        
     <![endif]-->                
-    <title>404 - ONLINE DOCUMENT SYSTEM</title>
+    <title>404 - TASK MANAGEMENT SYSTEM</title>
     <link rel="icon" type="image/ico" href="favicon.ico"/>
     
     <link href="<?php echo base_url()?>/wp-content/themes/ods/css/stylesheets.css" rel="stylesheet" type="text/css" />
@@ -44,8 +44,8 @@
         <h1>404</h1>
         <h2>Sorry.. </h2>
 		<h4>the page are you looking for <br/> not found</h4>
-		<p><img src="<?php echo base_url(); ?>wp-content/themes/ods/images/sad.jpg" /></p>
-        <?php echo  anchor('public/dashboard','<button class="btn btn-primary btn-large">Back to main</button>'); ?> 
+		<p><img src="<?php echo base_url(); ?>wp-content/themes/ods/img/sad.jpg" /></p>
+        <?php echo  anchor('user/profile','<button class="btn btn-primary btn-large">Back to main</button>'); ?> 
 		<button class="btn btn-large" onClick="history.back();">Previous page</button>
     </div>            
     

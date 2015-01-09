@@ -69,11 +69,11 @@
                         <?php 
 						if($key->ui_approval == 'n')
 						{
-							echo '<a title="approve user status" href=" ' . base_url(). 'admin/user/activated_user/' . $key->ui_id . '"><i class="fa fa-thumbs-up"></i></a>'; 
+							echo '<a title="approve user status" href=" ' . base_url(). 'admin/user/activated_user/' . $key->ui_id . '"><i class="ico-thumbs-up"></i></a>'; 
 						}
 						else
 						{
-							echo '<a title="suspend user status" href=" ' . base_url(). 'admin/user/suspended_user/' . $key->ui_id . '"><i class="fa fa-thumbs-down"></i></a>';
+							echo '<a title="suspend user status" href=" ' . base_url(). 'admin/user/suspended_user/' . $key->ui_id . '"><i class="ico-thumbs-down"></i></a>';
 						}
 						?> 
                     	<a title="edit user" href="<?php echo base_url().'admin/user/edit/' . $key->ui_id; ?>"><span class="ico-pencil"></span></a>

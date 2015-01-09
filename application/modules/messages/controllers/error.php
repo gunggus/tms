@@ -57,7 +57,7 @@ class Error extends CI_Controller {
 	
 	public function unknown_error()
 	{
-		
+		$this->load->view('unknown_error');
 	}
 	
 	public function error_db()
