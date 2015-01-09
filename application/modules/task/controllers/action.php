@@ -24,7 +24,7 @@ class Action extends CI_Controller {
 	public function add()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
-		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
 		$data['master_id'] = $this->input->post('master_id');
 		$data['parent_id'] = $this->input->post('parent_id');
 		$data['task_id'] = $this->uri->segment(5, 0);
@@ -63,6 +63,16 @@ class Action extends CI_Controller {
 		}
 		elseif($data['main_field'] == "message"){
 				$this->load->view("add_task_message",$data);
+		}
+		elseif($data['main_field'] == "applyment"){
+				$this->load->view("add_task_applyment",$data);
+		}
+		elseif($data['main_field'] == "approve"){
+				$limit = 0;
+				$offset = 0;
+				$data['task_id'] = $this->uri->segment(5,0);
+				$data['result'] = $this->task_model->get_task($ui_nipp,0,0,$task_id,$limit,$offset);
+				$this->load->view("approve_task_applyment",$data);
 		}
 		else{$this->load->view("add_task",$data);}
 	}
@@ -196,6 +206,116 @@ class Action extends CI_Controller {
 		
 		redirect('task/manage/','refresh');
 	}
+	# save applyment
+	public function save_applyment()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$data = array(
+			'task_master_id' => $this->input->post('task_master_id'),
+			'task_status' => 'taken',
+			'task_name' => $this->input->post('task_name'),
+			'task_category' => $this->input->post('task_category'),
+			'task_point' => $this->input->post('task_point'),
+			'task_sch_start' => $this->input->post('task_sch_start'),
+			'task_sch_finish' => $this->input->post('task_sch_finish'),
+			'task_sch_duration' => $this->input->post('task_sch_duration'),
+			'task_act_start' => $this->input->post('task_sch_start'),
+			'task_act_finish' => $this->input->post('task_sch_finish'),
+			'task_act_duration' => $this->input->post('task_sch_duration'),
+			'task_description' => $this->input->post('task_description'), 
+			'task_is_applyment' => 'yes', 
+			'task_is_approve' => 'no', 
+			'task_created' => $ui_id, 
+			'task_created_by' => $ui_nama, 
+			'task_created_on' => date("Y-m-d H:i:s"), 
+ 			'task_update_by' => $ui_nama, 
+			'task_update_on' => date("Y-m-d H:i:s"), 
+ 		);
+		$task_id = $this->task_model->save_data("task",$data);
+		redirect('task/manage/applyment','refresh');
+	}
+	# approve applyment
+	public function approve_applyment()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$data = array(
+			'task_master_id' => $this->input->post('task_master_id'),
+			'task_status' => 'complete',
+			'task_name' => $this->input->post('task_name'),
+			'task_category' => $this->input->post('task_category'),
+			'task_point' => $this->input->post('task_point'),
+			'task_sch_start' => $this->input->post('task_sch_start'),
+			'task_sch_finish' => $this->input->post('task_sch_finish'),
+			'task_sch_duration' => $this->input->post('task_sch_duration'),
+			'task_act_start' => $this->input->post('task_sch_start'),
+			'task_act_finish' => $this->input->post('task_sch_finish'),
+			'task_act_duration' => $this->input->post('task_sch_duration'),
+			'task_description' => $this->input->post('task_description'), 
+			'task_is_applyment' => 'yes', 
+			'task_is_approve' => 'yes', 
+			'task_created' => $this->input->post('task_created'), 
+			'task_created_by' => $this->input->post('task_created_by'), 
+			'task_created_on' => $this->input->post('task_created_on'), 
+ 			'task_taken' => $this->input->post('task_created'), 
+			'task_taken_by' => $this->input->post('task_created_by'), 
+			'task_taken_on' => $this->input->post('task_created_on'), 
+ 			'task_update_by' => $ui_nama, 
+			'task_update_on' => date("Y-m-d H:i:s"), 
+ 		);
+		$where = array(
+			'task_id'	=>	$this->input->post('task_id'),
+		);
+		$task_id = $this->task_model->update_data("task",$data,$where);
+		$data = array(
+			'tsh_task_id' => $task_id, 
+			'tsh_status' => "open", 
+			'tsh_update_by' => $this->input->post('task_created_by'), 
+			'tsh_update_on' => $this->input->post('task_created_on'), 
+		);
+		$this->task_model->save_data("task_status_history",$data);
+		$data = array(
+			'tsh_task_id' => $task_id, 
+			'tsh_status' => "taken", 
+			'tsh_update_by' => $this->input->post('task_created_by'), 
+			'tsh_update_on' => $this->input->post('task_created_on'), 
+		);
+		$this->task_model->save_data("task_status_history",$data);
+		$data = array(
+			'tsh_task_id' => $task_id, 
+			'tsh_status' => "complete", 
+			'tsh_update_by' => $this->input->post('task_created_by'), 
+			'tsh_update_on' => $this->input->post('task_created_on'), 
+		);
+		$this->task_model->save_data("task_status_history",$data);
+		
+		redirect('task/manage/applyment','refresh');
+	}
 	public function save_task_message()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
@@ -312,32 +432,7 @@ class Action extends CI_Controller {
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
 		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
-		$task_id = $this->input->post("task_id");
-		
-		# get data from session
-		$session_data = $this->session->userdata('logged_in');
-		  
-		# data
-		$ui_id = $session_data['ui_id'];
-		$data['ui_id'] = $ui_id;
-		$ui_nama = $session_data['ui_nama'];
-		$data['ui_nama'] = $ui_nama;
-		$ui_nipp = $session_data['ui_nipp'];
-		$data['ui_nipp'] = $ui_nipp;
-		
-		# close task
-		$data = array("tmg_closed" => "yes", "tmg_update_by" => $ui_nama, "tmg_update_on" => mdate("%Y-%m-%d %H:%i:%s", time()));
-		$where = array("tmg_id" => $task_id,);
-		$this->task_model->update_data("task_message",$data,$where);
-		
-		redirect('task/manage/','refresh');
-	}
-	
-	public function disable_task_message()
-	{
-		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
-		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
-		$task_id = $this->input->post("task_id");
+		$task_id = $this->input->post("tmg_id");
 		
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
@@ -355,7 +450,32 @@ class Action extends CI_Controller {
 		$where = array("tmg_id" => $task_id,);
 		$this->task_model->update_data("task_message",$data,$where);
 		
-		redirect('task/manage/','refresh');
+		redirect('task/manage/message/','refresh');
+	}
+	
+	public function disable_task_message()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+		$task_id = $this->input->post("tmg_id");
+		
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		# close task
+		$data = array("tmg_closed" => "yes", "tmg_update_by" => $ui_nama, "tmg_update_on" => mdate("%Y-%m-%d %H:%i:%s", time()));
+		$where = array("tmg_id" => $task_id,);
+		$this->task_model->update_data("task_message",$data,$where);
+		
+		redirect('task/manage/message/','refresh');
 	}
 	
 	public function reopen()
@@ -393,7 +513,7 @@ class Action extends CI_Controller {
 	function complete()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
-		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
 		$data['task_id'] = $this->input->post("task_id");
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
@@ -578,6 +698,9 @@ class Action extends CI_Controller {
 			$where = array('abs_id' => $this->input->post('abs_id') );
 			$this->task_model->update_data("absensi",$data,$where);
 		}
+		
+		$this->task_model->save_data("absensi",$data);
+		
 		
 		redirect('task/manage/absensi','refresh');
 	}

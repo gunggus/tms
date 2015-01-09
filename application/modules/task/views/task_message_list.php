@@ -74,7 +74,7 @@
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_category);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_date);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_status);?></td>
-								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_form);?></td>
+								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_from);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_closed);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_update_by);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_update_on);?></td>
@@ -83,12 +83,12 @@
 										if($row->tmg_closed == "yes"){
 											echo " &nbsp; &nbsp;";	
 											echo "<div class='span8'>";
-											echo form_open("task/action/enable_task_message/"); echo form_hidden("tm_id",$row->tm_id);echo form_submit("submit","enable");echo form_close();
+											echo form_open("task/action/enable_task_message/"); echo form_hidden("tmg_id",$row->tmg_id);echo form_submit("submit","enable");echo form_close();
 											echo "</div>";
 										}else{
 											echo " &nbsp; &nbsp;";	
 											echo "<div class='span8'>";
-											echo form_open("task/action/disable_task_message/"); echo form_hidden("tm_id",$row->tm_id);echo form_submit("submit","disable");echo form_close();
+											echo form_open("task/action/disable_task_message/"); echo form_hidden("tmg_id",$row->tmg_id);echo form_submit("submit","disable");echo form_close();
 											echo "</div>";
 										}
 									echo "</div>";
@@ -96,8 +96,8 @@
 								</td>
 							</tr>
 							<tr>
-								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_description);?></td>
-								<td <?php echo $bg;?>><?php echo strtoupper($row->tmg_report);?></td>
+								<td colspan="5" <?php echo $bg;?>><?php echo strtoupper($row->tmg_description);?></td>
+								<td colspan="5" <?php echo $bg;?>><?php echo strtoupper($row->tmg_report);?></td>
 							</tr>	
 							<?php } ?>
 						</tbody>

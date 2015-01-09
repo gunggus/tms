@@ -115,6 +115,28 @@ class Task_model extends CI_Model
 		return $query->result();
 	}
 	
+	# task applyment
+	public function get_applyment($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
+	{
+		$where = "";
+		$limited = "";
+		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					AND task_is_applyment = 'yes'
+					$where
+					ORDER BY task_id DESC
+					$limited
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
 	# closed task list
 	public function get_closed_task($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
 	{
@@ -243,6 +265,23 @@ class Task_model extends CI_Model
 		$query = " 	SELECT * FROM task 
 					JOIN task_access ON tac_category = task_category
 					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	# count task
+	public function count_applyment($nipp,$master_id,$parent_id,$task_id)
+	{
+		$where = "";
+		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		$query = " 	SELECT * FROM task 
+					LEFT JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_is_applyment = 'yes'
 					AND task_closed = 'no'
 					$where
 				";

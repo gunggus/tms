@@ -4,13 +4,13 @@
             <div class="icon">
                 <span class="ico-arrow-right"></span>
             </div>
-            <h1>Add Task Message</h1>
+            <h1>Approve Applyment</h1>
         </div>
 
       <!-- row title -->
       <div class="row">
         <div class="col-lg-12">
-          <h4 class="page-title"><?php echo anchor('task/manage', 'TMS', 'title="Task Management System"');?> <i class="fa fa-angle-double-right"></i> ADD TASK MESSAGE </h4>
+          <h4 class="page-title"><?php echo anchor('task/manage/applyment', 'TMS', 'title="Task Management System"');?> <i class="fa fa-angle-double-right"></i> Approve Applyment</h4>
         </div>
       </div>
       <!-- row -->
@@ -31,32 +31,24 @@
             		<?php if(isset($message)){echo '<div class="badge-warning"><p class="text-danger">&nbsp; message : '.$message.'</p></div>';} ?>
             		<?php if(validation_errors()){echo '<div class="badge-warning">'.validation_errors().'</div>';} ?>
                     
-                  	<?php echo form_open('task/action/save_task_message', 'class="form-horizontal"'); 
+                  	<?php echo form_open('task/action/approve_applyment', 'class="form-horizontal"'); 
+					foreach($result as $row){
+					//echo  form_hidden("master_id",$master_id);
+					//echo  form_hidden("parent_id",$parent_id);
+					echo  form_hidden("task_id",$row->task_id);
 					?>
                     
                     <div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Name </label>
                         <div class="span4 col-sm-4">
-                          <input type="text" class="form-control" placeholder="Task Name" name="tmg_name">
+                          <input type="text" class="form-control" value='<?php $row->task_name; ?>' placeholder="Task Name" name="task_name">
                         </div>
                     </div>  
 					<div class="row-form">
-                        <label for="inputNama" class="span2 col-sm-2 control-label"> Organization </label>
+                        <label for="inputNama" class="span2 col-sm-2 control-label"> Point </label>
                         <div class="span4 col-sm-4">
-							<?php 
-							$var_org = array("studiokami" => "STUDIOKAMI" , "pandhawa" => "PANDHAWA");
-							echo form_dropdown("tmg_org",$var_org);	
-							?>
-						</div>
-                    </div>  
-					<div class="row-form">
-                        <label for="inputNama" class="span2 col-sm-2 control-label"> Type </label>
-                        <div class="span4 col-sm-4">
-							<?php 
-							$var_type = array("ym" => "YM" , "skype" => "SKYPE", "phone"=>"PHONE", "email"=>"EMAIL");
-							echo form_dropdown("tmg_type",$var_type);	
-							?>
-						</div>
+                          <input type="text" class="form-control" value='<?php $row->task_point; ?>' placeholder="Task Point" name="task_point">
+                        </div>
                     </div>  
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
@@ -66,44 +58,49 @@
 								$vc = $lc->tc_category;
 								$var_category[$vc] = $vc;
 							}
-							echo form_dropdown("tmg_category",$var_category);	
+							echo form_dropdown("task_category",$var_category,$cat);	
 							?>
 						</div>
                     </div>  
 					<div class="row-form">
-                        <label for="inputStart" class="span2 col-sm-2 control-label"> Date </label>
+                        <label for="inputStart" class="span2 col-sm-2 control-label"> Start On </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("tmg_date",""," id='inputStart' class='mask_date'"); ?>
+                          <?php echo form_input("task_sch_start",$row->task_sch_start," id='inputStart' class='mask_datetime'"); ?>
 						</div>
                     </div>  
 					<div class="row-form">
-                        <label for="inputDescription" class="span2 col-sm-2 control-label"> Description </label>
+                        <label for="inputFinish" class="span2 col-sm-2 control-label"> Finish On </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_textarea("tmg_description",""," id='inputDescription' "); ?>
+                          <?php echo form_input("task_sch_finish",$row->task_sch_finish," id='inputFinish' class='mask_datetime'"); ?>
 						</div>
                     </div>  
 					<div class="row-form">
-                        <label for="inputReport" class="span2 col-sm-2 control-label"> Report </label>
+                        <label for="inputDuration" class="span2 col-sm-2 control-label"> Duration  </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_textarea("tmg_report",""," id='inputReport' "); ?>
+                          <?php echo form_input("task_sch_duration",$row->task_sch_duration," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
 						</div>
                     </div>  
 					<div class="row-form">
-                        <label for="inputFrom" class="span2 col-sm-2 control-label"> From </label>
+                        <label for="inputNama" class="span2 col-sm-2 control-label"> Description  </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("tmg_from",""," id='inputFrom' "); ?>
-						</div>
-                    </div>
-					<div class="row-form">
-                        <label for="inputStatus" class="span2 col-sm-2 control-label"> Complete </label>
-                        <div class="span4 col-sm-4">
-                          <?php echo form_checkbox("complete","yes",false)." check if this task done "; ?>
+                          <?php echo form_textarea("task_description",$row->task_description,"class='form-control'"); ?>
 						</div>
                     </div>  
-					
+					<div class="row-form">
+                        <label for="inputNama" class="span2 col-sm-2 control-label"> Report  </label>
+                        <div class="span4 col-sm-4">
+                          <?php echo form_textarea("task_report",$row->task_report,"class='form-control'"); ?>
+						</div>
+                    </div>  
+					<div class="row-form">
+                        <label for="inputDuration" class="span2 col-sm-2 control-label"> Apply By  </label>
+                        <div class="span4 col-sm-4">
+                          <?php echo form_input("task_created_by",$row->task_created_by," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+						</div>
+                    </div>  
 					<div class="row-form">
                         <div class="span6 col-sm-offset-4 col-sm-6">			
-                            <button class="btn btn-primary pull-right" type="submit">Save</button> 
+                            <button class="btn btn-primary pull-right" type="submit">Approve</button> 
                         </div>
                     </div>            
                                             
