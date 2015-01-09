@@ -97,7 +97,7 @@
 										echo "<div class='row'>";
 										echo " &nbsp;&nbsp;";	
 										echo "<div class='span4'>";
-										if($row->abs_out == "0000-00-00 00:00:00" ){
+										if($row->abs_out == "0000-00-00 00:00:00"  AND  $row->abs_nama == $ui_nama){
 											echo anchor("task/action/absensi/out/".$row->abs_id,"<input type='button' value='Absen OUT' >");
 										}else{
 											echo anchor("task/manage/detail_absensi/".$row->abs_id.'/'.mdate('%Y-%m-%d',strtotime($row->abs_out)),"<input type='button' value='detail absensi' >");
