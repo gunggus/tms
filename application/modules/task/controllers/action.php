@@ -687,7 +687,7 @@ class Action extends CI_Controller {
 				"abs_update_by"	=>	$ui_nama,
 				"abs_update_on"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
 			);
-			$this->task_model->save_data("absensi",$data);
+			$abs_id = $this->task_model->save_data("absensi",$data);
 		}else{
 			$data = array(
 				"abs_out"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
@@ -697,10 +697,48 @@ class Action extends CI_Controller {
 			);
 			$where = array('abs_id' => $this->input->post('abs_id') );
 			$this->task_model->update_data("absensi",$data,$where);
+			$abs_id = $this->input->post('abs_id');
 		}
 		
-		$this->task_model->save_data("absensi",$data);
-		
+		# point calculation
+		$typeshift = $this->input->post('abs_shift');
+		$var_point = $this->task_model->get_var_point();
+		foreach($var_point as $vp){
+			$abs_point = $vp->abs_point;
+			$abs_penalty = $vp->abs_penalty;
+			$abs_reward = $vp->abs_reward;
+		}
+		$resultshift = $this->task_model->get_shift($typeshift);
+		foreach($resultshift as $rs){ 
+			$in = $rs->shift_start;
+			$out = $rs->shift_end; 
+			$tol_in = $rs->shift_start_tolerance;
+			$tol_out = $rs->shift_end_tolerance;
+		}
+		# set penalty & reward
+		$point_point = $abs_point;
+		$point_penalty = 0;
+		$point_reward = 0;
+		if($this->uri->segment(4) == 'in'){ 
+			if(substr($tol_in,11) < mdate("%H:%i:%s",time())){ $point_penalty = $abs_penalty;}
+			$point_description = "Absen IN ".strtoupper( $this->input->post('abs_shift'))." $ui_nama ".mdate("%Y-%m-%d %H:%i:%s",time());
+		}else{ 
+			if((substr($out,11) > mdate("%H:%i:%s",time()))   OR   (substr($tol_out,11) < mdate("%H:%i:%s",time()))){ $point_penalty = $abs_penalty;}
+			if((substr($out,11) < mdate("%H:%i:%s",time()))   AND   (substr($tol_out,11) > mdate("%H:%i:%s",time()))){ $point_reward = $abs_reward;}
+			$point_description = "Absen OUT ".strtoupper( $this->input->post('abs_shift'))." $ui_nama ".mdate("%Y-%m-%d %H:%i:%s",time()); 
+		}	
+		$datapoint = array(
+			"point_abs_id"	=>	$abs_id,
+			"point_point"	=>  $point_point,
+			"point_penalty"	=>  $point_penalty,
+			"point_reward"	=>  $point_reward,
+			"point_username"=>  $ui_nama,
+			"point_date"	=>  mdate("%Y-%m-%d %H:%i:%s",time()),
+			"point_description" => $point_description,
+			"point_update_by"	=> $ui_nama,
+			"point_update_on"	=> mdate("%Y-%m-%d %H:%i:%s",time()),
+		);
+		$this->task_model->save_data("point",$datapoint);
 		
 		redirect('task/manage/absensi','refresh');
 	}

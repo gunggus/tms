@@ -481,11 +481,27 @@ class Task_model extends CI_Model
 	}
 	public function get_minimum_point()
 	{
-		$query = " SELECT * FROM var_absensi_master";
+		$query = " SELECT * FROM var_point";
 		$query = $this->db->query($query);
 		$result = $query->result();
 		$minpoint = 0;
 		foreach($result as $row){$minpoint = $row->min_point_out;}
 		return $minpoint;
 	}
+	public function get_shift($shift)
+	{
+		$where = "";
+		if(($shift != "") AND ($shift != "ALL")){ $where.= " AND shift_title = '$shift'  ";  }
+		if($where != ''){$where = " WHERE ".substr($where,4);}
+		$query = " SELECT * FROM var_shift $where ";
+		$query = $this->db->query($query);
+		return $query->result();	
+	}
+	public function get_var_point()
+	{
+		$query = " SELECT * FROM var_point ";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
 }
