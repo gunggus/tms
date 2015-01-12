@@ -14,7 +14,7 @@
                     <?php echo anchor('task/manage/',' <div class="icon"><span class="ico-folder"></span></div><div class="name">Task List</div>', 'class="button red"');?>
 				</li>
                 <li>
-                    <?php echo anchor('task/manage/message',' <div class="icon"><span class="ico-envelope"></span></div><div class="name">Task Message</div>', 'class="button red"');?>
+                    <?php echo anchor('task/manage/applyment',' <div class="icon"><span class="ico-envelope"></span></div><div class="name">Applyment</div>', 'class="button red"');?>
 				</li>
                 <li>
                     <?php echo anchor('task/manage/closed_task',' <div class="icon"><span class="ico-zip"></span></div><div class="name">Closed Task</div>', 'class="button red"');?>
