@@ -204,6 +204,16 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
+	
+	# get skill category
+	public function get_skill_category()
+	{
+		$query = "	SELECT * FROM var_skill
+					ORDER BY skill_point ASC
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
 
 	# get task master category
 	public function get_task_master_category($master_id)
@@ -227,6 +237,24 @@ class Task_model extends CI_Model
 	public function get_performance_task($nama,$start,$end,$limit,$offset)
 	{
 		$where = "";
+		if($nama != "ALL"){$where.=" AND point_username LIKE '$nama' ";}
+		if($start != "ALL"){$where.=" AND point_date >= '$start' ";}
+		if($end != "ALL"){$where.=" AND point_date <= '$end' ";}
+		if($where != ""){$where = " WHERE  ".substr($where,4);}
+		$query = "	SELECT * FROM point
+					LEFT JOIN task ON point_task_id = task_id
+					LEFT JOIN absensi ON point_abs_id = abs_id
+					$where
+					ORDER BY point_id DESC
+					LIMIT $offset,$limit	
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	/*
+	public function get_performance_task($nama,$start,$end,$limit,$offset)
+	{
+		$where = "";
 		if($nama != "ALL"){$where.=" AND task_taken_by LIKE '$nama' ";}
 		if($start != "ALL"){$where.=" AND task_taken_on >= '$start' ";}
 		if($end != "ALL"){$where.=" AND task_taken_on <= '$end' ";}
@@ -239,8 +267,22 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
-	
+	*/
 	# count performance task
+	public function count_performance_task($nama,$start,$end)
+	{
+		$where = "";
+		if($nama != "ALL"){$where.=" AND point_username LIKE '$nama' ";}
+		if($start != "ALL"){$where.=" AND point_date >= '$start' ";}
+		if($end != "ALL"){$where.=" AND point_date <= '$end' ";}
+		if($where != ""){$where = " WHERE  ".substr($where,4);}
+		$query = "	SELECT * FROM point
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	/*
 	public function count_performance_task($nama,$start,$end)
 	{
 		$where = "";
@@ -254,7 +296,7 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->num_rows();
 	}
-	
+	*/
 	# count task
 	public function count_task($nipp,$master_id,$parent_id,$task_id)
 	{
@@ -431,6 +473,13 @@ class Task_model extends CI_Model
 		$this->db->update($tabel,$data);
 	}
 	
+	# delete data
+	public function delete_data($tabel,$where)
+	{
+		$this->db->where($where);
+		$this->db->delete($tabel);
+	}
+	
 	# get absensi
 	public function get_absensi($user,$start_date,$end_date,$limit,$offset)
 	{
@@ -488,6 +537,15 @@ class Task_model extends CI_Model
 		foreach($result as $row){$minpoint = $row->min_point_out;}
 		return $minpoint;
 	}
+	public function get_target_point($nipp)
+	{
+		$query = " SELECT * FROM point_target WHERE pt_nipp = '$nipp' ";
+		$query = $this->db->query($query);
+		$result = $query->result();
+		$minpoint = 0;
+		foreach($result as $row){$minpoint = $row->pt_point;}
+		return $minpoint;
+	}
 	public function get_shift($shift)
 	{
 		$where = "";
@@ -503,5 +561,20 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
-	
+	public function get_category_access($nipp,$limit,$offset)
+	{
+		$where = "";
+		if($nipp != 'ALL'){ $where .= " WHERE ta_nipp = '$nipp' "; }
+		$query = " SELECT * FROM task_access LEFT JOIN user_identity ON ta_nipp = ui_nipp $where ORDER BY ta_nipp ASC LIMIT $offset,$limit ";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	public function count_category_access($nipp)
+	{
+		$where = "";
+		if($nipp != 'ALL'){ $where .= " WHERE ta_nipp = '$nipp' "; }
+		$query = " SELECT * FROM task_access LEFT JOIN user_identity ON ta_nipp = ui_nipp $where ";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
 }
