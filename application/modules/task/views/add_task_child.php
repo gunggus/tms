@@ -60,10 +60,22 @@
 							echo form_dropdown("task_category",$var_category,$cat);	
 							?>
 						</div>
+						<label for="inputNama" class="span2 col-sm-2 control-label"> Skill </label>
+                        <div class="span4 col-sm-4">
+							<?php 
+							foreach($list_skill as $ls){
+								$vs = $ls->skill_level.";".$ls->skill_point;
+								$var_skill[$vs] = $ls->skill_level." [".$ls->skill_point."]";
+							}
+							echo form_dropdown("task_skill",$var_skill);	
+							?>
+						</div>
+						<!--
 						<label for="inputPoint" class="span2 col-sm-2 control-label"> Point </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_point","","class='form-control'"); ?>
+                          <?php //echo form_input("task_point","","class='form-control'"); ?>
 						</div>
+						-->
                     </div>  
 					<div class="row-form">
                         <label for="inputStart" class="span2 col-sm-2 control-label"> Scheduled Start On </label>

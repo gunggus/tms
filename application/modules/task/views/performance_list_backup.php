@@ -66,12 +66,13 @@
 								<td>No</td>
 								<td>Category</td>
 								<td>Name</td>
-								<td>Date</td>
 								<td>Point</td>
-								<td>Reward</td>
-								<td>Penalty</td>
-								<td>Description</td>
-								<td>Action</td>
+								<td>Start</td>
+								<td>Finish</td>
+								<td>Duration</td>
+								<td>Status</td>
+								<td>By</td>
+								<td>Performance</td>
 							</tr>
 						</thead>
                   	    <tbody>
@@ -80,27 +81,44 @@
 							foreach($result as $row){ 
 							$i++;
 							$current = mdate('%Y-%m-%d %H:%i:%s',time());
-							if($row->point_penalty > 0){$bg = " style=' background-color: #FFCCCC' ";}
+							if($row->task_status == 'complete'){$bg = " style=' background-color: #CCFFCC' ";}
+							else if(($row->task_status != 'complete') AND ($row->task_sch_finish < $current) AND ($row->task_act_finish == "0000-00-00 00:00:00")){$bg=" style=' background-color: #FFFFDD' ";}
+							else if(($row->task_status == 'complete') AND ($row->task_sch_finish < $row->task_act_finish)){$bg=" style=' background-color: #FFDDDD' ";}
 							else{$bg="";}
 							
 							?>
 							<tr>
-								<td <?php echo "$bg";?>><?php echo $i;?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->point_username);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->point_date);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->point_point);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->point_reward);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->point_penalty);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->point_description);?></td>
-								<td>
-								<?php 
-									if($this->user_access->level('user_access')>=40):
-									echo anchor("action/edit/point/".$row->point_id,"EDIT");
-									endif;
-								?>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo $i;?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_name);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_point);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_start);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_finish);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_duration);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_status);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_update_by);?></td>
+								<td rowspan="2" <?php echo "$bg";?>>
+									<?php
+									$performance = 0;
+									if($row->task_status == "complete"){
+										$duration = $row->task_act_duration - $row->task_sch_duration;
+										if($duration < 0){ 
+											$performance = $row->task_point;
+										}elseif($duration == 0){
+											$performance = 0;
+										}else{
+											$performance = (1 - ($duration / $row->task_sch_duration)) * $row->task_point;
+										}
+									}
+									echo number_format($performance,0,',','.' );
+									?>
 								</td>
-							</tr>	
+							</tr>
+							<tr>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_act_start);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_act_finish);?></td>
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_act_duration);?></td>
+							</tr>
 							<?php } ?>
 						</tbody>
 						<tfoot>

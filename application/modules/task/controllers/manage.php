@@ -50,7 +50,6 @@ class Manage extends CI_Controller {
 		$nama = $this->uri->segment(4, 'ALL');
 		$start_date = $this->uri->segment(5, 'ALL');
 		$end_date = $this->uri->segment(6, 'ALL');
-		
 		#pagination config
 		$search = "";
 		$config['base_url'] = base_url()."task/manage/absensi/$nama/$start_date/$end_date"; 
@@ -58,7 +57,7 @@ class Manage extends CI_Controller {
 		$config['per_page'] = 50; 
 		$config['uri_segment'] = 4; 
 		$this->pagination->initialize($config);
-		$page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+		$page = ($this->uri->segment(7)) ? $this->uri->segment(7) : 0;
 		
 		#data preparing
 		$data['result'] = $this->task_model->get_absensi($nama,$start_date,$end_date,$config['per_page'],$page);
@@ -557,7 +556,6 @@ class Manage extends CI_Controller {
 		# call views		
 		$this->load->view('task_message_list', $data);
 	}
-	
 	function performance()
 	{
 		# get data from session
@@ -611,6 +609,62 @@ class Manage extends CI_Controller {
 		$this->load->view('performance_list', $data);
 	
 	}
+	
+	/*
+	function performance()
+	{
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		  
+		$ui_email = $session_data['ui_email'];
+		$data['ui_email'] = $ui_email;
+		
+		$ui_level = $session_data['ui_level'];
+		$station = substr($ui_level,4,2);
+		$lvl = substr($ui_level,6);  
+
+		$nama = "ALL";
+		$start = "ALL";
+		$end = "ALL";
+		
+		if($this->uri->segment(4) > 0){	$nama = str_replace("%20","_",$this->uri->segment(4, "ALL"));}
+		if($this->input->post('user') != ""){$nama = $this->input->post('user');}
+		if($this->uri->segment(5) > 0){$start = $this->uri->segment(5, "ALL");}
+		if($this->input->post('start_date') != ""){$start = $this->input->post('start_date');}
+		if($this->uri->segment(6) > 0){$end = $this->uri->segment(6, "ALL");}
+		if($this->input->post('end_date') != ""){$end = $this->input->post('end_date');}
+		
+		#pagination config
+		$search = "";
+		$config['base_url'] = base_url()."task/manage/performance/$nama/$start/$end"; 
+		$config['total_rows'] = $this->task_model->count_performance_task($nama,$start,$end); 
+		$config['per_page'] = 50; 
+		$config['uri_segment'] = 7; 
+		$this->pagination->initialize($config);
+		$page = ($this->uri->segment(7)) ? $this->uri->segment(7) : 0;
+		
+		#data preparing
+		$data['result'] = $this->task_model->get_performance_task($nama,$start,$end,$config['per_page'],$page);
+		$data['count']	= $config['total_rows'];
+		$data['page'] = $page;
+		$data['list_user'] = $this->task_model->get_user();
+		
+		# sidebar nav 
+		$data['menu_task'] = 'class="current"' ;
+		$data['view_manage_task'] = 'class="current"' ;
+		
+		# call views		
+		$this->load->view('performance_list', $data);
+	
+	}
+	*/
 	
 	
 }

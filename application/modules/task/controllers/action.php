@@ -24,7 +24,7 @@ class Action extends CI_Controller {
 	public function add()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
-		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
 		$data['master_id'] = $this->input->post('master_id');
 		$data['parent_id'] = $this->input->post('parent_id');
 		$data['task_id'] = $this->uri->segment(5, 0);
@@ -50,16 +50,21 @@ class Action extends CI_Controller {
 		
 		# get option data
 		$data['list_cat'] = $this->task_model->get_task_category();
+		$data['list_skill'] = $this->task_model->get_skill_category();
 		if($data['master_id'] > 0){$data['cat'] = $this->task_model->get_task_master_category($data["master_id"]);}
 		else{$data['cat'] = "";}
-		if($data['main_field'] == "master"){$this->load->view("add_task_master",$data);}
+		if($data['main_field'] == "master"){
+			if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+			$this->load->view("add_task_master",$data);
+		}
 		elseif($data['main_field'] == "child"){
-				$limit = 0;
-				$offset = 0;
-				$data['parent_id'] = $this->uri->segment(5,0);
-				$data['parent_task'] = $this->task_model->get_task($ui_nipp,0,0,$data['parent_id'],$limit,$offset);
-				$data['result'] = $this->task_model->get_task($ui_nipp,0,$data['parent_id'],0,$limit,$offset);
-				$this->load->view("add_task_child",$data);
+			if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+			$limit = 0;
+			$offset = 0;
+			$data['parent_id'] = $this->uri->segment(5,0);
+			$data['parent_task'] = $this->task_model->get_task($ui_nipp,0,0,$data['parent_id'],$limit,$offset);
+			$data['result'] = $this->task_model->get_task($ui_nipp,0,$data['parent_id'],0,$limit,$offset);
+			$this->load->view("add_task_child",$data);
 		}
 		elseif($data['main_field'] == "message"){
 				$this->load->view("add_task_message",$data);
@@ -68,6 +73,7 @@ class Action extends CI_Controller {
 				$this->load->view("add_task_applyment",$data);
 		}
 		elseif($data['main_field'] == "approve"){
+				if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
 				$limit = 0;
 				$offset = 0;
 				$data['task_id'] = $this->uri->segment(5,0);
@@ -77,10 +83,24 @@ class Action extends CI_Controller {
 		else{$this->load->view("add_task",$data);}
 	}
 	
-	public function save_master_task()
+	public function edit()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
 		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+		$data['main_field'] = $this->uri->segment(4, "task");
+		if($data['main_field'] == "point"){
+			$point_id = $this->uri->segment(5, 0);
+			$data['result'] = $this->task_model->get_data_point($point_id);
+			$this->load->view("edit_point",$data);
+		}else{
+			redirect("messages/error/error_404");
+		}
+	}
+	
+	public function save_master_task()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
 
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
@@ -93,10 +113,16 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 	
+		$varskill = explode(';',$this->input->post('task_skill'));
+		$skill = $varskill[0];
+		$skillpoint = $varskill[1]; 
+		$point = $skillpoint * $this->input->post('task_sch_duration');
 		$tm_start_time = mdate("%Y-%m-%d %H:%i:%s",(strtotime( $this->input->post('tm_start_time') )  +  ( 3600 * $this->input->post('tm_start_hour') ) + (60 * $this->input->post('tm_start_minute')) + $this->input->post('tm_start_second')));
 		$data = array(
 			'tm_task' => $this->input->post('tm_task'),
-			'tm_point' => $this->input->post('tm_point'),
+			'tm_skill' => $skill,
+			'tm_skill_point' => $skillpoint,
+			'tm_point' => $point,
 			'tm_year' => $this->input->post('tm_year'),
 			'tm_month' => $this->input->post('tm_month'),
 			'tm_day' => $this->input->post('tm_day'),
@@ -117,7 +143,7 @@ class Action extends CI_Controller {
 	public function save_task()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
-		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
 
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
@@ -130,12 +156,18 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 		
+		$varskill = explode(';',$this->input->post('task_skill'));
+		$skill = $varskill[0];
+		$skillpoint = $varskill[1]; 
+		$point = $skillpoint * $this->input->post('task_sch_duration');
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
 			'task_status' => 'open',
 			'task_name' => $this->input->post('task_name'),
 			'task_category' => $this->input->post('task_category'),
-			'task_point' => $this->input->post('task_point'),
+			'task_skill' => $skill,
+			'task_skill_point' => $skillpoint,
+			'task_point' => $point,
 			'task_sch_start' => $this->input->post('task_sch_start'),
 			'task_sch_finish' => $this->input->post('task_sch_finish'),
 			'task_sch_duration' => $this->input->post('task_sch_duration'),
@@ -160,7 +192,7 @@ class Action extends CI_Controller {
 	public function save_child_task()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
-		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
 
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
@@ -173,13 +205,19 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 		
+		$varskill = explode(';',$this->input->post('task_skill'));
+		$skill = $varskill[0];
+		$skillpoint = $varskill[1]; 
+		$point = $skillpoint * $this->input->post('task_sch_duration');
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
 			'task_parent_id' => $this->input->post('task_parent_id'),
 			'task_status' => 'open',
 			'task_name' => $this->input->post('task_name'),
 			'task_category' => $this->input->post('task_category'),
-			'task_point' => $this->input->post('task_point'),
+			'task_skill' => $skill,
+			'task_skill_point' => $skillpoint,
+			'task_point' => $point,
 			'task_sch_start' => $this->input->post('task_sch_start'),
 			'task_sch_finish' => $this->input->post('task_sch_finish'),
 			'task_sch_duration' => $this->input->post('task_sch_duration'),
@@ -241,6 +279,12 @@ class Action extends CI_Controller {
 			'task_created' => $ui_id, 
 			'task_created_by' => $ui_nama, 
 			'task_created_on' => date("Y-m-d H:i:s"), 
+ 			'task_taken' => $ui_id, 
+			'task_taken_by' => $ui_nama, 
+			'task_taken_on' => date("Y-m-d H:i:s"), 
+ 			'task_complete' => $ui_id, 
+			'task_complete_by' => $ui_nama, 
+			'task_complete_on' => date("Y-m-d H:i:s"), 
  			'task_update_by' => $ui_nama, 
 			'task_update_on' => date("Y-m-d H:i:s"), 
  		);
@@ -569,6 +613,33 @@ class Action extends CI_Controller {
 			'tsh_update_on' => date("Y-m-d H:i:s"), 
 		);
 		$this->task_model->save_data("task_status_history",$data);
+		
+		$point_point = $this->input->post('task_point');
+		$point_penalty = 0;
+		$point_reward = 0;
+		$point_description = $this->input->post('task_name')." ".$this->input->post('task_report');
+		if(mdate("%Y-%m-%d %H:%i:%s",time()) > $this->input->post('task_sch_finish')){
+			$duration = $this->input->post('task_act_duration') - $this->input->post('task_sch_duration');
+			$point_penalty = ($duration / $this->input->post('task_sch_duration')) * $this->input->post('task_point') / 2 ;
+		}
+		if(($this->input->post('task_act_duration') <= $this->input->post('task_sch_duration')) AND (mdate("%Y-%m-%d %H:%i:%s",time()) < $this->input->post('task_sch_finish')))
+		{
+			$duration = $this->input->post('task_sch_duration') - $this->input->post('task_act_duration');
+			$point_reward = ($duration / $this->input->post('task_sch_duration')) * $this->input->post('task_point') / 2  ;
+		}
+		$datapoint = array(
+			"point_task_id"	=>	$this->input->post('task_id'),
+			"point_point"	=>  $point_point,
+			"point_penalty"	=>  $point_penalty,
+			"point_reward"	=>  $point_reward,
+			"point_username"=>  $ui_nama,
+			"point_date"	=>  mdate("%Y-%m-%d %H:%i:%s",time()),
+			"point_description" => $point_description,
+			"point_update_by"	=> $ui_nama,
+			"point_update_on"	=> mdate("%Y-%m-%d %H:%i:%s",time()),
+		);
+		$this->task_model->save_data("point",$datapoint);
+		
 		redirect('task/manage/','refresh');
 	}
 	function enable_master()
@@ -652,7 +723,7 @@ class Action extends CI_Controller {
 			$date = mdate('%Y-%m-%d %H:%i:%s',time());
 			$data['result'] = $this->task_model->get_absensi_by_id($abs_id);
 			$data['result_task'] = $this->task_model->get_task_by_abs_id($abs_id,$date);
-			$data['minpoint'] = $this->task_model->get_minimum_point();
+			$data['minpoint'] = $this->task_model->get_target_point($ui_nipp);
 			$this->load->view("absensi_out",$data);
 		}
 	}

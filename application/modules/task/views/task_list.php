@@ -5,7 +5,8 @@
                 <span class="ico-arrow-right"></span>
             </div>
             <h1>Task</h1>
-        	<?php echo "<div align='right'>".anchor("task/action/add/task","<input type='button' value='add new task' >")."</div>"; ?>
+			<?php echo "<div align='right'>".anchor("task/action/add/task","<input type='button' value='add new task' >")."</div>"; ?>
+			</h2>
 		</div>
 
       <!-- row title -->
@@ -21,12 +22,22 @@
         
         <!-- col -->
         <div class="span12 col-lg-12">
-          
+		  <?php $style_all = ""; $style_open = ""; $style_taken = ""; $style_complete = ""; $style_closed = "";?>	
+          <?php if($this->uri->segment(3) == 'task'){$style_all = "style='font-weight:bold'";}?>
+		  <?php if($this->uri->segment(3) == 'open'){$style_open = "style='font-weight:bold'";}?>
+		  <?php if($this->uri->segment(3) == 'taken'){$style_taken = "style='font-weight:bold'";}?>
+		  <?php if($this->uri->segment(3) == 'complete'){$style_complete ="style='font-weight:bold'";}?>
+		  <?php if($this->uri->segment(3) == 'closed_task'){$style_closed ="style='font-weight:bold'";}?>
+		  <div class="span2"> <?php echo anchor("task/manage/task","ALL TASK","$style_all"); ?> </div>
+          <div class="span2"> <?php echo anchor("task/manage/open","OPEN","$style_open"); ?> </div>
+          <div class="span2"> <?php echo anchor("task/manage/taken","PROGRESS","$style_taken"); ?> </div>
+          <div class="span2"> <?php echo anchor("task/manage/complete","COMPLETE","$style_complete"); ?> </div>
+          <div class="span2"> <?php echo anchor("task/manage/closed_task","CLOSED","$style_closed"); ?> </div>
           <!-- widget -->
           <div class="block">
             <div class="head purple">
-                <div class="icon"><span class="ico-location"></span></div>
-                <h2>Task List</h2>     
+			    <div class="icon"><span class="ico-location"></span></div>
+                <h2>Task List</h2>
                 <ul class="buttons">
                     <li><a href="#" onClick="source('table_hover'); return false;"><div class="icon"><span class="ico-info"></span></div></a></li>
                 </ul>
@@ -42,6 +53,7 @@
 							<tr>
 								<td>No</td>
 								<td>Category</td>
+								<td>Skill</td>
 								<td>Name</td>
 								<td>Point</td>
 								<td>Start</td>
@@ -67,6 +79,7 @@
 							<tr>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo $i;?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_skill);?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_name);?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_point);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_start);?></td>
@@ -135,7 +148,7 @@
 						</tbody>
 						<tfoot>
 							<tr>
-								<td colspan="10"> <?php echo $this->pagination->create_links();?> </td>
+								<td colspan="11"> <?php echo $this->pagination->create_links();?> </td>
 							</tr>
 						</tfoot>						
                     </table>

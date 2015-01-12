@@ -42,6 +42,7 @@
 							<tr>
 								<td rowspan="2">No</td>
 								<td rowspan="2">Task</td>
+								<td rowspan="2">Skill</td>
 								<td rowspan="2">Point</td>
 								<td colspan="4"><div align="center">Every</div></td>
 								<td rowspan="2">Run Time</td>
@@ -70,6 +71,7 @@
 							<tr>
 								<td <?php echo $bg;?>><?php echo $i;?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_task);?></td>
+								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_skill);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_point);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_year);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_month);?></td>
@@ -102,7 +104,7 @@
 						</tbody>
 						<tfoot>
 							<tr>
-								<td colspan="10"> <?php echo $this->pagination->create_links();?> </td>
+								<td colspan="11"> <?php echo $this->pagination->create_links();?> </td>
 							</tr>
 						</tfoot>						
                     </table>
