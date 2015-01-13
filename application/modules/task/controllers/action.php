@@ -664,13 +664,13 @@ class Action extends CI_Controller {
 		$point_reward = 0;
 		$point_description = $this->input->post('task_name')." ".$this->input->post('task_report');
 		if(mdate("%Y-%m-%d %H:%i:%s",time()) > $this->input->post('task_sch_finish')){
-			$duration = $this->input->post('task_act_duration') - $this->input->post('task_sch_duration');
-			$point_penalty = ($duration / $this->input->post('task_sch_duration')) * $this->input->post('task_point') / 2 ;
+			//$duration = $this->input->post('task_act_duration') - $this->input->post('task_sch_duration');
+			//$point_penalty = ($duration / $this->input->post('task_sch_duration')) * $this->input->post('task_point') / 2 ;
 		}
 		if(($this->input->post('task_act_duration') <= $this->input->post('task_sch_duration')) AND (mdate("%Y-%m-%d %H:%i:%s",time()) < $this->input->post('task_sch_finish')))
 		{
-			$duration = $this->input->post('task_sch_duration') - $this->input->post('task_act_duration');
-			$point_reward = ($duration / $this->input->post('task_sch_duration')) * $this->input->post('task_point') / 2  ;
+			//$duration = $this->input->post('task_sch_duration') - $this->input->post('task_act_duration');
+			//$point_reward = ($duration / $this->input->post('task_sch_duration')) * $this->input->post('task_point') / 2  ;
 		}
 		$datapoint = array(
 			"point_task_id"	=>	$this->input->post('task_id'),

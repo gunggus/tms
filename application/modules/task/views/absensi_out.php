@@ -108,21 +108,25 @@
 						$performance = 0;
 						foreach($result_task as $row_task){ 
 						$no++;
-						$performance = $performance + $row_task->task_performance;
+						$varpoint = $row_task->point_point + $row_task->point_reward - $row_task->point_penalty;
+						$performance = $performance + $varpoint;
 						?>
-						<tr><td><?php echo $no; ?></td><td><?php echo $row_task->task_name; ?></td><td><?php echo $row_task->task_performance; ?></td></tr>
+						<tr><td><?php echo $no; ?></td><td><?php echo $row_task->task_name; ?></td><td><?php echo $varpoint; ?></td></tr>
 						<?php } 
 						?>
-						<tr><td colspan="3"><?php echo "Total Point : $performance".form_hidden('performance',$performance,"readonly");?></td></tr>
+						<tr><td colspan="3"><?php echo "Total Point  : $performance".form_hidden('performance',$performance,"readonly");?></td></tr>
+						<tr><td colspan="3"><?php echo "Target Point : $minpoint";?></td></tr>
 						</table>
 						</div>
                     </div>  
 					<div class="row-form">
                         <div class="span6 col-sm-offset-4 col-sm-6">			
-                            <?php if($performance >= $minpoint){ ?>
+                            <button class="btn btn-primary pull-right" type="submit">Send</button> 
+							<?php echo form_close(); ?>
+							<?php /* if($performance >= $minpoint){ ?>
 								<button class="btn btn-primary pull-right" type="submit">Send</button> 
 							<?php echo form_close(); 
-							}?>                    
+							}*/ ?>                    
                 		</div>
                     </div>            
                                             
