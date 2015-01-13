@@ -41,25 +41,25 @@
                     <div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Name </label>
                         <div class="span4 col-sm-4">
-                          <input type="text" class="form-control" value='<?php $row->task_name; ?>' placeholder="Task Name" name="task_name">
+                          <input type="text" class="form-control" value='<?php echo $row->task_name; ?>' placeholder="Task Name" name="task_name">
                         </div>
                     </div>  
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Skill </label>
                         <div class="span4 col-sm-4">
-                          <input type="text" class="form-control" value='<?php $row->task_skill; ?>' placeholder="Task Skill" name="task_skill">
+                          <input type="text" class="form-control" value='<?php echo $row->task_skill; ?>' placeholder="Task Skill" name="task_skill">
                         </div>
                     </div>  
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Skill Point </label>
                         <div class="span4 col-sm-4">
-                          <input type="text" class="form-control" value='<?php $row->task_skill_point; ?>' placeholder="Task Skill Point" name="task_skill_point">
+                          <input type="text" class="form-control" value='<?php echo $row->task_skill_point; ?>' placeholder="Task Skill Point" name="task_skill_point">
                         </div>
                     </div>  
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Point </label>
                         <div class="span4 col-sm-4">
-                          <input type="text" class="form-control" value='<?php $row->task_point; ?>' placeholder="Task Point" name="task_point">
+                          <input type="text" class="form-control" value='<?php echo $row->task_point; ?>' placeholder="Task Point" name="task_point">
                         </div>
                     </div>  
 					<div class="row-form">
