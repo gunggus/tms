@@ -17,10 +17,10 @@
                     <?php echo anchor('task/manage/applyment',' <div class="icon"><span class="ico-envelope"></span></div><div class="name">Applyment</div>', 'class="button red"');?>
 				</li>
                 <li>
-                    <?php echo anchor('task/manage/closed_task',' <div class="icon"><span class="ico-zip"></span></div><div class="name">Closed Task</div>', 'class="button red"');?>
+                    <?php echo anchor('performance/manage/performance',' <div class="icon"><span class="ico-time"></span></div><div class="name">Performance</div>', 'class="button red"');?>
 				</li>
-                <li>
-                    <?php echo anchor('task/manage/performance',' <div class="icon"><span class="ico-time"></span></div><div class="name">Performance</div>', 'class="button red"');?>
+			    <li>
+                    <?php echo anchor('performance/manage/chart',' <div class="icon"><span class="ico-chart-4"></span></div><div class="name">Chart</div>', 'class="button red"');?>
 				</li>
 				<li>
                     <?php echo anchor('admin/module',' <div class="icon"><span class="ico-collapse"></span></div><div class="name">Module</div>', 'class="button red"');?>
