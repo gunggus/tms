@@ -352,7 +352,7 @@ class Action extends CI_Controller {
 		
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
-			'task_status' => 'complete',
+			'task_status' => 'taken',
 			'task_name' => $this->input->post('task_name'),
 			'task_category' => $this->input->post('task_category'),
 			'task_skill' => $this->input->post('task_skill'),
@@ -394,6 +394,7 @@ class Action extends CI_Controller {
 			'tsh_update_by' => $this->input->post('task_created_by'), 
 			'tsh_update_on' => $this->input->post('task_created_on'), 
 		);
+		/*
 		$this->task_model->save_data("task_status_history",$data);
 		$data = array(
 			'tsh_task_id' => $task_id, 
@@ -402,7 +403,7 @@ class Action extends CI_Controller {
 			'tsh_update_on' => $this->input->post('task_created_on'), 
 		);
 		$this->task_model->save_data("task_status_history",$data);
-		
+		*/
 		redirect('task/manage/applyment','refresh');
 	}
 	public function save_task_message()

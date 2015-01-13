@@ -126,7 +126,7 @@
 											echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take");echo form_close();
 											echo "</div>";
 										}
-										if($row->task_status == "taken")
+										if($row->task_status == "taken" AND $row->task_is_approve == "yes" AND $row->task_taken_by == $ui_nama  )
 										{	
 											echo " &nbsp;&nbsp;";	
 											echo "<div class='span4'>";
