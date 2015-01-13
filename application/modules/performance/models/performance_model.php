@@ -46,10 +46,12 @@ class Performance_model extends CI_Model
 		$where = "";
 		if($start != "ALL"){$where.=" AND point_date >= '$start' ";}
 		if($end != "ALL"){$where.=" AND point_date <= '$end' ";}
-		$query = "	SELECT * FROM point
+		$query = "	SELECT *, SUM(point_point) AS 'point', SUM(point_reward) AS 'reward', SUM(point_penalty) AS 'penalty' 
+					FROM point
 					WHERE point_nipp LIKE '$nipp' 
 					$where
-					ORDER BY point_date ASC
+					GROUP BY DATE(point_date)
+					ORDER BY DATE(point_date) ASC
 				";
 		$query = $this->db->query($query);
 		return $query->result();

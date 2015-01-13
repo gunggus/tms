@@ -111,7 +111,7 @@
 						$varpoint = $row_task->point_point + $row_task->point_reward - $row_task->point_penalty;
 						$performance = $performance + $varpoint;
 						?>
-						<tr><td><?php echo $no; ?></td><td><?php echo $row_task->task_name; ?></td><td><?php echo $varpoint; ?></td></tr>
+						<tr><td><?php echo $no; ?></td><td><?php echo $row_task->point_description; ?></td><td><?php echo $varpoint; ?></td></tr>
 						<?php } 
 						?>
 						<tr><td colspan="3"><?php echo "Total Point  : $performance".form_hidden('performance',$performance,"readonly");?></td></tr>
