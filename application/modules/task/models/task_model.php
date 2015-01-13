@@ -522,9 +522,10 @@ class Task_model extends CI_Model
 	public function get_task_by_abs_id($abs_id,$date)
 	{
 		$query = " 	SELECT * FROM absensi 
-					JOIN task ON ( (task_complete_by = abs_nama)  AND (abs_in < task_complete_on  AND  task_complete_on < '$date'))	
+					JOIN task ON (abs_in < task_complete_on  AND  task_complete_on < '$date')	
 					JOIN point ON (( task_id = point_task_id ) OR ( abs_id = point_abs_id )) 
-					WHERE abs_id = $abs_id 
+					WHERE abs_id = $abs_id
+					AND point_username = abs_nama	
 				";
 		$query = $this->db->query($query);
 		return $query->result();
