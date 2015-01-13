@@ -486,7 +486,7 @@ class Task_model extends CI_Model
 	public function get_absensi($user,$start_date,$end_date,$limit,$offset)
 	{
 		$where = "";
-		if($user != 'ALL'){ $where .= " AND abs_nama LIKE '$nama' ";}
+		if($user != 'ALL'){ $where .= " AND abs_nama LIKE '$user' ";}
 		if($start_date != 'ALL'){ $where .= " AND DATE(abs_in)>='$start_date' ";}
 		if($end_date != 'ALL'){ $where .= " AND DATE(abs_in)<='$end_date' ";}
 		if($where != ''){$where = " WHERE ".substr($where,4);}
@@ -504,7 +504,7 @@ class Task_model extends CI_Model
 	public function count_absensi($user,$start_date,$end_date)
 	{
 		$where = "";
-		if($user != 'ALL'){ $where .= " AND abs_nama LIKE '$nama' ";}
+		if($user != 'ALL'){ $where .= " AND abs_nama LIKE '$user' ";}
 		if($start_date != 'ALL'){ $where .= " AND DATE(abs_in)>='$start_date' ";}
 		if($end_date != 'ALL'){ $where .= " AND DATE(abs_in)<='$end_date' ";}
 		if($where != ''){$where = " WHERE ".substr($where,4);}

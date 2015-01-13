@@ -74,13 +74,13 @@ class Manage extends CI_Controller {
 	# search absensi
 	function absensi_search()
 	{
-		$nama = $this->input->post('nama');
+		$user = $this->input->post('user');
 		$start_date = $this->input->post('start_date');
 		$end_date = $this->input->post('end_date');
-		if($nama == ""){$nama = "ALL";}
+		if($user == ""){$user = "ALL";}
 		if($start_date == ""){$start_date = 'ALL';}
 		if($end_date == ""){$end_date = 'ALL';}
-		redirect("task/manage/absensi/$nama/$start_date/$end_date");
+		redirect("task/manage/absensi/$user/$start_date/$end_date");
 	}
 	# detail absensi
 	function detail_absensi()
