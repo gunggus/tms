@@ -72,4 +72,31 @@ class Performance_model extends CI_Model
 		return $query->result();
 	}
 	
+	public function get_data_point($point_id)
+	{
+		$query = "SELECT * FROM point WHERE point_id = $point_id";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
+	# insert data
+	public function save_data($tabel,$data)
+	{
+		$this->db->insert($tabel,$data);
+		return $this->db->insert_id();
+	}
+	
+	# update data
+	public function update_data($tabel,$data,$where)
+	{
+		$this->db->where($where);
+		$this->db->update($tabel,$data);
+	}
+	
+	# delete data
+	public function delete_data($tabel,$where)
+	{
+		$this->db->where($where);
+		$this->db->delete($tabel);
+	}
 }

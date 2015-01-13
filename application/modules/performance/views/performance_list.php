@@ -95,7 +95,7 @@
 								<td>
 								<?php 
 									if($this->user_access->level('user_access')>=40):
-									echo anchor("task/action/edit/point/".$row->point_id,"EDIT");
+									echo anchor("performance/action/edit/point/".$row->point_id,"EDIT");
 									endif;
 								?>
 								</td>
