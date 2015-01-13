@@ -109,7 +109,7 @@
 									}else{
 										echo " &nbsp;&nbsp;";	
 										echo "<div class='span4'>";
-										echo form_open("task/action/decline"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","decline");echo form_close();
+										//echo form_open("task/action/decline"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","decline");echo form_close();
 										echo "</div>";
 									}
 									if($row->task_closed == "no"){

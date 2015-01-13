@@ -129,6 +129,7 @@ class Task_model extends CI_Model
 					WHERE tac_nipp = '$nipp'
 					AND task_closed = 'no'
 					AND task_is_applyment = 'yes'
+					AND task_is_approve = 'no'
 					$where
 					ORDER BY task_id DESC
 					$limited
@@ -324,6 +325,7 @@ class Task_model extends CI_Model
 					LEFT JOIN task_access ON tac_category = task_category
 					WHERE tac_nipp = '$nipp'
 					AND task_is_applyment = 'yes'
+					AND task_is_approve = 'no'
 					AND task_closed = 'no'
 					$where
 				";
