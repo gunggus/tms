@@ -104,7 +104,7 @@
 									if($row->task_is_approve == 'no'){
 										echo " &nbsp;&nbsp;";	
 										echo "<div class='span4'>";
-										echo form_open("task/action/approved"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","approve");echo form_close();
+										echo form_open("task/action/add/approve"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","approve");echo form_close();
 										echo "</div>";
 									}else{
 										echo " &nbsp;&nbsp;";	

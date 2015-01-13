@@ -104,7 +104,7 @@
 					<div class="row-form">
                         <label for="inputPoint" class="span2 col-sm-2 control-label"> Duration </label>
                         <div class="span1" ><?php echo form_input("tm_duration",""); ?></div>
-						<div class="span1" > minutes</div>
+						<div class="span1" > hours</div>
                     </div>  
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Description  </label>

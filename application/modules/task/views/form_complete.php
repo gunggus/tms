@@ -94,18 +94,18 @@
 					<div class="row-form">
                         <label for="inputDuration" class="span2 col-sm-2 control-label"> Scheduled Duration  </label>
                         <div class="span1 col-sm-1">
-                          <?php echo form_input("task_sch_duration",$row->task_sch_duration," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' readonly "); ?>
+                          <?php echo form_input("task_sch_duration",$row->task_sch_duration," id='inputDuration' class='form-control' placeholder='Project Duration in hours' readonly "); ?>
 						</div>
 						<div class="span1 col-sm-1">
-							minutes
+							hours
 						</div>
 						<label for="inputDuration" class="span2 col-sm-2 control-label"> Actual Duration  </label>
                         <div class="span1 col-sm-1">
-						  <?php $task_act_duration = round(((time() - strtotime($row->task_act_start))/60),0) ;?>	
-                          <?php echo form_input("task_act_duration",$task_act_duration," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' readonly "); ?>
+						  <?php $task_act_duration = round(((time() - strtotime($row->task_act_start))/3600),0) ;?>	
+                          <?php echo form_input("task_act_duration",$task_act_duration," id='inputDuration' class='form-control' placeholder='Project Duration in hours' readonly "); ?>
 						</div>
 						<div class="span1 col-sm-1">
-							minutes
+							hours
 						</div>
 					</div>  
 					<div class="row-form">

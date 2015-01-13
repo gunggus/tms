@@ -164,34 +164,34 @@
 					<div class="row-form">
                         <label for="inputDuration" class="span2 col-sm-2 control-label"> Scheduled Duration  </label>
                         <div class="span1 col-sm-1">
-                          <?php echo form_input("task_sch_duration_1",""," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+                          <?php echo form_input("task_sch_duration_1",""," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
 						</div>
 						<div class="span1 col-sm-1">
-							minutes
+							hours
 						</div>
 						<div class="span1 col-sm-1">
 						s/d
 						</div>
 						<div class="span1 col-sm-1">
-                          <?php echo form_input("task_sch_duration_2",""," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+                          <?php echo form_input("task_sch_duration_2",""," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
 						</div>
 						<div class="span1 col-sm-1">
-							minutes
+							hours
 						</div>
 					</div>  
 					<div class="row-form">
                     	<label for="inputDuration" class="span2 col-sm-2 control-label"> Actual Duration  </label>
                         <div class="span1 col-sm-1">
-						  <?php echo form_input("task_act_duration_1",""," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+						  <?php echo form_input("task_act_duration_1",""," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
 						</div>
 						<div class="span1 col-sm-1">
-							minutes
+							hours
 						</div>
 						<div class="span1 col-sm-1">
 						s/d	
 						</div>
 						<div class="span1 col-sm-1">
-						  <?php echo form_input("task_act_duration_2",""," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+						  <?php echo form_input("task_act_duration_2",""," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
 						</div>
 						<div class="span1 col-sm-1">
 							minutes

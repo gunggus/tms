@@ -2,7 +2,7 @@
 
 $config['header'] = 'wp-content/themes/ods/templates/header.php';
 $config['footer'] = 'wp-content/themes/ods/templates/footer.php';
-
+date_default_timezone_set('Asia/Singapore'); 
 /*
 |--------------------------------------------------------------------------
 | Base Site URL

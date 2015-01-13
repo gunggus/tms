@@ -45,6 +45,18 @@
                         </div>
                     </div>  
 					<div class="row-form">
+                        <label for="inputNama" class="span2 col-sm-2 control-label"> Skill </label>
+                        <div class="span4 col-sm-4">
+                          <input type="text" class="form-control" value='<?php $row->task_skill; ?>' placeholder="Task Skill" name="task_skill">
+                        </div>
+                    </div>  
+					<div class="row-form">
+                        <label for="inputNama" class="span2 col-sm-2 control-label"> Skill Point </label>
+                        <div class="span4 col-sm-4">
+                          <input type="text" class="form-control" value='<?php $row->task_skill_point; ?>' placeholder="Task Skill Point" name="task_skill_point">
+                        </div>
+                    </div>  
+					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Point </label>
                         <div class="span4 col-sm-4">
                           <input type="text" class="form-control" value='<?php $row->task_point; ?>' placeholder="Task Point" name="task_point">
@@ -77,7 +89,7 @@
 					<div class="row-form">
                         <label for="inputDuration" class="span2 col-sm-2 control-label"> Duration  </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_duration",$row->task_sch_duration," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+                          <?php echo form_input("task_sch_duration",$row->task_sch_duration," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
 						</div>
                     </div>  
 					<div class="row-form">
@@ -95,7 +107,7 @@
 					<div class="row-form">
                         <label for="inputDuration" class="span2 col-sm-2 control-label"> Apply By  </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_created_by",$row->task_created_by," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+                          <?php echo form_input("task_created_by",$row->task_created_by," id='inputDuration' class='form-control' placeholder='' "); ?>
 						</div>
                     </div>  
 					<div class="row-form">
@@ -104,7 +116,7 @@
                         </div>
                     </div>            
                                             
-				<?php echo form_close(); ?>                    
+				<?php } echo form_close(); ?>                    
                     
         			<?php } ?>
         

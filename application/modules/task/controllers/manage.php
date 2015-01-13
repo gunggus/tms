@@ -12,7 +12,6 @@ class Manage extends CI_Controller {
 	{
         parent::__construct();
 		$this->load->model('task_model', '', TRUE);
-		
 		# user restriction
 		if ($this->session->userdata('logged_in')):
 			if($this->module_management->module_active('module_active') == FALSE):redirect('messages/error/module_inactive');endif;
@@ -21,7 +20,7 @@ class Manage extends CI_Controller {
 		else:
 			redirect('user/pin_login'); 	
 		endif;	
-    }
+	}
 
 	function index()
 	{

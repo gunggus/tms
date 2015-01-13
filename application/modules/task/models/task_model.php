@@ -27,7 +27,7 @@ class Task_model extends CI_Model
 		$result = $query->result();
 		foreach($result as $row){
 			$sch_finish = $row->tm_run_time;
-			$sch_finish = mdate("%Y-%m-%d %H:%i:%s", (strtotime($sch_finish) + ( 60 * $row->tm_duration)));
+			$sch_finish = mdate("%Y-%m-%d %H:%i:%s", (strtotime($sch_finish) + ( 3600 * $row->tm_duration)));
 			
 			$data = array(
 				'task_master_id' => $row->tm_id,
@@ -543,7 +543,7 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		$result = $query->result();
 		$minpoint = 0;
-		foreach($result as $row){$minpoint = $row->pt_point;}
+		foreach($result as $row){$minpoint = $row->pt_min_point;}
 		return $minpoint;
 	}
 	public function get_shift($shift)
@@ -576,5 +576,11 @@ class Task_model extends CI_Model
 		$query = " SELECT * FROM task_access LEFT JOIN user_identity ON ta_nipp = ui_nipp $where ";
 		$query = $this->db->query($query);
 		return $query->num_rows();
+	}
+	public function get_data_point($point_id)
+	{
+		$query = "SELECT * FROM point WHERE point_id = $point_id";
+		$query = $this->db->query($query);
+		return $query->result();
 	}
 }

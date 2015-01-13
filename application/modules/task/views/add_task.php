@@ -89,7 +89,7 @@
 					<div class="row-form">
                         <label for="inputDuration" class="span2 col-sm-2 control-label"> Duration  </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_duration",""," id='inputDuration' class='form-control' placeholder='Project Duration in minutes' "); ?>
+                          <?php echo form_input("task_sch_duration",""," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
 						</div>
                     </div>  
 					<div class="row-form">

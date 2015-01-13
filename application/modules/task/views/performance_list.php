@@ -4,14 +4,13 @@
             <div class="icon">
                 <span class="ico-arrow-right"></span>
             </div>
-            <h1>Task</h1>
-        	<?php echo "<div align='right'>".anchor("task/action/add/task","<input type='button' value='add new task' >")."</div>"; ?>
-		</div>
+            <h1>Performance</h1>
+        </div>
 
       <!-- row title -->
       <div class="row">
         <div class="col-lg-12">
-			<h4 class="page-title"><?php echo anchor('task/dashboard', 'TMS', 'title="Task Management System Dashboard"');?> <i class="fa fa-angle-double-right">TASK LIST</i> </h4>
+			<h4 class="page-title"><?php echo anchor('task/dashboard', 'TMS', 'title="Task Management System Dashboard"');?> <i class="fa fa-angle-double-right">Performance</i> </h4>
 		</div>
       </div>
       <!-- row -->
@@ -96,7 +95,7 @@
 								<td>
 								<?php 
 									if($this->user_access->level('user_access')>=40):
-									echo anchor("action/edit/point/".$row->point_id,"EDIT");
+									echo anchor("task/action/edit/point/".$row->point_id,"EDIT");
 									endif;
 								?>
 								</td>
