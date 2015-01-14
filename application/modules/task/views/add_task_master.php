@@ -62,13 +62,13 @@
                     </div>  
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Start Time </label>
-                        <div class="span1 col-sm-2">
+                        <div class="span2 col-sm-2">
                           <input type="text" class="mask_date" placeholder="yyyy-mm-dd" name="tm_start_time" value="<?php echo mdate("%Y-%m-%d",time());?>">
                         </div>
 						<div class="span4 col-sm-2">
-							<input type="text" class="span1" placeholder="hh" name="tm_start_hour" value="<?php echo mdate("%H",time());?>">:
-							<input type="text" class="span1" placeholder="mm" name="tm_start_minute" value="<?php echo mdate("%i",time());?>">:
-							<input type="text" class="span1" placeholder="ss" name="tm_start_second" value="<?php echo "00";?>">
+							<input type="text" class="span2" placeholder="hh" name="tm_start_hour" value="<?php echo mdate("%H",time());?>">:
+							<input type="text" class="span2" placeholder="mm" name="tm_start_minute" value="<?php echo mdate("%i",time());?>">:
+							<input type="text" class="span2" placeholder="ss" name="tm_start_second" value="<?php echo "00";?>">
 						</div>
                     </div>  
 					<div class="row-form">
@@ -95,12 +95,14 @@
 							?>
 						</div>
 					</div>
+					<!--
 					<div class="row-form">
                         <label for="inputPoint" class="span2 col-sm-2 control-label"> Point </label>
                         <div class="span4 col-sm-4">
                           <?php echo form_input("tm_point","","class='form-control'"); ?>
 						</div>
-                    </div>  
+                    </div>
+					-->	
 					<div class="row-form">
                         <label for="inputPoint" class="span2 col-sm-2 control-label"> Duration </label>
                         <div class="span1" ><?php echo form_input("tm_duration",""); ?></div>
