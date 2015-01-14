@@ -37,56 +37,64 @@
 					echo form_open('task/action/save_child_task', 'class="form-horizontal"'); 
 					echo  form_hidden("task_master_id",$master_id);
 					echo  form_hidden("task_parent_id",$parent_id);
+					echo  form_hidden("task_point",$row_parent->task_point);
+					echo  form_hidden("task_category",$row_parent->task_category);
+					echo  form_hidden("task_skill",$row_parent->task_skill);
+					echo  form_hidden("task_skill_point",$row_parent->task_skill_point);
+					echo  form_hidden("task_point",$row_parent->task_point);
+					echo  form_hidden("task_sch_start",$row_parent->task_sch_start);
+					echo  form_hidden("task_sch_finish",$row_parent->task_sch_finish);
+					
 					?>
                     
                     <div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Name </label>
                         <div class="span4 col-sm-4">
-                          <input type="text" class="form-control" placeholder="Task Name" name="task_name">
+                          <input type="text" value="<?php $row_parent->task_name; ?>" class="form-control" placeholder="Task Name" name="task_name">
                         </div>
 						<label for="inputDuration" class="span2 col-sm-2 control-label"> Duration  </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_duration",""," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
+                          <?php echo form_input("task_sch_duration",$row_parent->task_sch_duration," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
 						</div>
                     </div>  
+					<!--
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
                         <div class="span4 col-sm-4">
 							<?php 
+							/*
 							foreach($list_cat as $lc){
 								$vc = $lc->tc_category;
 								$var_category[$vc] = $vc;
 							}
 							echo form_dropdown("task_category",$var_category,$cat);	
+							*/
 							?>
 						</div>
 						<label for="inputNama" class="span2 col-sm-2 control-label"> Skill </label>
                         <div class="span4 col-sm-4">
 							<?php 
+							/* 
 							foreach($list_skill as $ls){
 								$vs = $ls->skill_level.";".$ls->skill_point;
 								$var_skill[$vs] = $ls->skill_level." [".$ls->skill_point."]";
 							}
 							echo form_dropdown("task_skill",$var_skill);	
+							*/
 							?>
 						</div>
-						<!--
-						<label for="inputPoint" class="span2 col-sm-2 control-label"> Point </label>
-                        <div class="span4 col-sm-4">
-                          <?php //echo form_input("task_point","","class='form-control'"); ?>
-						</div>
-						-->
-                    </div>  
+					</div>  
 					<div class="row-form">
                         <label for="inputStart" class="span2 col-sm-2 control-label"> Scheduled Start On </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_start",""," id='inputStart' class='mask_date'"); ?>
+                          <?php //echo form_input("task_sch_start",""," id='inputStart' class='mask_date'"); ?>
 						</div>
                         <label for="inputFinish" class="span2 col-sm-2 control-label"> Scheduled Finish On </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_finish",""," id='inputFinish' class='mask_date'"); ?>
+                          <?php //echo form_input("task_sch_finish",""," id='inputFinish' class='mask_date'"); ?>
 						</div>
                     </div>  
+					-->
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Description  </label>
                         <div class="span4 col-sm-4">

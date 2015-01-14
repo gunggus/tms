@@ -521,14 +521,20 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
-	public function get_task_by_abs_id($abs_id,$date)
+	public function get_task_by_abs_id($abs_id)
 	{
+		/*
 		$query = " 	SELECT * FROM absensi 
 					JOIN task ON (abs_in < task_complete_on  AND  task_complete_on < '$date')	
 					JOIN point ON (( task_id = point_task_id )) 
 					WHERE abs_id = $abs_id
 					AND point_username = abs_nama
 					AND task_complete_by = point_username	
+				";
+		*/
+		$query = "  SELECT * FROM point
+					LEFT JOIN task ON task_id = point_task_id 
+					WHERE point_abs_id = $abs_id
 				";
 		$query = $this->db->query($query);
 		return $query->result();
@@ -584,8 +590,18 @@ class Task_model extends CI_Model
 	}
 	public function get_data_point($point_id)
 	{
-		$query = "SELECT * FROM point WHERE point_id = $point_id";
+		$query = " SELECT * FROM point WHERE point_id = $point_id ";
 		$query = $this->db->query($query);
 		return $query->result();
 	}
+	public function get_last_abs_id($ui_nipp)
+	{
+		$query = " SELECT * FROM absensi WHERE abs_nipp LIKE '$ui_nipp' ORDER BY abs_id DESC LIMIT 1 ";
+		$query = $this->db->query($query);
+		$result = $query->result();
+		foreach($result as $row){
+			return $row->abs_id;
+		}
+	}
+	
 }

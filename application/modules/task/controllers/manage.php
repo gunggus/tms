@@ -107,7 +107,7 @@ class Manage extends CI_Controller {
 		
 		#data preparing
 		$data['result'] = $this->task_model->get_absensi_by_id($abs_id);
-		$data['result_task'] = $this->task_model->get_task_by_abs_id($abs_id,$date);
+		$data['result_task'] = $this->task_model->get_task_by_abs_id($abs_id);
 			
 		# sidebar nav 
 		$data['menu_task'] = 'class="current"' ;
