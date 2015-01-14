@@ -81,7 +81,6 @@
 						 <?php 
 						foreach($result as $row){ 
 							$date = substr($row->point_date,0,9);
-							$date = $row->point_date;
 							$point  = $row->point + $row->reward - $row->penalty;
 							echo "['".$date."',".$point.",".$target."],";
 						} 
