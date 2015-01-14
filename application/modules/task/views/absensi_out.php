@@ -100,9 +100,9 @@
 					<?php } ?>
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label">   </label>
-                        <div class="span4 col-sm-4">
+                        <div class="span10 col-sm-10">
 						<table>
-						<tr><td class="span1">No</td><td class="span1">Task</td><td class="span1">Point</td></tr>
+						<tr><td class="span1">No</td><td class="span8">Task</td><td class="span1">Point</td></tr>
 						<?php 
 						$no = 0;
 						$performance = 0;

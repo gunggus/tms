@@ -99,20 +99,21 @@
 					<?php } ?>
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label">   </label>
-                        <div class="span4 col-sm-4">
+                        <div class="span10 col-sm-10">
 						<table>
-						<tr><td class="span1">No</td><td class="span1">Task</td><td class="span1">Point</td></tr>
+						<tr><td class="span1">No</td><td class="span8">Task</td><td class="span1">Point</td></tr>
 						<?php 
 						$no = 0;
 						$performance = 0;
 						foreach($result_task as $row_task){ 
 						$no++;
-						$performance = $performance + $row_task->task_performance;
+						$varpoint = $row_task->point_point + $row_task->point_reward - $row_task->point_penalty;
+						$performance = $performance + $varpoint;
 						?>
-						<tr><td><?php echo $no; ?></td><td><?php echo $row_task->task_name; ?></td><td><?php echo $row_task->task_performance; ?></td></tr>
+						<tr><td><?php echo $no; ?></td><td><?php echo $row_task->point_description; ?></td><td><?php echo $varpoint; ?></td></tr>
 						<?php } 
 						?>
-						<tr><td colspan="3"><?php echo "Total Point : $performance".form_hidden('performance',$performance,"readonly");?></td></tr>
+						<tr><td colspan="3"><?php echo "Total Point  : $performance".form_hidden('performance',$performance,"readonly");?></td></tr>
 						</table>
 						</div>
                     </div>  
