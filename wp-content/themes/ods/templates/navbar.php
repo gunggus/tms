@@ -1,6 +1,7 @@
 <body>    
-    <div id="loader"><img src="<?php echo base_url(); ?>wp-content/themes/ods/img/loader.gif"/></div>
-    <div class="wrapper">
+    <!-- <div id="loader"><img src="<?php echo base_url(); ?>wp-content/themes/ods/img/loader.gif"/></div>
+    -->
+	<div class="wrapper">
         
 		<div class="body">
             <ul class="navigation">
