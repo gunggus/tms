@@ -80,7 +80,7 @@
 								<td rowspan="2" <?php echo "$bg";?>><?php echo $i;?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_skill);?></td>
-								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_name);?></td>
+								<td rowspan="2" <?php echo "$bg";?>><?php echo anchor("task/detail/task/".$row->task_id,strtoupper($row->task_name));?></td>
 								<td rowspan="2" <?php echo "$bg";?>><?php echo strtoupper($row->task_point);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_start);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_finish);?></td>

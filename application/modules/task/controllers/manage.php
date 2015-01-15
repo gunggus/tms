@@ -16,7 +16,6 @@ class Manage extends CI_Controller {
 		if ($this->session->userdata('logged_in')):
 			if($this->module_management->module_active('module_active') == FALSE):redirect('messages/error/module_inactive');endif;
 			if($this->user_access->level('user_access')==0):redirect('messages/error/not_authorized');endif;
-			$this->task_model->generate_task();
 		else:
 			redirect('user/pin_login'); 	
 		endif;	
@@ -121,7 +120,10 @@ class Manage extends CI_Controller {
 	{
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
-		  
+			
+		$this->load->model('generate_model');
+		$this->generate_model->generate_task();
+		
 		# data
 		$ui_nama = $session_data['ui_nama'];
 		$data['ui_nama'] = $ui_nama;
