@@ -43,12 +43,24 @@
                         </div>
                     </div>  
 					<div class="row-form">
+                        <label for="inputNama" class="span2 col-sm-2 control-label"> Unit </label>
+                        <div class="span4 col-sm-4">
+							<?php 
+							foreach($list_unit as $lu){
+								$vu = $lu->vu_name;
+								$var_unit[$vu] = strtoupper($vu);
+							}
+							echo form_dropdown("task_unit",$var_unit);	
+							?>
+						</div>
+                    </div>
+					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
                         <div class="span4 col-sm-4">
 							<?php 
 							foreach($list_cat as $lc){
 								$vc = $lc->tc_category;
-								$var_category[$vc] = $vc;
+								$var_category[$vc] = strtoupper($vc);
 							}
 							echo form_dropdown("task_category",$var_category,$cat);	
 							?>
@@ -77,13 +89,13 @@
 					<div class="row-form">
                         <label for="inputStart" class="span2 col-sm-2 control-label"> Scheduled Start On </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_start",""," id='inputStart' class='mask_date'"); ?>
+                          <?php echo form_input("task_sch_start",""," id='inputStart' class='mask_datetime'"); ?>
 						</div>
                     </div>  
 					<div class="row-form">
                         <label for="inputFinish" class="span2 col-sm-2 control-label"> Scheduled Finish On </label>
                         <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_finish",""," id='inputFinish' class='mask_date'"); ?>
+                          <?php echo form_input("task_sch_finish",""," id='inputFinish' class='mask_datetime'"); ?>
 						</div>
                     </div>  
 					<div class="row-form">

@@ -42,12 +42,13 @@
 							<tr>
 								<td rowspan="2">No</td>
 								<td rowspan="2">Task</td>
+								<td rowspan="2">Unit</td>
+								<td rowspan="2">Category</td>
 								<td rowspan="2">Skill</td>
 								<td rowspan="2">Point</td>
 								<td colspan="4"><div align="center">Every</div></td>
 								<td rowspan="2">Run Time</td>
 								<td rowspan="2">Duration</td>
-								<td rowspan="2">Category</td>
 								<td rowspan="2">Description</td>
 								<td rowspan="2">Update By</td>
 								<td rowspan="2">Update On</td>
@@ -71,6 +72,8 @@
 							<tr>
 								<td <?php echo $bg;?>><?php echo $i;?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_task);?></td>
+								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_unit);?></td>
+								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_category);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_skill);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_point);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_year);?></td>
@@ -79,7 +82,6 @@
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_hour);?></td>
 								<td <?php echo $bg;?>><?php if($row->tm_run_time == "0000-00-00 00:00:00"){echo strtoupper($row->tm_start_time);}else{echo strtoupper($row->tm_run_time);} ?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_duration);?></td>
-								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_category);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_description);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_update_by);?></td>
 								<td <?php echo $bg;?>><?php echo strtoupper($row->tm_update_on);?></td>

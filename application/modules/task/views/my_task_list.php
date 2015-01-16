@@ -6,7 +6,17 @@
             </div>
             <h1>Task</h1>
 			<?php echo "<div align='right'>".anchor("task/action/add/task","<input type='button' value='add new task' >")."</div>"; ?>
-			</h2>
+			<div class="span7"></div>
+			<div class="span1"><button class='btn btn-warning' type='button' title="<?php echo " $count_open open task";?>"><?php echo " $count_open";?></button></div>
+			<div class="span1"><button class='btn btn-info' type='button' title="<?php echo " $count_taken taken task";?>"><?php echo " $count_taken";?></button></div>
+			<div class="span1"><button class='btn btn-success' type='button' title="<?php echo " $count_complete complete task";?>"><?php echo " $count_complete";?></button></div>
+			<!--
+			<a href="#" class="swidget dblue clean" size="20px" width="20px">
+                <div class="value">
+                     5,231
+                </div>                             
+            </a>
+			-->
 		</div>
 
       <!-- row title -->
@@ -40,22 +50,21 @@
           <div class="block">
             <div class="head purple">
 			    <div class="icon"><span class="ico-location"></span></div>
-                <h2>Task List</h2>
+                <h2>MY Task List</h2>
                 <ul class="buttons">
                     <li><a href="#" onClick="source('table_hover'); return false;"><div class="icon"><span class="ico-info"></span></div></a></li>
                 </ul>
 			</div>  
-            <!-- wigget content -->
+		    <!-- wigget content -->
             <div class="data-fluid">
 					<?php if($this->session->userdata('logged_in')) { ?>
             		<?php if(isset($message)){echo '<div class="badge-warning"><p class="text-danger">&nbsp; message : '.$message.'</p></div>';} ?>
             		<?php if(validation_errors()){echo '<div class="badge-warning">'.validation_errors().'</div>';} ?>
-                    <table cellpadding="0" cellspacing="0" width="100%" class="table table-hover">
+                    <table cellpadding="0" cellspacing="0" width="100%" class="table tickets">
                         <thead>
 							<tr>
 								<td>No</td>
 								<td>Task</td>
-								<td>Unit</td>
 								<td>Category</td>
 								<td>Skill</td>
 								<td>Point</td>
@@ -79,7 +88,6 @@
 							<tr>
 								<td <?php echo "$bg";?>><?php echo $i;?></td>
 								<td <?php echo "$bg";?>><?php echo anchor("task/detail/task/".$row->task_id,strtoupper($row->task_name));?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_unit);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_skill);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_point);?></td>
@@ -97,12 +105,7 @@
 							</tr>
 							<?php } ?>
 						</tbody>
-						<tfoot>
-							<tr>
-								<td colspan="11"> <?php echo $this->pagination->create_links();?> </td>
-							</tr>
-						</tfoot>						
-                    </table>
+					</table>
         			<?php } ?>
         
  			</div>
@@ -114,6 +117,7 @@
           </div>
           <!-- col -->
           
+		  
 		  <!-- announcment -->
 		  <div class="span4">
 			<div class="span2"></div>
@@ -147,17 +151,18 @@
 						?>
 						<div class="item" id="<?php echo $faq;?>">
                             <div class="title"><?php echo $ra->tan_title; ?></div>
-                            <div class="text"><p><?php echo $ra->tan_detail; ?></p></div>
+                            <div class="text">
+								<p><?php echo $ra->tan_detail; ?></p>
+							</div>
                         </div>
 						<?php	
-							}
+						}
 						?>
 				</div>                    
-
+				
 			</div>
 		  </div>
 		  <!-- end of announcement -->
-		  
 		  
         </div>
         <!-- row -->
