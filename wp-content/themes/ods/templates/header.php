@@ -39,10 +39,11 @@
     <script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/plugins/shbrush/shBrushXml.js'></script>
     <script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/plugins/shbrush/shBrushJScript.js'></script>
     <script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/plugins/shbrush/shBrushCss.js'></script>    
-    
+    <script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/plugins/cleditor/jquery.cleditor.js'></script>       
     <script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/plugins.js'></script>
     <script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/charts.js'></script>
-    <script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/actions.js'></script>
+    <script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/plugins/other/faq.js'></script>
+	<script type='text/javascript' src='<?php echo base_url(); ?>wp-content/themes/ods/js/actions.js'></script>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
     
 </head>
