@@ -33,6 +33,7 @@ class Generate_model extends CI_Model
 				'task_master_id' => $row->tm_id,
 				'task_status' => 'open',
 				'task_name' => $row->tm_task,
+				'task_unit' => $row->tm_unit,
 				'task_category' => $row->tm_category,
 				'task_skill' => $row->tm_skill,
 				'task_skill_point' => $row->tm_skill_point,
