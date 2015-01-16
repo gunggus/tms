@@ -14,7 +14,7 @@ class Task_model extends CI_Model
 		$where = "";
 		$limited = "";
 		if($status == 'taken'){ $where .= " AND task_taken_by = '$username' ";}
-		if($status == 'complete'){ $where .= " AND task_update_by = '$username' ";}
+		if($status == 'complete'){ $where .= " AND task_complete_by = '$username' ";}
 		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
 		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
 		if($task_id > 0){$where.= " AND task_id = $task_id";}
@@ -37,9 +37,13 @@ class Task_model extends CI_Model
 	{
 		$where = "";
 		$limited = "";
-		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
-		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
-		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		if(($parent_id = 0) AND ($master_id = 0) AND ($task_id > 0)){
+			$where.= " AND task_parent_id = 0";
+		}else{
+			if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+			if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+			if($task_id > 0){$where.= " AND task_id = $task_id";}
+		}
 		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
 		$query = " 	SELECT * FROM task 
 					JOIN task_access ON tac_category = task_category
@@ -52,7 +56,38 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
-	
+	# my task list
+	public function get_my_task($nipp,$status,$ui_nama,$limit,$offset)
+	{
+		$where = "";
+		$limited = "";
+		if($status == "taken"){$where.=" AND task_status = 'taken'  AND  task_taken_by = '$ui_nama' ";}
+		if($limit > 0){ $limited.=" LIMIT $offset,$limit ";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					$where
+					ORDER BY task_id DESC
+					$limited
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	# get all announcement
+	public function get_all_announcement()
+	{
+		$query = " SELECT * FROM task_announcement ORDER BY tan_id DESC LIMIT 50";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	# get task announcement
+	public function get_announcement($announcement)
+	{
+		$query = " SELECT * FROM task_announcement WHERE tan_title LIKE '%$announcement%' ORDER BY tan_id DESC LIMIT 50";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
 	# task applyment
 	public function get_applyment($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
 	{
@@ -139,6 +174,15 @@ class Task_model extends CI_Model
 	{
 		$query = "	SELECT * FROM task_category
 					ORDER BY tc_category ASC
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	# get unit
+	public function get_unit()
+	{
+		$query = "	SELECT * FROM var_unit
+					ORDER BY vu_name ASC
 				";
 		$query = $this->db->query($query);
 		return $query->result();
@@ -240,9 +284,13 @@ class Task_model extends CI_Model
 	public function count_task($nipp,$master_id,$parent_id,$task_id)
 	{
 		$where = "";
-		if($master_id > 0){$where.= " AND task_master_id = $master_id";}
-		if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
-		if($task_id > 0){$where.= " AND task_id = $task_id";}
+		if(($parent_id = 0) AND ($master_id = 0) AND ($task_id > 0)){
+			$where.= " AND task_parent_id = 0";
+		}else{
+			if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+			if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+			if($task_id > 0){$where.= " AND task_id = $task_id";}
+		}
 		$query = " 	SELECT * FROM task 
 					JOIN task_access ON tac_category = task_category
 					WHERE tac_nipp = '$nipp'
@@ -540,6 +588,16 @@ class Task_model extends CI_Model
 		foreach($result as $row){
 			return $row->abs_id;
 		}
+	}
+	public function count_task_status($ui_id,$status)
+	{
+		$where = "";
+		if($status == "open"){$where.=" AND task_created = '$ui_id' AND task_status = 'open' ";}
+		if($status == "taken"){$where.=" AND task_taken = '$ui_id' AND task_status = 'taken' ";}
+		if($status == "complete"){$where.=" AND task_complete = '$ui_id' AND task_status = 'complete' ";}
+		$query = " SELECT * FROM task WHERE task_closed LIKE '%%' $where ORDER BY task_id";
+		$query = $this->db->query($query);
+		return $query->num_rows();
 	}
 	
 }

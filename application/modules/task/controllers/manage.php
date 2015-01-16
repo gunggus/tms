@@ -23,7 +23,7 @@ class Manage extends CI_Controller {
 
 	function index()
 	{
-		redirect("task/manage/task");
+		redirect("task/manage/open");
 	}
 	# list absensi
 	function absensi()
@@ -156,12 +156,52 @@ class Manage extends CI_Controller {
 		$data['count']	= $config['total_rows'];
 		$data['page'] = $page;
 		
+		$data['result_announcement'] = $this->task_model->get_all_announcement();
+		
 		# sidebar nav 
 		$data['menu_task'] = 'class="current"' ;
 		$data['view_manage_task'] = 'class="current"' ;
 		
 		# call views		
 		$this->load->view('task_list', $data);
+	}
+	# list task
+	function my_task()
+	{
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+			
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		  
+		$ui_email = $session_data['ui_email'];
+		$data['ui_email'] = $ui_email;
+		
+		$ui_level = $session_data['ui_level'];
+		$station = substr($ui_level,4,2);
+		$lvl = substr($ui_level,6);  
+		
+		$status = "taken";
+		#data preparing
+		$data['result'] = $this->task_model->get_my_task($ui_nipp,$status,$ui_nama,0,0);
+		$announcement = $this->input->post("search_announcement");
+		$data['result_announcement'] = $this->task_model->get_announcement($announcement);
+		$data['count_open'] = $this->task_model->count_task_status($ui_id,"open");
+		$data['count_taken'] = $this->task_model->count_task_status($ui_id,"taken");
+		$data['count_complete'] = $this->task_model->count_task_status($ui_id,"complete");
+		# sidebar nav 
+		$data['menu_task'] = 'class="current"' ;
+		$data['view_manage_task'] = 'class="current"' ;
+		
+		# call views		
+		$this->load->view('my_task_list', $data);
 	}
 	# list task applyment
 	function applyment()
@@ -247,6 +287,7 @@ class Manage extends CI_Controller {
 		$data['count']	= $config['total_rows'];
 		$data['page'] = $page;
 		
+		$data['result_announcement'] = $this->task_model->get_all_announcement();
 		# sidebar nav 
 		$data['menu_task'] = 'class="current"' ;
 		$data['view_manage_task'] = 'class="current"' ;
@@ -293,6 +334,7 @@ class Manage extends CI_Controller {
 		$data['count']	= $config['total_rows'];
 		$data['page'] = $page;
 		
+		$data['result_announcement'] = $this->task_model->get_all_announcement();
 		# sidebar nav 
 		$data['menu_task'] = 'class="current"' ;
 		$data['view_manage_task'] = 'class="current"' ;
@@ -339,6 +381,7 @@ class Manage extends CI_Controller {
 		$data['count']	= $config['total_rows'];
 		$data['page'] = $page;
 		
+		$data['result_announcement'] = $this->task_model->get_all_announcement();
 		# sidebar nav 
 		$data['menu_task'] = 'class="current"' ;
 		$data['view_manage_task'] = 'class="current"' ;
@@ -384,6 +427,7 @@ class Manage extends CI_Controller {
 		$data['count']	= $config['total_rows'];
 		$data['page'] = $page;
 		
+		$data['result_announcement'] = $this->task_model->get_all_announcement();
 		# sidebar nav 
 		$data['menu_task'] = 'class="current"' ;
 		$data['view_manage_task'] = 'class="current"' ;
@@ -507,6 +551,7 @@ class Manage extends CI_Controller {
 		#data preparing
 		$data['result'] = $this->task_model->get_task_search($ui_nipp);
 		
+		$data['result_announcement'] = $this->task_model->get_all_announcement();
 		# sidebar nav 
 		$data['menu_task'] = 'class="current"' ;
 		$data['view_manage_task'] = 'class="current"' ;

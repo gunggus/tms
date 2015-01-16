@@ -50,6 +50,7 @@ class Action extends CI_Controller {
 		
 		# get option data
 		$data['list_cat'] = $this->task_model->get_task_category();
+		$data['list_unit'] = $this->task_model->get_unit();
 		$data['list_skill'] = $this->task_model->get_skill_category();
 		if($data['master_id'] > 0){$data['cat'] = $this->task_model->get_task_master_category($data["master_id"]);}
 		else{$data['cat'] = "";}
@@ -74,12 +75,16 @@ class Action extends CI_Controller {
 				$this->load->view("add_task_applyment",$data);
 		}
 		elseif($data['main_field'] == "approve"){
-				if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
-				$limit = 0;
-				$offset = 0;
-				$data['task_id'] = $this->input->post('task_id');
-				$data['result'] = $this->task_model->get_task($ui_nipp,0,0,$data['task_id'],$limit,$offset);
-				$this->load->view("approve_task_applyment",$data);
+			if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+			$limit = 0;
+			$offset = 0;
+			$data['task_id'] = $this->input->post('task_id');
+			$data['result'] = $this->task_model->get_task($ui_nipp,0,0,$data['task_id'],$limit,$offset);
+			$this->load->view("approve_task_applyment",$data);
+		}
+		elseif($data['main_field'] == "announcement"){
+			if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+			$this->load->view("add_announcement",$data);
 		}
 		else{$this->load->view("add_task",$data);}
 	}
@@ -97,6 +102,7 @@ class Action extends CI_Controller {
 			redirect("messages/error/error_404");
 		}
 	}
+	
 	public function do_edit_point()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
@@ -167,6 +173,7 @@ class Action extends CI_Controller {
 			'tm_start_time' => $tm_start_time,
 			'tm_run_time' => $tm_start_time,
 			'tm_duration' => $this->input->post('tm_duration'),
+			'tm_unit' => $this->input->post('tm_unit'),
 			'tm_category' => $this->input->post('tm_category'),
 			'tm_description' => $this->input->post('tm_description'), 
 			'tm_created_by' => $ui_nama, 
@@ -180,7 +187,7 @@ class Action extends CI_Controller {
 	public function save_task()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
-		if($this->user_access->level('user_access')<40):redirect('messages/error/not_authorized');endif;
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
 
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
@@ -201,6 +208,7 @@ class Action extends CI_Controller {
 			'task_master_id' => $this->input->post('task_master_id'),
 			'task_status' => 'open',
 			'task_name' => $this->input->post('task_name'),
+			'task_unit' => $this->input->post('task_unit'),
 			'task_category' => $this->input->post('task_category'),
 			'task_skill' => $skill,
 			'task_skill_point' => $skillpoint,
@@ -251,6 +259,7 @@ class Action extends CI_Controller {
 			'task_parent_id' => $this->input->post('task_parent_id'),
 			'task_status' => 'open',
 			'task_name' => $this->input->post('task_name'),
+			'task_unit' => $this->input->post('task_unit'),
 			'task_category' => $this->input->post('task_category'),
 			'task_skill' => $this->input->post('task_skill'),
 			'task_skill_point' => $this->input->post('task_skill_point'),
@@ -333,6 +342,18 @@ class Action extends CI_Controller {
  		);
 		$task_id = $this->task_model->save_data("task",$data);
 		redirect('task/manage/applyment','refresh');
+	}
+	# save announcement
+	public function save_announcement()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+		$data = array(
+				"tan_title"	=>	$this->input->post('title'),
+				"tan_detail"	=>	$this->input->post('detail'),
+			);
+		$this->task_model->save_data("task_announcement",$data);
+		redirect("task/manage");
 	}
 	# approve applyment
 	public function approve_applyment()
