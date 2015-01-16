@@ -32,6 +32,9 @@ class Detail extends CI_Controller {
 		$session_data = $this->session->userdata('logged_in');
 		
 		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		
 		$ui_nama = $session_data['ui_nama'];
 		$data['ui_nama'] = $ui_nama;
 		
@@ -57,7 +60,7 @@ class Detail extends CI_Controller {
 		$data['history'] = $this->detail_model->get_history_task($task_id);
 		$data['file'] = $this->detail_model->get_file_task($task_id);
 		$data['child'] = $this->detail_model->get_child_task($task_id);
-		
+		$data['stuck_task'] = $this->detail_model->count_status_task($ui_id,"taken"); #count taken task by user
 		$this->load->view('detail_task',$data);
 	}
 	

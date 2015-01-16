@@ -39,6 +39,15 @@ class Detail_model extends CI_Model
 		return $query->result();
 	}
 	
+	public function count_status_task($ui_id,$status)
+	{
+		$where = "";
+		if($status == "taken"){$where.="  AND task_status = 'taken'  AND  task_taken = '$ui_id'  ";}
+		$query = " SELECT * FROM task WHERE task_closed = 'no' AND task_closed = 'no' $where ";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	
 	# insert data
 	public function save_data($tabel,$data)
 	{

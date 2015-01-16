@@ -10,7 +10,7 @@
       <!-- row title -->
       <div class="row">
         <div class="col-lg-12">
-          <h8 class="page-title"><?php echo anchor('task/manage', 'TMS', 'title="Task Management System"');?> <i class="fa fa-angle-double-right"></i> DETAIL TASK</h8>
+          <h4 class="page-title"><?php echo anchor('task/manage', 'TMS', 'title="Task Management System"');?> <i class="fa fa-angle-double-right"></i> DETAIL TASK</h4>
         </div>
       </div>
       <!-- row -->
@@ -40,12 +40,64 @@
 				$parent_id = $row->task_parent_id;
  				?>
 				<div class="row-form">
-                    <label for="inputNama" class="span2 col-sm-2 control-label"> Name </label>
-                    <div class="span8 col-sm-8"><?php echo $row->task_name; ?></div>
-                </div>  
+                    <label for="inputNama" class="span2 col-sm-2 control-label"> Task </label>
+                    <div class="span4 col-sm-4"><?php echo "<b>".strtoupper($row->task_name)."</b>"; ?></div>
+					<div class="span4 col-sm-4">
+					<?php 
+					$current = date("Y-m-d H:i:s");
+					if($row->task_closed == "no"){
+						echo " &nbsp;&nbsp;";	
+						echo "<div class='span4'>";
+						echo form_open("task/action/closed"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit",'close',"class='btn btn-warning'");echo form_close();
+						echo "</div>";
+						if(($row->task_status == "open" OR $row->task_status == "reopen") AND ($row->task_sch_start < $current) AND ($row->task_is_child == 'yes'))
+						{ 
+							if($stuck_task > 2){
+								echo " &nbsp;&nbsp;";	
+								echo "<div class='span2' align='right'>";
+								echo '<a href="#bModal" role="button" class="btn" data-toggle="modal">take</a>';
+								echo '<!-- Bootrstrap modal -->
+										<div align="center" id="bModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+												<h3 id="myModalLabel">Warning</h3>
+											</div>
+											<div class="modal-body">
+												<p>You can not take on this task <br/> <b>Please Complete your Previous Task</b> </p>
+											</div>
+											<div class="modal-footer">
+												'.anchor('task/manage/my_task','Go','class="btn btn-warning" aria-hidden="true"').'
+												<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>            
+											</div>
+										</div>               
+									';
+								echo "</div>";
+							}else{
+								echo " &nbsp;&nbsp;";	
+								echo "<div class='span2' align='right'>";
+								echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take","class='btn'");echo form_close();
+								echo "</div>";
+							}
+						}
+						if($row->task_status == "taken" AND $row->task_is_approve == "yes" AND $row->task_taken_by == $ui_nama  )
+						{	
+							echo " &nbsp;&nbsp;";	
+							echo "<div class='span3' align='right'>";
+							echo form_open("task/action/complete"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","complete","class='btn btn-success'");echo form_close();
+							echo "</div>";
+						}
+					}else{
+							echo " &nbsp;&nbsp;";	
+							echo "<div class='span3' align='right'>";
+							echo form_open("task/action/reopen"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","reopen","class='btn btn-info'");echo form_close();
+							echo "</div>";
+					}
+					?>
+					</div>
+				</div>  
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Status </label>
-                    <div class="span8 col-sm-8"><?php echo $row->task_status; if($row->task_closed == 'yes'){ echo "[CLOSED]";} ?></div>
+                    <div class="span8 col-sm-8"><?php echo "<b>".$row->task_status."</b>"; if($row->task_closed == 'yes'){ echo "<b>[CLOSED]</b>";} ?></div>
                 </div>
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
@@ -78,7 +130,7 @@
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Report </label>
                     <div class="span8 col-sm-8"><?php echo $row->task_report; ?></div>
-                </div>  
+                </div> 
 				<?php }	?> 
         	</div>
             <!-- widget content -->
@@ -226,8 +278,8 @@
                     </div>					
 					<div class="input-prepend input-append">
                         <span class="add-on dblue"><span class="icon-envelope icon-white"></span></span>
-						<input type="text" name="text" />                              
-                        <button class="btn dblue" type="button">Send  <span class="icon-arrow-next icon-white"></span></button>
+						<input class="span9" type="text" name="text" />                              
+                        <button class="btn dblue" type="submit">Send  <span class="icon-arrow-next icon-white"></span></button>
                     </div>
 					<?php echo form_close();?>	
                 </div>
