@@ -55,9 +55,11 @@
 							<tr>
 								<td>No</td>
 								<td>Task</td>
+								<!--
 								<td>Unit</td>
 								<td>Category</td>
 								<td>Skill</td>
+								-->
 								<td>Point</td>
 								<td>Finish</td>
 								<?php if($this->uri->segment(3) == 'task'){echo "<td>Status</td>";} ?>
@@ -79,9 +81,11 @@
 							<tr>
 								<td <?php echo "$bg";?>><?php echo $i;?></td>
 								<td <?php echo "$bg";?>><?php echo anchor("task/detail/task/".$row->task_id,strtoupper($row->task_name));?></td>
+								<!--
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_unit);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_skill);?></td>
+								-->
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_point);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_finish);?></td>
 								<?php if($this->uri->segment(3) == 'task'){?>

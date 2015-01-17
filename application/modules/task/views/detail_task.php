@@ -154,9 +154,13 @@
                     <h2>Child Task</h2>
 					<ul class="buttons">
                     <?php if($parent_id == 0){ echo anchor("task/detail/task/$parent_id","<li>GO TO PARENT TASK <div class='icon'><span class='ico-arrow-up'></span></div></li>");} ?>
-                    </ul>                              
-                </div>                
-                <div class="data-fluid">
+                    </ul>
+				</div>                
+                
+				<div class="head blue" align='right'>
+                	<?php echo anchor("task/action/add/child/$task_id","ADD CHILD"," class='btn btn-default' ");?>	
+                </div>
+				<div class="data-fluid">
                     <table cellpadding="0" cellspacing="0" width="100%" class="table">
                         <thead>
                             <tr>
@@ -203,10 +207,13 @@
                     <table cellpadding="0" cellspacing="0" width="100%" class="table">
                         <thead>
                             <tr>
-                                <th width="20%">No</th>
-                                <th width="20%">Status</th>
+                                <th width="5%">No</th>
+                                <th width="10%">Status</th>
                                 <th width="40%">Description</th>
-                                <th width="20%">By</th>
+                                <th width="10%">Start On</th>
+                                <th width="10%">Finish On</th>
+                                <th width="10%">Update On</th>
+                                <th width="10%">Update By</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -219,6 +226,9 @@
 								<td><?php echo $no; ?></td>
 								<td><?php echo $his->tsh_status;?></td>
 								<td><?php echo $his->tsh_report;?></td>
+								<td><?php echo $his->tsh_start;?></td>
+								<td><?php echo $his->tsh_end;?></td>
+								<td><?php echo $his->tsh_update_on;?></td>
 								<td><?php echo $his->tsh_update_by;?></td>
 							</tr>
 							<?php } ?>

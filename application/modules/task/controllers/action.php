@@ -200,22 +200,26 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 		
-		$varskill = explode(';',$this->input->post('task_skill'));
-		$skill = $varskill[0];
-		$skillpoint = $varskill[1]; 
-		$point = $skillpoint * $this->input->post('task_sch_duration');
+		$varcategory = explode(';',$this->input->post('task_category'));
+		$category = $varcategory[0];
+		$skill = $varcategory[1];
+		$skillpoint = $varcategory[2]; 
+		$duration = $varcategory[3]; 
+		//if($this->input->post('task_sch_duration') > 0){$duration = $this->input->post('task_sch_duration');}
+		//$point = $skillpoint * $duration;
+		
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
 			'task_status' => 'open',
 			'task_name' => $this->input->post('task_name'),
 			'task_unit' => $this->input->post('task_unit'),
-			'task_category' => $this->input->post('task_category'),
+			'task_category' => $category,
 			'task_skill' => $skill,
 			'task_skill_point' => $skillpoint,
 			'task_point' => $point,
 			'task_sch_start' => $this->input->post('task_sch_start'),
 			'task_sch_finish' => $this->input->post('task_sch_finish'),
-			'task_sch_duration' => $this->input->post('task_sch_duration'),
+			//'task_sch_duration' => $duration,
 			'task_description' => $this->input->post('task_description'), 
 			'task_created' => $ui_id, 
 			'task_created_by' => $ui_nama, 

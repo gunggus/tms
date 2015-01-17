@@ -41,19 +41,29 @@
                         <div class="span4 col-sm-4">
                           <input type="text" class="form-control" placeholder="Task Name" name="task_name">
                         </div>
-                    </div>  
+                    </div>
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Unit </label>
                         <div class="span4 col-sm-4">
-							<?php 
-							foreach($list_unit as $lu){
-								$vu = $lu->vu_name;
-								$var_unit[$vu] = strtoupper($vu);
-							}
-							echo form_dropdown("task_unit",$var_unit);	
-							?>
+							<select name="task_unit" id="unit" class="form-control">
+								<option value="">select unit</option>
+								<?php foreach($list_unit as $lu){ ?>
+								<option value="<?php echo $lu->vu_name; ?>"><?php echo strtoupper( $lu->vu_name ) ?></option>
+								<?php } ?>
+							</select>
 						</div>
                     </div>
+					
+					<div class="row-form">
+						<label for="inputUnit" class="span2 col-sm-2 control-label">Category</label>
+						<div class="span4 col-sm-6">
+							<select  name="task_category" id="category" class="form-control">
+								<option value="">select category</option>
+							</select>
+						</div>
+					</div>
+	  
+					<!--
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
                         <div class="span4 col-sm-4">
@@ -77,7 +87,8 @@
 							echo form_dropdown("task_skill",$var_skill);	
 							?>
 						</div>
-                    </div>  
+                    </div>
+					-->	
 					<!--
 					<div class="row-form">
                         <label for="inputPoint" class="span2 col-sm-2 control-label"> Point </label>
@@ -103,7 +114,7 @@
                         <div class="span4 col-sm-4">
                           <?php echo form_input("task_sch_duration",""," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
 						</div>
-                    </div>  
+                    </div>
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Description  </label>
                         <div class="span4 col-sm-4">
@@ -135,3 +146,28 @@
 
 </div>
 <?php include($this->config->item('footer')); ?>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+	
+		/* pengaturan id select dropdown */
+		$_unit			= $('select#unit');
+		$_category		= $('select#category');
+		
+		$_unit.change(function(){
+		$this = $(this);
+
+			$.get( '<?php echo base_url() ?>task/ajax_controller/category_task/' + $this.val(), function(data){
+			$_category.html( data ? data : '<option value=""></option>' );
+				
+			});
+			
+		});
+		
+		
+		return false;
+	
+	});
+	
+</script>
