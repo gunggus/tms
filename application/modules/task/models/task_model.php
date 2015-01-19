@@ -37,8 +37,8 @@ class Task_model extends CI_Model
 	{
 		$where = "";
 		$limited = "";
-		if(($parent_id = 0) AND ($master_id = 0) AND ($task_id > 0)){
-			$where.= " AND task_parent_id = 0";
+		if(($parent_id == 0) AND ($master_id == 0) AND ($task_id > 0)){
+			$where.= " AND task_parent_id = 0 AND task_id = '$task_id' ";
 		}else{
 			if($master_id > 0){$where.= " AND task_master_id = $master_id";}
 			if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
@@ -56,6 +56,21 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->result();
 	}
+	
+	public function get_task_by_task_id($task_id)
+	{
+		$query = "  SELECT * FROM task WHERE task_id = $task_id ";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
+	public function get_user_list()
+	{
+		$query = " SELECT * FROM user_identity ";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
 	# my task list
 	public function get_my_task($nipp,$status,$ui_nama,$limit,$offset)
 	{

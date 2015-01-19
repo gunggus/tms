@@ -63,9 +63,11 @@ class Action extends CI_Controller {
 			$limit = 0;
 			$offset = 0;
 			$data['parent_id'] = $this->uri->segment(5,0);
-			$data['parent_task'] = $this->task_model->get_task($ui_nipp,0,0,$data['parent_id'],$limit,$offset);
+			//$data['parent_task'] = $this->task_model->get_task($ui_nipp,0,0,$data['parent_id'],$limit,$offset);
 			//$data['duration'] = $this->task_model->get_duration_parent_task($data['parent_id']);
+			$data['parent_task'] = $this->task_model->get_task_by_task_id($data['parent_id']);
 			$data['result'] = $this->task_model->get_task($ui_nipp,0,$data['parent_id'],0,$limit,$offset);
+			$data['list_user'] = $this->task_model->get_user_list();
 			$this->load->view("add_task_child",$data);
 		}
 		elseif($data['main_field'] == "message"){
@@ -200,13 +202,13 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 		
-		$varcategory = explode(';',$this->input->post('task_category'));
+		$varcategory = explode('|',$this->input->post('task_category'));
 		$category = $varcategory[0];
 		$skill = $varcategory[1];
 		$skillpoint = $varcategory[2]; 
 		$duration = $varcategory[3]; 
-		//if($this->input->post('task_sch_duration') > 0){$duration = $this->input->post('task_sch_duration');}
-		//$point = $skillpoint * $duration;
+		if($this->input->post('task_sch_duration') > 0){$duration = $this->input->post('task_sch_duration');}
+		$point = $skillpoint * $duration;
 		
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
@@ -254,23 +256,30 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 		
-		//$varskill = explode(';',$this->input->post('task_skill'));
-		//$skill = $varskill[0];
-		//$skillpoint = $varskill[1]; 
-		//$point = $skillpoint * $this->input->post('task_sch_duration');
+		$varcategory = explode('|',$this->input->post('task_category'));
+		$category = $varcategory[0];
+		$skill = $varcategory[1];
+		$skillpoint = $varcategory[2]; 
+		$var_duration = $varcategory[3]; 
+		
+		$var_time = $this->input->post("satuan_waktu");
+		$duration_minute = $this->input->post("task_sch_duration") * $var_time;
+		$duration = $duration_minute / 60;
+		$point = ($skillpoint * $duration) / $var_duration ;
+		
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
 			'task_parent_id' => $this->input->post('task_parent_id'),
-			'task_status' => 'open',
 			'task_name' => $this->input->post('task_name'),
 			'task_unit' => $this->input->post('task_unit'),
-			'task_category' => $this->input->post('task_category'),
-			'task_skill' => $this->input->post('task_skill'),
-			'task_skill_point' => $this->input->post('task_skill_point'),
-			'task_point' => $this->input->post('task_point'),
+			'task_category' => $category,
+			'task_skill' => $skill,
+			'task_skill_point' => $skillpoint,
+			'task_point' => $point,
 			'task_sch_start' => $this->input->post('task_sch_start'),
 			'task_sch_finish' => $this->input->post('task_sch_finish'),
-			'task_sch_duration' => $this->input->post('task_sch_duration'),
+			'task_sch_duration' => $duration,
+			'task_sch_duration_min' => $duration_minute,
 			'task_description' => $this->input->post('task_description'), 
 			'task_created' => $ui_id, 
 			'task_created_by' => $ui_nama, 
@@ -278,15 +287,25 @@ class Action extends CI_Controller {
  			'task_update_by' => $ui_nama, 
 			'task_update_on' => date("Y-m-d H:i:s"), 
  		);
-		$task_id = $this->task_model->save_data("task",$data);
 		
-		$data = array(
-			'tsh_task_id' => $task_id, 
-			'tsh_status' => "open", 
-			'tsh_update_by' => $ui_nama, 
-			'tsh_update_on' => date("Y-m-d H:i:s"), 
-		);
-		$this->task_model->save_data("task_status_history",$data);
+		if($this->input->post("assign") == ""){ 
+			$data["task_status"] = "open";
+			$data_tsh["tsh_status"] = "open";
+		}else{
+			$var_assign = explode('|',$this->input->post("assign"));
+			$data["task_status"] = "taken";
+			$data["task_taken"] = $var_assign[0];
+			$data["task_taken_by"] = $var_assign[1];
+			$data["task_taken_on"] = date("Y-m-d H:i:s");
+			$data_tsh["tsh_status"] = "taken";
+			$data_tsh["tsh_username"] = $var_assign[1];
+		}
+		$task_id = $this->task_model->save_data("task",$data);
+		$data_tsh['tsh_task_id'] = $task_id; 
+		$data_tsh['tsh_update_by'] = $ui_nama; 
+		$data_tsh['tsh_update_on'] = date("Y-m-d H:i:s"); 
+		
+		$this->task_model->save_data("task_status_history",$data_tsh);
 		
 		$update = array( "task_is_child"	=>	"no",	);
 		$where = array(	'task_id' => $this->input->post('task_parent_id'),);

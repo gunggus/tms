@@ -37,70 +37,72 @@
 					echo form_open('task/action/save_child_task', 'class="form-horizontal"'); 
 					echo  form_hidden("task_master_id",$master_id);
 					echo  form_hidden("task_parent_id",$parent_id);
-					echo  form_hidden("task_point",$row_parent->task_point);
-					echo  form_hidden("task_category",$row_parent->task_category);
-					echo  form_hidden("task_skill",$row_parent->task_skill);
-					echo  form_hidden("task_skill_point",$row_parent->task_skill_point);
-					echo  form_hidden("task_point",$row_parent->task_point);
-					echo  form_hidden("task_sch_start",$row_parent->task_sch_start);
-					echo  form_hidden("task_sch_finish",$row_parent->task_sch_finish);
+					//echo  form_hidden("task_point",$row_parent->task_point);
+					//echo  form_hidden("task_category",$row_parent->task_category);
+					//echo  form_hidden("task_skill",$row_parent->task_skill);
+					//echo  form_hidden("task_skill_point",$row_parent->task_skill_point);
+					//echo  form_hidden("task_point",$row_parent->task_point);
+					//echo  form_hidden("task_sch_start",$row_parent->task_sch_start);
+					//echo  form_hidden("task_sch_finish",$row_parent->task_sch_finish);
 					
 					?>
                     
                     <div class="row-form">
-                        <label for="inputNama" class="span2 col-sm-2 control-label"> Name </label>
+                        <label for="inputNama" class="span2 col-sm-2 control-label"> Title </label>
                         <div class="span4 col-sm-4">
-                          <input type="text" value="<?php $row_parent->task_name; ?>" class="form-control" placeholder="Task Name" name="task_name">
+							<input type="text" value="<?php $row_parent->task_name; ?>" class="form-control" placeholder="Task Title" name="task_name">
                         </div>
 						<label for="inputDuration" class="span2 col-sm-2 control-label"> Duration  </label>
-                        <div class="span4 col-sm-4">
-                          <?php echo form_input("task_sch_duration",$row_parent->task_sch_duration," id='inputDuration' class='form-control' placeholder='Project Duration in hours' "); ?>
+                        <div class="span2 col-sm-2">
+							<?php echo form_input("task_sch_duration",""," id='inputDuration' class='form-control' placeholder='Duration' "); ?>
 						</div>
-                    </div>  
-					<!--
+						<div class="span2 col-sm-2">
+							<?php
+							$satuan_waktu = array("1"=>"minutes","60"=>"hours","1440"=>"days","10080"=>"weeks","43200"=>"month");
+							echo form_dropdown("satuan_waktu",$satuan_waktu);
+							?>
+						</div>
+                    </div>
 					<div class="row-form">
-                        <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
+                        <label for="inputNama" class="span2 col-sm-2 control-label"> Unit </label>
                         <div class="span4 col-sm-4">
-							<?php 
-							/*
-							foreach($list_cat as $lc){
-								$vc = $lc->tc_category;
-								$var_category[$vc] = $vc;
-							}
-							echo form_dropdown("task_category",$var_category,$cat);	
-							*/
-							?>
+							<select name="task_unit" id="unit" class="form-control">
+								<option value="">select unit</option>
+								<?php foreach($list_unit as $lu){ ?>
+								<option value="<?php echo $lu->vu_name; ?>"><?php echo strtoupper( $lu->vu_name ) ?></option>
+								<?php } ?>
+							</select>
 						</div>
-						<label for="inputNama" class="span2 col-sm-2 control-label"> Skill </label>
-                        <div class="span4 col-sm-4">
-							<?php 
-							/* 
-							foreach($list_skill as $ls){
-								$vs = $ls->skill_level.";".$ls->skill_point;
-								$var_skill[$vs] = $ls->skill_level." [".$ls->skill_point."]";
-							}
-							echo form_dropdown("task_skill",$var_skill);	
-							*/
-							?>
+                    	<label for="inputUnit" class="span2 col-sm-2 control-label">Category</label>
+						<div class="span4 col-sm-6">
+							<select  name="task_category" id="category" class="form-control">
+								<option value="">select category</option>
+							</select>
 						</div>
-					</div>  
+					</div>
 					<div class="row-form">
                         <label for="inputStart" class="span2 col-sm-2 control-label"> Scheduled Start On </label>
                         <div class="span4 col-sm-4">
-                          <?php //echo form_input("task_sch_start",""," id='inputStart' class='mask_date'"); ?>
+                          <?php echo form_input("task_sch_start",""," id='inputStart' class='mask_datetime'"); ?>
 						</div>
                         <label for="inputFinish" class="span2 col-sm-2 control-label"> Scheduled Finish On </label>
                         <div class="span4 col-sm-4">
-                          <?php //echo form_input("task_sch_finish",""," id='inputFinish' class='mask_date'"); ?>
+                          <?php echo form_input("task_sch_finish",""," id='inputFinish' class='mask_datetime'"); ?>
 						</div>
                     </div>  
-					-->
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Description  </label>
                         <div class="span4 col-sm-4">
                           <?php echo form_textarea("task_description","","class='form-control'"); ?>
 						</div>
-						<div class="span6 col-sm-offset-4 col-sm-6">			
+						<label for="inputNama" class="span2 col-sm-2 control-label"> Assign To  </label>
+                        <div class="span2 col-sm-offset-4 col-sm-6">			
+							<?php
+								foreach($list_user as $lu){ $key = $lu->ui_id."|".$this->encrypt->decode($lu->ui_nama); $var_user[$key]=$this->encrypt->decode($lu->ui_nama);}
+								echo form_dropdown("assign",$var_user);
+							?>
+						</div>
+						<div class="span2 col-sm-offset-4 col-sm-6">			
                             <button class="btn btn-primary pull-right" type="submit">Save</button> 
                         </div>
                     </div>  
@@ -116,14 +118,14 @@
 							<tr>
 								<td>No</td>
 								<td>Category</td>
-								<td>Name</td>
-								<td>Point</td>
+								<td>Task</td>
+								<!-- <td>Point</td> -->
 								<td>Start</td>
 								<td>Finish</td>
 								<td>Duration</td>
 								<td>Status</td>
 								<td>By</td>
-								<td>Action </td>
+								<!-- <td>Action </td> -->
 							</tr>
 						</thead>
                   	    <tbody>
@@ -136,13 +138,13 @@
 								<td><?php echo $i;?></td>
 								<td><?php echo strtoupper($row->task_category);?></td>
 								<td><?php echo strtoupper($row->task_name);?></td>
-								<td><?php echo strtoupper($row->task_point);?></td>
+								<!-- <td><?php echo strtoupper($row->task_point);?></td> -->
 								<td><?php echo strtoupper($row->task_sch_start);?></td>
 								<td><?php echo strtoupper($row->task_sch_finish);?></td>
 								<td><?php echo strtoupper($row->task_sch_duration);?></td>
 								<td><?php echo strtoupper($row->task_status);?></td>
 								<td><?php echo strtoupper($row->task_update_by);?></td>
-								<td><?php 
+								<!-- <td><?php 
 									echo "<div class='row'>";
 									echo "<div class='span8'>";
 									echo anchor("task/manage/history/".$row->task_id,"<input type='button' value='history' >","target='_blank'");
@@ -161,6 +163,7 @@
 									echo "</div>";
 									?>
 								</td>
+								-->
 							</tr>
 							<?php } ?>
 						</tbody>
@@ -181,3 +184,28 @@
 
 </div>
 <?php include($this->config->item('footer')); ?>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+	
+		/* pengaturan id select dropdown */
+		$_unit			= $('select#unit');
+		$_category		= $('select#category');
+		
+		$_unit.change(function(){
+		$this = $(this);
+
+			$.get( '<?php echo base_url() ?>task/ajax_controller/category_task/' + $this.val(), function(data){
+			$_category.html( data ? data : '<option value=""></option>' );
+				
+			});
+			
+		});
+		
+		
+		return false;
+	
+	});
+	
+</script>
