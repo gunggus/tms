@@ -240,6 +240,7 @@ class Action extends CI_Controller {
 		$this->task_model->save_data("task_status_history",$data);
 		redirect('task/manage/','refresh');
 	}
+	# save child task
 	public function save_child_task()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
@@ -279,7 +280,7 @@ class Action extends CI_Controller {
 			'task_sch_start' => $this->input->post('task_sch_start'),
 			'task_sch_finish' => $this->input->post('task_sch_finish'),
 			'task_sch_duration' => $duration,
-			'task_sch_duration_min' => $duration_minute,
+			'task_sch_duration_minute' => $duration_minute,
 			'task_description' => $this->input->post('task_description'), 
 			'task_created' => $ui_id, 
 			'task_created_by' => $ui_nama, 
@@ -287,7 +288,6 @@ class Action extends CI_Controller {
  			'task_update_by' => $ui_nama, 
 			'task_update_on' => date("Y-m-d H:i:s"), 
  		);
-		
 		if($this->input->post("assign") == ""){ 
 			$data["task_status"] = "open";
 			$data_tsh["tsh_status"] = "open";
@@ -295,10 +295,11 @@ class Action extends CI_Controller {
 			$var_assign = explode('|',$this->input->post("assign"));
 			$data["task_status"] = "taken";
 			$data["task_taken"] = $var_assign[0];
+			$data["task_is_assigned"] = 'yes';
 			$data["task_taken_by"] = $var_assign[1];
 			$data["task_taken_on"] = date("Y-m-d H:i:s");
 			$data_tsh["tsh_status"] = "taken";
-			$data_tsh["tsh_username"] = $var_assign[1];
+			$data_tsh["tsh_user"] = $var_assign[1];
 		}
 		$task_id = $this->task_model->save_data("task",$data);
 		$data_tsh['tsh_task_id'] = $task_id; 
@@ -311,8 +312,163 @@ class Action extends CI_Controller {
 		$where = array(	'task_id' => $this->input->post('task_parent_id'),);
 		$this->task_model->update_data("task",$update,$where);
 		
-		redirect('task/manage/','refresh');
+		redirect('task/detail/task/'.$this->input->post('task_parent_id'),'refresh');
 	}
+	# approve assign
+	public function approve_assign()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$task_id = $this->input->post('task_id');
+		$result = $this->task_model->get_task_by_task_id($task_id);
+		foreach($result as $row){
+			if($row->task_sch_start > date("Y-m-d H:i:s")){ $act_start = $row->task_sch_start;}
+			else{ $act_start = date("Y-m-d H:i:s"); }
+			$update = array(
+					"task_act_start" => $act_start,
+					"task_is_assigned" => "no",
+				);
+			$where = array(
+					"task_id"	=>	$row->task_id,
+				);
+			$this->task_model->update_data("task",$update,$where);
+			
+			# task status
+			$data_tsh = array(
+					"tsh_task_id"	=>	$row->task_id,
+					"tsh_status"	=>	"reject",
+					"tsh_user"		=>	$ui_nama,
+					"tsh_report"	=>	$this->input->post("report"),
+					"tsh_start"		=>	date("Y-m-d H:i:s"),
+					"tsh_update_by"		=>	$ui_nama,
+					"tsh_update_on"		=>	date("Y-m-d H:i:s"),
+				);
+			$this->task_model->save_data("task_status_history",$data_tsh);
+			
+		}
+		redirect('task/detail/task/'.$task_id,'refresh');
+	}
+	# reject assign
+	public function reject_assign()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+		
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$task_id = $this->input->post('task_id');
+		$parent_id = 0;
+		$result = $this->task_model->get_task_by_task_id($task_id);
+		foreach($result as $row){
+			$parent_id = $row->task_parent_id;
+			$data_task = array(
+					"task_status" => "open",
+					"task_taken" => "",
+					"task_taken_by" => "",
+					"task_taken_on" => "0000-00-00 00:00:00",
+					"task_is_assigned" => "no",
+				);
+			$where = array(
+					"task_id"	=>	$row->task_id,
+				);
+			# save reject task
+			$this->task_model->update_data("task",$data_task,$where);
+			$data_tsh = array(
+					"tsh_task_id"	=>	$row->task_id,
+					"tsh_status"	=>	"reject",
+					"tsh_user"		=>	$ui_nama,
+					"tsh_report"	=>	$this->input->post("report"),
+					"tsh_start"		=>	date("Y-m-d H:i:s"),
+					"tsh_update_by"		=>	$ui_nama,
+					"tsh_update_on"		=>	date("Y-m-d H:i:s"),
+				);
+			$this->task_model->save_data("task_status_history",$data_tsh);
+			# save open task
+			$data_tsh = array(
+					"tsh_task_id"	=>	$row->task_id,
+					"tsh_status"	=>	"open",
+					"tsh_user"		=>	$ui_nama,
+					"tsh_start"		=>	date("Y-m-d H:i:s"),
+					"tsh_update_by"		=>	$ui_nama,
+					"tsh_update_on"		=>	date("Y-m-d H:i:s"),
+				);
+			$this->task_model->save_data("task_status_history",$data_tsh);
+		}
+		redirect('task/detail/task/'.$parent_id,'refresh');
+	}
+	# request_complete
+	public function approve_request_complete()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+		
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$data['ui_id'] = $ui_id;
+		$ui_nama = $session_data['ui_nama'];
+		$data['ui_nama'] = $ui_nama;
+		$ui_nipp = $session_data['ui_nipp'];
+		$data['ui_nipp'] = $ui_nipp;
+		
+		$task_id = $this->input->post("task_id");
+		$result = $this->task_model->get_task_by_task_id($task_id);
+		foreach($result as $row){
+			$data_status = array( 
+					"tsh_status" => "taken", 
+					"tsh_user" => $ui_nama, 
+					"tsh_start" => date("Y-m-d H:i:s"), 
+					"tsh_end" => date("Y-m-d H:i:s"), 
+					"tsh_request_complete" => "yes", 
+					"tsh_update_by"	=>	$ui_nama,
+					"tsh_update_on"	=>	date("Y-m-d H:i:s"),
+				);
+			$this->task_model->save_data("task_status_history",$data_status);
+		
+			$duration_minute = (time() - strtotime($row->task_act_start))/60;
+			$duration_hour = $duration_minute/60;
+			$data_task = array(
+					"task_request_complete"	=>	"yes",
+					"task_act_finish"	=>	date("Y-m-d H:i:s"),
+					"task_act_duration"	=>	$duration_hour,
+					"task_act_duration_minute"	=>	$duration_minute,
+					"task_report"	=>	$row->task_report,
+					"task_complete"	=>	$ui_id,
+					"task_complete_by"	=>	$ui_nama,
+					"task_complete_on"	=>	date("Y-m-d H:i:s"),
+					"task_update"	=>	$ui_id,
+					"task_update_by"	=>	$ui_nama,
+					"task_update_on"	=>	date("Y-m-d H:i:s"),
+				);
+			$where = array("task_id" => $task_id);
+			$this->task_model->save_data("task",$data_task,$where);
+		}
+		redirect('task/detail/task/'.$task_id,'refresh');
+	}
+	
 	# save applyment
 	public function save_applyment()
 	{
