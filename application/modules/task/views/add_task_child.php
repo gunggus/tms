@@ -97,10 +97,9 @@
 						</div>
 						<label for="inputNama" class="span2 col-sm-2 control-label"> Assign To  </label>
                         <div class="span2 col-sm-offset-4 col-sm-6">			
-							<?php
-								foreach($list_user as $lu){ $key = $lu->ui_id."|".$this->encrypt->decode($lu->ui_nama); $var_user[$key]=$this->encrypt->decode($lu->ui_nama);}
-								echo form_dropdown("assign",$var_user);
-							?>
+							<select  name="assign" id="assign" class="form-control">
+								<option value="">select user</option>
+							</select>
 						</div>
 						<div class="span2 col-sm-offset-4 col-sm-6">			
                             <button class="btn btn-primary pull-right" type="submit">Save</button> 
@@ -192,17 +191,32 @@
 		/* pengaturan id select dropdown */
 		$_unit			= $('select#unit');
 		$_category		= $('select#category');
+		$_assign		= $('select#assign');
 		
 		$_unit.change(function(){
 		$this = $(this);
 
 			$.get( '<?php echo base_url() ?>task/ajax_controller/category_task/' + $this.val(), function(data){
 			$_category.html( data ? data : '<option value=""></option>' );
+
+				$.get( '<?php echo base_url() ?>task/ajax_controller/task_access/' + $_category.val(), function(data){
+				$_assign.html( data ? data : '<option value=""></option>' );
+					
+				});
+					
+			});
+			
+		});
+		$_category.change(function(){
+		$this = $(this);
+
+			$.get( '<?php echo base_url() ?>task/ajax_controller/task_access/' + $this.val(), function(data){
+			$_assign.html( data ? data : '<option value=""></option>' );
 				
 			});
 			
 		});
-		
+				
 		
 		return false;
 	

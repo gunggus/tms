@@ -18,6 +18,15 @@ class Ajax_model extends CI_Model
 	}
 # get all category
 
+# get task access
+	function get_task_access($category)
+	{
+		$query = " SELECT * FROM task_access JOIN user_identity ON tac_nipp = ui_nipp WHERE tac_category = '$category' ";
+		$query = $this->db->query($query);
+		$result = $query->result();
+		return $result ? $result : false;	
+	}
+# get task access
 
 
 

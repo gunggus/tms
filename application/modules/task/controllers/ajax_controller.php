@@ -17,6 +17,18 @@ class Ajax_controller extends CI_Controller {
 		}
 	}
 	
+	function task_access( $var_category )
+	{
+		$var_category=str_replace('%7','|',$var_category);
+		$var_category=str_replace('%20',' ',$var_category);
+		$varcategory = explode('|',$var_category);
+		$category = $varcategory[0];
+		$access = $this->ajax_model->get_task_access( $category );
+		if ( $access ) foreach ( $access as $access_items ) {
+			echo '<option value="'.$access_items->ui_id.'|'.$this->encrypt->decode($access_items->ui_nama).'">'.$this->encrypt->decode($access_items->ui_nama).'</option>';
+		}
+		
+	}
 	
 	
 }
