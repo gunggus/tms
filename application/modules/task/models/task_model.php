@@ -614,5 +614,15 @@ class Task_model extends CI_Model
 		$query = $this->db->query($query);
 		return $query->num_rows();
 	}
-	
+	public function get_nipp_by_user_id($ui_id)
+	{
+		$query = " SELECT * FROM user_identity WHERE ui_id = $ui_id ";
+		$query = $this->db->query($query);
+		$result = $query->result();
+		foreach($result as $row)
+		{
+			$nipp = $row->ui_nipp;
+		}
+		return $nipp;
+	}	
 }

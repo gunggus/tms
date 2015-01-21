@@ -93,10 +93,16 @@
 									echo form_open("task/action/request_complete"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","request complete","class='btn btn-success'");echo form_close();
 									echo "</div>";
 								}else{
-									echo " &nbsp;&nbsp;";	
-									echo "<div class='span3' align='right'>";
-									echo form_open("task/action/complete"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","complete","class='btn btn-success'");echo form_close();
-									echo "</div>";
+									if($user_level > 30){
+										echo " &nbsp;&nbsp;";	
+										echo "<div class='span3' align='right'>";
+										echo form_open("task/action/approve_request_complete"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","approve"," title='accept request complete' class='btn btn-success'");echo form_close();
+										echo "</div>";
+										echo " &nbsp;&nbsp;";	
+										echo "<div class='span3' align='right'>";
+										echo form_open("task/action/reject_request_complete"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","reject"," title='reject request complete' class='btn btn-warning'");echo form_close();
+										echo "</div>";
+									}
 								}
 							}
 						}	

@@ -28,6 +28,8 @@ class Detail extends CI_Controller {
 	
 	function task()
 	{
+		$data['user_level'] = $this->user_access->level('user_access');
+		
 		# get data from session
 		$session_data = $this->session->userdata('logged_in');
 		
