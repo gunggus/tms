@@ -100,12 +100,13 @@
 										echo "</div>";
 										echo " &nbsp;&nbsp;";	
 										echo "<div class='span3' align='right'>";
-										echo form_open("task/action/reject_request_complete"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","reject"," title='reject request complete' class='btn btn-warning'");echo form_close();
+									//	echo form_open("task/action/reject_request_complete"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","reject"," title='reject request complete' class='btn btn-warning'");echo form_close();
+										echo '<a href="#rejectreqModal" role="button" class="btn btn-warning" data-toggle="modal" title="reject request" >reject</a>';
 										echo "</div>";
 									}
 								}
 							}
-						}	
+						}
 					}else{
 							echo " &nbsp;&nbsp;";	
 							echo "<div class='span3' align='right'>";
@@ -117,8 +118,48 @@
 				</div>  
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Status </label>
-                    <div class="span8 col-sm-8"><?php echo "<b>".$row->task_status."</b>"; if($row->task_closed == 'yes'){ echo "<b>[CLOSED]</b>";} ?></div>
-                </div>
+                    <div class="span6 col-sm-6"><?php echo "<b>".$row->task_status."</b>"; if($row->task_closed == 'yes'){ echo "<b>[CLOSED]</b>";} ?></div>
+					<div class="span4 col-sm-4" align="right">
+						<?php
+							if($user_level > 30){
+							echo " &nbsp;&nbsp;";	
+							echo '<a href="#assignModal" role="button" class="btn btn-warning" data-toggle="modal" title="assign to" ><span class="ico-pencil"></span></a>';
+							?>
+							<!-- Bootrstrap modal form assign -->
+								<div id="assignModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+										<h3 id="myModalLabel">Reject</h3>
+									</div>        
+									<?php echo form_open("task/action/reject_request_complete/");?>
+									<div class="row-fluid">
+										<div class="block-fluid">
+											<div class="row-form">
+												<div class="span4">Assign To:</div>
+												<div class="span8">
+													<?php
+													$var_assign_selected = $row->task_taken."|".$row->task_taken_by;
+													$var_ru[""] = "";
+													foreach($related_user as $ru){
+														$varru = $ru->ui_id."|".$this->encrypt->decode($ru->ui_nama);
+														$var_ru[$varru] = $this->encrypt->decode($ru->ui_nama)." [".$ru->ui_nipp."]";
+													}
+													echo form_dropdown("assign",$var_ru,$var_assign_selected);
+													?>
+												</div>
+											</div>       
+										</div>
+									</div>                   
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-primary" >Set</button> 
+									</div>
+									<?php echo form_close();?>
+								</div> 
+							<?php		
+							}
+						?>	
+					</div>
+				</div>
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
                     <div class="span8 col-sm-8"><?php echo $row->task_category; ?></div>
@@ -378,6 +419,25 @@
 			</div>
 			<?php echo form_close();?>
         </div>      
+		
+		<!-- Bootrstrap modal form Reject request complete -->
+        <div id="rejectreqModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Reject</h3>
+            </div>        
+            <?php echo form_open("task/action/reject_request_complete/");?>
+			<div class="modal-body">
+				<p>Are you sure ?</p>
+			</div>
+            <div class="modal-footer">
+               	<input type="hidden" name="task_id" value="<?php echo $task_id;?>">
+				<button type="submit" class="btn btn-warning" >Confirm</button> 
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>            
+            </div>
+           <?php echo form_close();?>
+        </div>      
+		
 		
 	</div>
 

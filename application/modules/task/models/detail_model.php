@@ -48,6 +48,13 @@ class Detail_model extends CI_Model
 		return $query->num_rows();
 	}
 	
+	public function get_related_user_category_by_task_id($task_id)
+	{
+		$query = " SELECT * FROM task JOIN task_access  ON task_category = tac_category JOIN user_identity ON ui_nipp = tac_nipp WHERE task_id = $task_id ";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
 	# insert data
 	public function save_data($tabel,$data)
 	{

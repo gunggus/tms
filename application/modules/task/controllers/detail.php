@@ -63,6 +63,7 @@ class Detail extends CI_Controller {
 		$data['file'] = $this->detail_model->get_file_task($task_id);
 		$data['child'] = $this->detail_model->get_child_task($task_id);
 		$data['stuck_task'] = $this->detail_model->count_status_task($ui_id,"taken"); #count taken task by user
+		$data['related_user'] =  $this->detail_model->get_related_user_category_by_task_id($task_id);
 		$this->load->view('detail_task',$data);
 	}
 	
