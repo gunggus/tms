@@ -59,9 +59,11 @@
 								<td>Unit</td>
 								<td>Category</td>
 								<td>Skill</td>
-								-->
 								<td>Point</td>
-								<td>Finish</td>
+								-->
+								<td>Target Start</td>
+								<td>Target Finish</td>
+								<td>Target Duration <br> (in hours)</td>
 								<?php if($this->uri->segment(3) == 'task'){echo "<td>Status</td>";} ?>
 								<td>By</td>
 							</tr>
@@ -85,9 +87,11 @@
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_unit);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_skill);?></td>
-								-->
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_point);?></td>
+								-->
+								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_start);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_finish);?></td>
+								<td <?php echo "$bg";?>><?php echo number_format($row->task_sch_duration,0,'.',',');?></td>
 								<?php if($this->uri->segment(3) == 'task'){?>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_status);?></td>
 								<?php } ?>
