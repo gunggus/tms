@@ -20,7 +20,11 @@
         
         <!-- col -->
         <div class="span12 col-lg-12">
-          
+			<?php if($this->uri->segment(6) == "duration_over"){ ?>
+			<div class="alert alert-error">            
+                <strong>Duration Over</strong> Change a duration and try submitting again... 
+			</div>
+			<?php } ?>
           <!-- widget -->
           <div class="block">
             

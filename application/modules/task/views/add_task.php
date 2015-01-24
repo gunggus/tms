@@ -30,18 +30,17 @@
         			<?php if($this->session->userdata('logged_in')) { ?>
             		<?php if(isset($message)){echo '<div class="badge-warning"><p class="text-danger">&nbsp; message : '.$message.'</p></div>';} ?>
             		<?php if(validation_errors()){echo '<div class="badge-warning">'.validation_errors().'</div>';} ?>
-                    
-                  	<?php echo form_open('task/action/save_task', 'class="form-horizontal"'); 
+                    <?php echo form_open('task/action/save_task', 'class="form-horizontal"'); 
 					echo  form_hidden("master_id",$master_id);
 					echo  form_hidden("parent_id",$parent_id);
 					?>
-                    
                     <div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Name </label>
                         <div class="span4 col-sm-4">
                           <input type="text" class="form-control" placeholder="Task Name" name="task_name">
                         </div>
                     </div>
+					<?php /*
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Unit </label>
                         <div class="span4 col-sm-4">
@@ -62,7 +61,7 @@
 							</select>
 						</div>
 					</div>
-	  
+					*/ ?>
 					<!--
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
