@@ -625,4 +625,11 @@ class Task_model extends CI_Model
 		}
 		return $nipp;
 	}	
+	public function get_total_child_target_duration($task_id)
+	{
+		$query = " SELECT *, SUM(task_sch_duration_minute) as 'tot_duration_minute' FROM  task WHERE task_parent_id = $task_id GROUP BY task_parent_id";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
 }
