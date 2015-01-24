@@ -60,11 +60,17 @@ class Detail extends CI_Controller {
 		$data['result'] = $this->detail_model->get_detail_task($task_id);
 		$data['discussion'] = $this->detail_model->get_discussion_task($task_id);
 		$data['history'] = $this->detail_model->get_history_task($task_id);
+		$data['report'] = $this->detail_model->get_report_task($task_id);
 		$data['file'] = $this->detail_model->get_file_task($task_id);
 		$data['child'] = $this->detail_model->get_child_task($task_id);
 		$data['stuck_task'] = $this->detail_model->count_status_task($ui_id,"taken"); #count taken task by user
 		$data['related_user'] =  $this->detail_model->get_related_user_category_by_task_id($task_id);
-		$this->load->view('detail_task',$data);
+		
+		if($this->detail_model->check_is_child_task($task_id)){
+			$this->load->view('detail_task',$data);
+		}else{
+			$this->load->view('detail_task_parent',$data);
+		}
 	}
 	
 	function discussion()
