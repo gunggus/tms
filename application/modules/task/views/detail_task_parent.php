@@ -49,7 +49,7 @@
 				</div>
 				<div class="row-form">
                     <label for="inputNama" class="span4 col-sm-4 control-label"> Duration </label>
-                    <div class="span8 col-sm-8"><?php echo $row->task_sch_duration; ?></div>
+                    <div class="span8 col-sm-8"><?php echo $row->task_sch_duration." hour(s)   / ".$row->task_sch_duration_minute." minute(s); ?></div>
                 </div>  
 				<div class="row-form">
                     <label for="inputNama" class="span4 col-sm-4 control-label"> Target Start </label>
