@@ -202,13 +202,15 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 		
+		/*
 		$varcategory = explode('|',$this->input->post('task_category'));
 		$category = $varcategory[0];
 		$skill = $varcategory[1];
 		$skillpoint = $varcategory[2]; 
 		$duration = $varcategory[3]; 
+		*/
 		if($this->input->post('task_sch_duration') > 0){$duration = $this->input->post('task_sch_duration');}
-		$point = $skillpoint * $duration;
+		//$point = $skillpoint * $duration;
 		
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
@@ -267,7 +269,7 @@ class Action extends CI_Controller {
 		$var_time = $this->input->post("satuan_waktu");
 		$duration_minute = $this->input->post("task_sch_duration") * $var_time;
 		$duration = $duration_minute / 60;
-		$point = ($skillpoint * $duration) / $var_duration ;
+		$point = ($skillpoint * $duration_minute) / ($var_duration * 60) ;
 		
 		$result_child = $this->task_model->get_total_child_target_duration($this->input->post('task_parent_id'));
 		$result_task = $this->task_model->get_task_by_task_id($this->input->post('task_parent_id'));
@@ -330,6 +332,43 @@ class Action extends CI_Controller {
 		
 		redirect('task/detail/task/'.$this->input->post('task_parent_id'),'refresh');
 	}
+	# assign task
+	public function assign_task()
+	{
+		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
+		if($this->user_access->level('user_access')<30):redirect('messages/error/not_authorized');endif;
+
+		# get data from session
+		$session_data = $this->session->userdata('logged_in');
+		  
+		# data
+		$ui_id = $session_data['ui_id'];
+		$ui_nama = $session_data['ui_nama'];
+		$ui_nipp = $session_data['ui_nipp'];
+		
+		$task_id = $this->input->post("task_id");
+		$var_assign = explode('|',$this->input->post("assign"));
+		$data["task_status"] = "taken";
+		$data["task_taken"] = $var_assign[0];
+		$data["task_is_assigned"] = 'yes';
+		$data["task_taken_by"] = $var_assign[1];
+		$data["task_taken_on"] = date("Y-m-d H:i:s");
+		$where = array("task_id"	=>	$task_id);
+		
+		$data_rep["tr_assignment_status"] = "assigned";
+		$data_rep["tr_assigned"] = $var_assign[0];
+		$data_rep["tr_assigned_by"] = $var_assign[1];
+		$data_rep['tr_update_by'] = $ui_nama; 
+		$data_rep['tr_update_on'] = date("Y-m-d H:i:s"); 
+		$data_rep['tr_task_id'] = $task_id; 
+		
+		$this->task_model->update_data("task",$data,$where);
+		
+		$this->task_model->save_data("task_report",$data_rep);
+		
+		redirect('task/detail/task/'.$task_id,'refresh');
+	}
+	
 	# approve assign
 	public function approve_assign()
 	{
@@ -450,10 +489,18 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 		
-		$data['result'] = $this->task_model->get_task_by_task_id($data['task_id']);
-		$this->load->view("form_request_complete",$data);
+		$assigned = $this->input->post("assigned");
+		$assigned_by = $this->input->post("assigned_by");
+		
+		$update = array( "tr_progress_status" => "request complete",);
+		$where = array( "tr_task_id" => $data["task_id"], "tr_assigned" => $assigned, "tr_assigned_by" => $assigned_by);
+		$this->task_model->update_data("task_report",$update,$where);
+		//$data['result'] = $this->task_model->get_task_by_task_id($data['task_id']);
+		//$this->load->view("form_request_complete",$data);
+		redirect("task/detail/task/".$this->input->post("task_id"));
 	}
 	# save request complete
+	/*
 	public function save_request_complete()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
@@ -508,8 +555,8 @@ class Action extends CI_Controller {
 		}
 		redirect('task/manage/','refresh');
 	}
-	
-	# request_complete
+	*/
+	# approve request_complete
 	public function approve_request_complete()
 	{
 		# xreada user restriction [ x=0 r=10 a=30 e=40 d=40 a=50 ]
@@ -527,51 +574,41 @@ class Action extends CI_Controller {
 		$data['ui_nipp'] = $ui_nipp;
 		
 		$task_id = $this->input->post("task_id");
-		$result = $this->task_model->get_task_by_task_id($task_id);
-		foreach($result as $row)
-		{
-			$user_id = $row->task_complete;
-			$user_nama = $row->task_complete_by;
-			$user_nipp = $this->task_model->get_nipp_by_user_id($user_id);
-			
-			$data = array(
+		$user_id = $this->input->post('assigned');
+		$user_nama = $this->input->post('assigned_by');
+		$task_target_duration = $this->input->post("task_target_duration");
+		$data = array(
 					"task_request_complete" => "no",
-					"task_status"	=>	"complete",
+					"task_status"		=>	"complete",
+					"task_act_finish"	=>	date("Y-m-d H:i:s"),
+					"task_act_duration"	=>	$task_target_duration / 60,
+					"task_act_duration_minute"	=>	$task_target_duration,
+					"task_complete"		=>	$user_id,
+					"task_complete_by"	=>	$user_nama,
+					"task_complete_on"	=>	date("Y-m-d H:i:s"),
+					"task_update"		=>	$ui_id,
+					"task_update_by"	=>	$ui_nama,
+					"task_update_on"	=>	date("Y-m-d H:i:s"),
 				);
-			$where = array("task_id" => $row->task_id);
-			$this->task_model->update_data("task",$data,$where);
+		$where = array("task_id" => $task_id);
+		$this->task_model->update_data("task",$data,$where);
 			
-			$data_status = array( 
-					"tsh_status" => "complete", 
-					"tsh_user" => $user_nama, 
-					"tsh_start" => date("Y-m-d H:i:s"), 
-					"tsh_end" => date("Y-m-d H:i:s"), 
-					"tsh_request_complete" => "yes", 
-					"tsh_update_by"	=>	$ui_nama,
-					"tsh_update_on"	=>	date("Y-m-d H:i:s"),
-				);
-			$this->task_model->save_data("task_status_history",$data_status);
-
-			$point_point = $row->task_point;
-			$point_penalty = 0;
-			$point_reward = 0;
-			$point_description = $this->input->post('task_name')." ".$this->input->post('task_report');
-			if(mdate("%Y-%m-%d %H:%i:%s",time()) > $this->input->post('task_sch_finish')){
-				$duration = $this->input->post('task_act_duration_minute') - $this->input->post('task_sch_duration_minute');
-				if($duration > 0){
-					$point_penalty = ($duration / $this->input->post('task_sch_duration_minute')) * $this->input->post('task_point') / 2 ;
-				}
-			}
-			if(($this->input->post('task_act_duration_minute') <= $this->input->post('task_sch_duration_minute')) AND (mdate("%Y-%m-%d %H:%i:%s",time()) < $this->input->post('task_sch_finish')))
-			{
-				$duration = $this->input->post('task_sch_duration_minute') - $this->input->post('task_act_duration_minute');
-				if($duration > 0){
-					$point_reward = ($duration / $this->input->post('task_sch_duration')) * $this->input->post('task_point') / 2  ;
-				}
-			}
-			
-			$point_abs_id = $this->task_model->get_last_abs_id($user_nipp);
-			$datapoint = array(
+		$data = array(
+				"tr_progress_status"	=>	"complete",
+				"tr_controlling_status"	=>	"confirm",
+				"tr_controlling_by"	=>	$ui_nama,
+				"tr_update_by"	=>	$ui_nama,
+			);
+		$where = array("tr_task_id" => $task_id, 'tr_assigned_by' => $this->input->post('assigned_by'));
+		$this->task_model->update_data("task_report",$data,$where);
+		
+		$point_point = $this->input->post("point");
+		$point_reward = $this->input->post("reward");
+		$point_penalty = $this->input->post("penalty");
+		
+		$user_nipp = $this->task_model->get_nipp_by_user_id($user_id);
+		$point_abs_id = $this->task_model->get_last_abs_id($user_nipp);
+		$datapoint = array(
 				"point_task_id"	=>	$this->input->post('task_id'),
 				"point_abs_id"	=>	$point_abs_id,
 				"point_point"	=>  $point_point,
@@ -580,13 +617,12 @@ class Action extends CI_Controller {
 				"point_nipp" 	=>  $ui_nipp,
 				"point_username"=>  $user_nama,
 				"point_date"	=>  mdate("%Y-%m-%d %H:%i:%s",time()),
-				"point_description" => $point_description,
+				"point_description" => $this->input->post("response"),
 				"point_update_by"	=> $ui_nama,
 				"point_update_on"	=> mdate("%Y-%m-%d %H:%i:%s",time()),
 			);
-			$this->task_model->save_data("point",$datapoint);
-	
-		}
+		$this->task_model->save_data("point",$datapoint);
+		
 		redirect('task/detail/task/'.$task_id,'refresh');
 	}
 	

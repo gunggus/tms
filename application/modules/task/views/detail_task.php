@@ -38,7 +38,10 @@
 				$assigned_id = $row->task_taken;
 				$assigned_name = $row->task_taken_by;
 				$parent_id = $row->task_parent_id;
- 				?>
+ 				$target_duration_minute = $row->task_sch_duration_minute;
+ 				$var_point = $row->tc_point;
+ 				$var_point_duration_minute = 60 * $row->tc_duration;
+				?>
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Task </label>
                     <div class="span4 col-sm-4"><?php echo "<b>".strtoupper($row->task_name)."</b>"; ?></div>
@@ -139,7 +142,7 @@
                 </div>
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Duration </label>
-                    <div class="span8 col-sm-8"><?php echo $row->task_sch_duration; ?></div>
+                    <div class="span8 col-sm-8"><?php echo $row->task_sch_duration." hour(s)  / ".$row->task_sch_duration_minute." minute(s) "; ?></div>
                 </div>  
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Schedule </label>
@@ -263,9 +266,14 @@
 							<?php 
 							$no = 0;
 							$point = 0;
+							$reward = 0;
+							$penalty = 0;
+							$task_report_duration = 0;
+							$progress_status = "open";
 							foreach($report as $rep){ 
 							$no++;
-							$point = $point + (($rep->tr_duration  /  (60 * $rep->tc_duration ) ) * $rep->tc_point);
+							$task_report_duration = $task_report_duration + $rep->tr_duration; 
+							$progress_status = $rep->tr_progress_status;
 							?>
 						    <tr>
                                 <td><?php echo $no; ?></td>
@@ -283,48 +291,126 @@
 								</td>
                                 <td><?php echo mdate("%d-%m-%Y %H:%i:%s",strtotime($rep->tr_start_on)); ?></td>
                                 <td><?php echo mdate("%d-%m-%Y %H:%i:%s",strtotime($rep->tr_finish_on)); ?></td>
-                                <td><?php echo mdate("%d-%m-%Y %H:%i:%s",strtotime($rep->tr_duration)); ?></td>
-                                <td><?php echo mdate("%d-%m-%Y %H:%i:%s",strtotime($rep->tr_assigned_by)); ?></td>
-                            </tr>
-							<?php } ?>
+                                <td><?php echo $rep->tr_duration." min"; ?></td>
+                                <td><?php echo $rep->tr_assigned_by; ?></td>
+							</tr>
+							
+							<?php 
+							}
+							if($target_duration_minute > 0 AND $var_point_duration_minute > 0){ 
+								$point = $var_point * ($target_duration_minute / $var_point_duration_minute);
+								if($task_report_duration < $target_duration_minute){$reward = (($target_duration_minute - $task_report_duration ) / $var_point_duration_minute) * $var_point;}
+								if($task_report_duration > $target_duration_minute){$penalty = (($task_report_duration - $target_duration_minute ) / $var_point_duration_minute) * $var_point;}
+							}
+							
+							?>
 						</tbody>
 						<tfoot>
 							<tr>
-								<td colspan="4"> Estimated Point : <?php echo "<b>$point</b>"; ?> </td>
-								<td colspan="6">
+							<?php
+								if($user_level > 30){
+									echo "<td colspan='4'>";	
+									echo '<a href="#assignModal" role="button" class="btn btn-warning" data-toggle="modal" title="assign to" ><span class="ico-pencil"> assign</span></a>';
+									echo "</td>";
+								}	
+							?>
+								<td colspan="4">
 									<div align="right">
-										<?php 
-										echo form_open("task/action/request_complete");
-										echo form_hidden("task_id",$task_id);
-										echo form_hidden("assigned",$assigned_id);
-										echo form_hidden("assigned_to",$assigned_name); 
-										echo form_submit("request","Request Complete","class='btn btn-info'");
-										echo form_close();
-										?>
+										<a href="#requestcompleteModal" role="button" class="btn btn-info" data-toggle="modal" title="request complete" ><span class="ico-files"> request complete</span></a>
 									</div>
 								</td>
+								<td colspan="2">
+									<?php 
+									if(($user_level > 30) AND ($assigned_name != $ui_nama)){
+									if($progress_status == "request complete"){ 
+									?>
+									<a href="#confirmreportModal" role="button" class="btn" data-toggle="modal" title="confirm" >Confirm Request</a>
+									<!-- Bootrstrap modal form request_complete -->
+									<div id="confirmreportModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+										<h3 id="myModalLabel">Confirm Request</h3>
+									</div>        
+									<?php 
+										echo form_open("task/action/approve_request_complete");
+										echo form_hidden("task_id",$task_id);
+										echo form_hidden("point",$point);
+										echo form_hidden("reward",$reward);
+										echo form_hidden("penalty",$penalty);
+										echo form_hidden("assigned",$assigned_id);
+										echo form_hidden("assigned_by",$assigned_name); 
+										echo form_hidden("task_target_duration",$target_duration_minute); 
+										echo form_hidden("task_report_duration",$task_report_duration); 
+										
+									?>
+									<div class="row-fluid">
+										<div class="block-fluid">
+											<div class="row-form"><div class="span2">Current Point</div><div class="span8"><?php echo $point+$reward-$penalty;?></div></div>
+											<div class="row-form"><div class="span2">Additional Reward</div><div class="span8"><?php echo form_input("add_reward","","title='additional reward point' placeholder='add reward point' ");?></div></div>										
+											<div class="row-form"><div class="span2">Comment</div><div class="span8"><?php echo form_textarea("response");?></div></div>
+										</div>
+									</div>                   
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-primary" >Confirm</button> 
+									</div>
+									<?php echo form_close();?>
+									</div>
+									<!-- End Of Request Complete Modal -->
+									<?php 
+									}
+									if($progress_status == "complete")
+									{
+									?>
+									<a href="#unconfirmreportModal" role="button" class="btn btn-warning" data-toggle="modal" title="reject" >reject</a>
+									<!-- Bootrstrap modal form request_complete -->
+									<div id="unconfirmreportModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+										<h3 id="myModalLabel">Point Result</h3>
+									</div>        
+									<?php 
+										echo form_open("task/action/request_complete");
+										echo form_hidden("task_id",$task_id);
+										echo form_hidden("point",$point);
+										echo form_hidden("reward",$reward);
+										echo form_hidden("penalty",$penalty);
+										echo form_hidden("assigned",$assigned_id);
+										echo form_hidden("assigned_by",$assigned_name); 
+									?>
+									<div class="row-fluid">
+										<div class="block-fluid">
+											<div class="row-form"><div class="span2">Point</div><div class="span8"><?php echo "$point";?></div></div>
+											<div class="row-form"><div class="span2">Reward</div><div class="span8"><?php echo "$reward";?></div></div>										
+											<div class="row-form"><div class="span2">Penalty</div><div class="span8"><?php echo "$penalty";?></div></div>										
+											<div class="row-form"><div class="span2"><b>Total</b></div><div class="span8"><?php $totpoint = $point + $reward - $penalty; echo "<b>".$totpoint."</b>";?></div></div>										
+										</div>
+									</div>                   
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-primary" >Send</button> 
+									</div>
+									<?php echo form_close();?>
+									</div>
+									<!-- End Of Request Complete Modal -->
+									<?php 
+										}
+									}
+									?>
+								</td>
 							</tr>
-							<?php
-							if($user_level > 30){
-								echo "<tr>";	
-								echo "<td colspan='4'>";	
-								echo '<a href="#assignModal" role="button" class="btn btn-warning" data-toggle="modal" title="assign to" ><span class="ico-pencil"> assign</span></a>';
-								echo "</td>";
-								echo "</tr>";
-							}	?>
 								<!-- Bootrstrap modal form assign -->
 								<div id="assignModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 								<div class="modal-header">
 									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 									<h3 id="myModalLabel">Assign</h3>
 								</div>        
-								<?php echo form_open("task/action/reject_request_complete/");?>
+								<?php echo form_open("task/action/assign_task/");?>
 								<div class="row-fluid">
 									<div class="block-fluid">
 										<div class="row-form">
 											<div class="span4">Assign To:</div>
 											<div class="span8">
 											<?php
+												echo form_hidden("task_id",$task_id);
 												$var_assign_selected = $assigned_id."|".$assigned_name;
 												$var_ru[""] = "";
 												foreach($related_user as $ru){
@@ -341,7 +427,39 @@
 									<button type="submit" class="btn btn-primary" >Set</button> 
 								</div>
 								<?php echo form_close();?>
-								</div> 
+								</div>
+								<!-- End of assign modal -->
+								
+								<!-- Bootrstrap modal form request_complete -->
+								<div id="requestcompleteModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+									<h3 id="myModalLabel">Point Result</h3>
+								</div>        
+								<?php 
+									echo form_open("task/action/request_complete");
+									echo form_hidden("task_id",$task_id);
+									echo form_hidden("point",$point);
+									echo form_hidden("reward",$reward);
+									echo form_hidden("penalty",$penalty);
+									echo form_hidden("assigned",$assigned_id);
+									echo form_hidden("assigned_by",$assigned_name); 
+								?>
+								<div class="row-fluid">
+									<div class="block-fluid">
+										<div class="row-form"><div class="span2">Point</div><div class="span8"><?php echo "$point";?></div></div>
+										<div class="row-form"><div class="span2">Reward</div><div class="span8"><?php echo "$reward";?></div></div>										
+										<div class="row-form"><div class="span2">Penalty</div><div class="span8"><?php echo "$penalty";?></div></div>										
+										<div class="row-form"><div class="span2"><b>Total</b></div><div class="span8"><?php $totpoint = $point + $reward - $penalty; echo "<b>".$totpoint."</b>";?></div></div>										
+									</div>
+								</div>                   
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-primary" >Send</button> 
+								</div>
+								<?php echo form_close();?>
+								</div>
+								<!-- End Of Request Complete Modal -->
+									
 						</tfoot>
                     </table>
                 </div>                 
@@ -416,63 +534,6 @@
         <!-- col -->
         <!-- end of child task -->
 			  
-			  
-		<!-- history status -->	
-		<!-- col -->
-		<?php /*
-		<div class="span7 col-lg-7">
-          
-            <!-- widget -->
-            <div class="block">
-            
-            <!-- wigget content -->
-            <div class="data-fluid">
-        		<div class="head blue">
-                    <h2>Status History</h2>
-				</div>                
-                <div class="data-fluid" style="width: 100%; overflow-x: scroll;">
-                    <table cellpadding="0" cellspacing="0" width="100%" class="table">
-                        <thead>
-                            <tr>
-                                <th width="5%">No</th>
-                                <th width="10%">Status</th>
-                                <th width="40%">Description</th>
-                                <th width="10%">Start On</th>
-                                <th width="10%">Finish On</th>
-                                <th width="10%">Update On</th>
-                                <th width="10%">Update By</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-							<?php 
-							$no = 0;
-							foreach($history as $his){ 
-							$no++;
-							?>
-							<tr>
-								<td><?php echo $no; ?></td>
-								<td><?php echo $his->tsh_status;?></td>
-								<td><?php echo $his->tsh_report;?></td>
-								<td><?php echo $his->tsh_start;?></td>
-								<td><?php echo $his->tsh_end;?></td>
-								<td><?php echo $his->tsh_update_on;?></td>
-								<td><?php echo $his->tsh_update_by;?></td>
-							</tr>
-							<?php } ?>
-						</tbody>
-                    </table>
-                </div>                 
-        	</div>
-            <!-- widget content -->
-            
-            </div>
-            <!-- widget -->          
-          
-        </div>
-        <!-- col -->
-        <!-- end of history status -->	
-        */ ?>
-		
 		</div>
 		
 		</div>
@@ -491,7 +552,7 @@
                         <div class="span2">
 							<input type="hidden" name="task_id" value="<?php echo $task_id;?>">
 							<input type="hidden" name="assigned" value="<?php echo $assigned_id;?>">
-							<input type="hidden" name="assigned_to" value="<?php echo $assigned_name;?>">
+							<input type="hidden" name="assigned_by" value="<?php echo $assigned_name;?>">
 							<span class="top title">Start On:</span>
                         </div>
 						<div class="span10">

@@ -57,6 +57,57 @@ class Task_model extends CI_Model
 		return $query->result();
 	}
 	
+	# parent task list
+	public function get_parent_task($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
+	{
+		$where = "";
+		$limited = "";
+		if(($parent_id == 0) AND ($master_id == 0) AND ($task_id > 0)){
+			$where.= " AND task_parent_id = 0 AND task_id = '$task_id' ";
+		}else{
+			if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+			if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+			if($task_id > 0){$where.= " AND task_id = $task_id";}
+		}
+		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					AND task_parent_id = 0
+					$where
+					ORDER BY task_id DESC
+					$limited
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	# task actuating list
+	public function get_actuating_task($nipp,$master_id,$parent_id,$task_id,$limit,$offset)
+	{
+		$where = "";
+		$limited = "";
+		if(($parent_id == 0) AND ($master_id == 0) AND ($task_id > 0)){
+			$where.= " AND task_parent_id = 0 AND task_id = '$task_id' ";
+		}else{
+			if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+			if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+			if($task_id > 0){$where.= " AND task_id = $task_id";}
+		}
+		if($limit > 0){ $limited.=" 	LIMIT $offset,$limit ";}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					AND task_is_child = 'yes'
+					$where
+					ORDER BY task_id DESC
+					$limited
+				";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
 	public function get_task_by_task_id($task_id)
 	{
 		$query = "  SELECT * FROM task WHERE task_id = $task_id ";
@@ -310,6 +361,48 @@ class Task_model extends CI_Model
 					JOIN task_access ON tac_category = task_category
 					WHERE tac_nipp = '$nipp'
 					AND task_closed = 'no'
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	# count parent task
+	public function count_parent_task($nipp,$master_id,$parent_id,$task_id)
+	{
+		$where = "";
+		if(($parent_id = 0) AND ($master_id = 0) AND ($task_id > 0)){
+			$where.= " AND task_parent_id = 0";
+		}else{
+			if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+			if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+			if($task_id > 0){$where.= " AND task_id = $task_id";}
+		}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					AND task_parent_id = 0
+					$where
+				";
+		$query = $this->db->query($query);
+		return $query->num_rows();
+	}
+	# count task
+	public function count_actuating_task($nipp,$master_id,$parent_id,$task_id)
+	{
+		$where = "";
+		if(($parent_id = 0) AND ($master_id = 0) AND ($task_id > 0)){
+			$where.= " AND task_parent_id = 0";
+		}else{
+			if($master_id > 0){$where.= " AND task_master_id = $master_id";}
+			if($parent_id > 0){$where.= " AND task_parent_id = $parent_id";}
+			if($task_id > 0){$where.= " AND task_id = $task_id";}
+		}
+		$query = " 	SELECT * FROM task 
+					JOIN task_access ON tac_category = task_category
+					WHERE tac_nipp = '$nipp'
+					AND task_closed = 'no'
+					AND task_is_child = 'yes'
 					$where
 				";
 		$query = $this->db->query($query);
@@ -600,9 +693,8 @@ class Task_model extends CI_Model
 		$query = " SELECT * FROM absensi WHERE abs_nipp LIKE '$ui_nipp' ORDER BY abs_id DESC LIMIT 1 ";
 		$query = $this->db->query($query);
 		$result = $query->result();
-		foreach($result as $row){
-			return $row->abs_id;
-		}
+		foreach($result as $row){$abs_id =  $row->abs_id;}
+		if(isset($abs_id)){ return $abs_id;}else{return 0;}
 	}
 	public function count_task_status($ui_id,$status)
 	{
