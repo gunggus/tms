@@ -24,7 +24,7 @@ class Ajax_controller extends CI_Controller {
 		$varcategory = explode('|',$var_category);
 		$category = $varcategory[0];
 		$access = $this->ajax_model->get_task_access( $category );
-		echo "<option value=''></option>";
+		echo "<option value=''>OPEN</option>";
 		if ( $access ) foreach ( $access as $access_items ) {
 			echo '<option value="'.$access_items->ui_id.'|'.$this->encrypt->decode($access_items->ui_nama).'">'.$this->encrypt->decode($access_items->ui_nama).'</option>';
 		}
