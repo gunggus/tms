@@ -25,6 +25,16 @@
                 <strong>Duration Over</strong> Change a duration and try submitting again... 
 			</div>
 			<?php } ?>
+			<?php if($this->uri->segment(6) == "sch_start_over"){ ?>
+			<div class="alert alert-error">            
+                <strong>Target Start Over</strong> Change a scheduled start and try submitting again... 
+			</div>
+			<?php } ?>
+			<?php if($this->uri->segment(6) == "sch_finish_over"){ ?>
+			<div class="alert alert-error">            
+                <strong>Target Finish Over</strong> Change a a scheduled finish and try submitting again... 
+			</div>
+			<?php } ?>
           <!-- widget -->
           <div class="block">
             
@@ -102,7 +112,7 @@
 						<label for="inputNama" class="span2 col-sm-2 control-label"> Assign To  </label>
                         <div class="span2 col-sm-offset-4 col-sm-6">			
 							<select  name="assign" id="assign" class="form-control">
-								<option value="">select user</option>
+								<option value="">OPEN</option>
 							</select>
 						</div>
 						<div class="span2 col-sm-offset-4 col-sm-6">			
