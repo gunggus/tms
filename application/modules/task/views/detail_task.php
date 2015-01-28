@@ -126,7 +126,40 @@
 				</div>  
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Status </label>
-                    <div class="span6 col-sm-6"><?php echo "<b>".$row->task_status."</b>"; if($row->task_closed == 'yes'){ echo "<b>[CLOSED]</b>";} ?></div>
+                    <div class="span4 col-sm-4"><?php echo "<b>".$row->task_status."</b>";if($row->task_closed == 'yes'){ echo "<b>[CLOSED]</b>";}  ?></div>
+					<?php
+					$current = mdate("%Y-%m-%d %H:%i:%s");
+					if(($row->task_status == "open" OR $row->task_status == "reopen") AND ($row->task_sch_start < $current) )
+							{ 
+								if($stuck_task > 2){
+									echo " &nbsp;&nbsp;";	
+									echo "<div class='span6' align='right'>";
+									echo '<a href="#bModal" role="button" class="btn" data-toggle="modal">take</a>';
+									echo '<!-- Bootrstrap modal -->
+											<div align="center" id="bModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+													<h3 id="myModalLabel">Warning</h3>
+												</div>
+												<div class="modal-body">
+													<p>You can not take on this task <br/> <b>Please Complete your Previous Task</b> </p>
+												</div>
+												<div class="modal-footer">
+													'.anchor('task/manage/my_task','Go','class="btn btn-warning" aria-hidden="true"').'
+													<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>            
+												</div>
+											</div>               
+										';
+									echo "</div>";
+								}else{
+									echo " &nbsp;&nbsp;";	
+									echo "<div class='span6' align='right'>";
+									echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take","class='btn'");echo form_close();
+									echo "</div>";
+								}
+							}
+							
+					?>
 				</div>
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Category </label>
@@ -248,12 +281,12 @@
                         <thead>
                             <tr>
                                 <th rowspan="2" width="5%">No</th>
-                                <th colspan="4" width="10%"><div align="center">Status</div></th>
+                                <th rowspan="2" width="10%">Assigned</th>
                                 <th rowspan="2" width="10%">Detail</th>
                                 <th rowspan="2" width="10%">Start On</th>
                                 <th rowspan="2" width="10%">Finish On</th>
                                 <th rowspan="2" width="10%">Duration</th>
-                                <th rowspan="2" width="10%">Assigned</th>
+                                <th colspan="4" width="10%"><div align="center">Status</div></th>
                             </tr>
 							<tr>
 								<th>Assignment</th>
