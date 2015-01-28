@@ -63,7 +63,7 @@ class Detail_model extends CI_Model
 	
 	public function check_is_child_task($task_id)
 	{
-		$query = "SELECT * FROM task WHERE task_id = $task_id AND task_is_child='yes'";
+		$query = "SELECT * FROM task WHERE task_id = $task_id AND (task_is_child='yes' AND task_parent_id > 0)";
 		$query = $this->db->query($query);
 		if($query->num_rows() > 0){ return TRUE;}
 		else{ return FALSE; }	

@@ -214,7 +214,7 @@ class Action extends CI_Controller {
 		
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
-			'task_status' => 'open',
+			'task_status' => 'taken',
 			'task_name' => $this->input->post('task_name'),
 			//'task_unit' => $this->input->post('task_unit'),
 			//'task_category' => $category,
@@ -226,7 +226,10 @@ class Action extends CI_Controller {
 			'task_sch_duration' => $duration,
 			'task_sch_duration_minute' => $duration * 60,
 			'task_description' => $this->input->post('task_description'), 
-			'task_created' => $ui_id, 
+			'task_taken' => $ui_id, 
+			'task_taken_by' => $ui_nama, 
+			'task_taken_on' => date("Y-m-d H:i:s"), 
+ 			'task_created' => $ui_id, 
 			'task_created_by' => $ui_nama, 
 			'task_created_on' => date("Y-m-d H:i:s"), 
  			'task_update_by' => $ui_nama, 
@@ -234,6 +237,7 @@ class Action extends CI_Controller {
  		);
 		$task_id = $this->task_model->save_data("task",$data);
 		
+		/*
 		$data = array(
 			'tsh_task_id' => $task_id, 
 			'tsh_status' => "open", 
@@ -241,6 +245,20 @@ class Action extends CI_Controller {
 			'tsh_update_on' => date("Y-m-d H:i:s"), 
 		);
 		$this->task_model->save_data("task_status_history",$data);
+		*/
+		
+		$data = array(
+			'tr_task_id' => $task_id, 
+			'tr_assignment_status' => "assigned", 
+			'tr_progress_status' => "progress", 
+			'tr_start_on' => date("Y-m-d H:i:s"), 
+			'tr_finish_on' => date("Y-m-d H:i:s"), 
+			'tr_assigned' => $ui_id, 
+			'tr_assigned_by' => $ui_nama, 
+			'tr_update_by' => $ui_nama, 
+			'tr_update_on' => date("Y-m-d H:i:s"), 
+		);
+		$this->task_model->save_data("task_report",$data);
 		redirect('task/manage/','refresh');
 	}
 	# save child task
@@ -284,6 +302,8 @@ class Action extends CI_Controller {
 		
 		# check total duration  
 		if( ($total_child_duration + $duration_minute ) > $rt->task_sch_duration_minute){redirect("task/action/add/child/".$this->input->post("task_parent_id")."/duration_over");}
+		if( $rt->task_sch_start > $this->input->post('task_sch_start')){redirect("task/action/add/child/".$this->input->post("task_parent_id")."/sch_start_over");}
+		if( $rt->task_sch_finish < $this->input->post('task_sch_finish')){redirect("task/action/add/child/".$this->input->post("task_parent_id")."/sch_finish_over");}
 		
 		$data = array(
 			'task_master_id' => $this->input->post('task_master_id'),
@@ -715,11 +735,21 @@ class Action extends CI_Controller {
 		);
 		$this->task_model->update_data("task",$data,$where);
 		
+		/*
 		$data = array(
 			'tsh_task_id' => $task_id, 
 			'tsh_status' => "take", 
 			'tsh_update_by' => $ui_nama, 
 			'tsh_update_on' => date("Y-m-d H:i:s"), 
+		);
+		*/
+		$data = array(
+			'tr_task_id'		=>	$task_id,
+			'tr_assigned_status'=>	"assigned",
+			'tr_progress_status'=>	"progress",
+			'tr_assigned'		=>	$ui_id,
+			'tr_assigned_by'	=>	$ui_nama,
+			
 		);
 		$this->task_model->save_data("task_status_history",$data);
 		redirect('task/manage/','refresh');
