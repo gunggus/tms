@@ -41,6 +41,7 @@ class Generate_model extends CI_Model
 				'task_sch_start' => $row->tm_run_time,
 				'task_sch_finish' => $sch_finish,
 				'task_sch_duration' => $row->tm_duration,
+				'task_sch_duration_minute' => 60 * $row->tm_duration,
 				'task_description' => $row->tm_description, 
 				'task_created' => $ui_id, 
 				'task_created_by' => $ui_nama, 
@@ -51,6 +52,7 @@ class Generate_model extends CI_Model
 			$this->db->insert("task",$data);
 			$task_id = $this->db->insert_id();
 		
+			/*
 			$data = array(
 				'tsh_task_id' => $task_id, 
 				'tsh_status' => "open", 
@@ -58,6 +60,17 @@ class Generate_model extends CI_Model
 				'tsh_update_on' => date("Y-m-d H:i:s"), 
 			);
 			$this->db->insert("task_status_history",$data);
+			*/
+			
+			$data = array(
+				'tr_task_id' => $task_id, 
+				'tr_progress_status' => "open", 
+				'tr_start_on' => date("Y-m-d H:i:s"), 
+				'tr_finish_on' => date("Y-m-d H:i:s"), 
+				'tr_update_by' => $ui_nama, 
+				'tr_update_on' => date("Y-m-d H:i:s"), 
+			);
+			$this->db->insert("task_report",$data);
 			
 			# set next run time 
 			$run_time = $row->tm_run_time;
