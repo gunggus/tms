@@ -82,6 +82,10 @@
 					
 				</div>
 				<div class="row-form">
+                    <label for="inputNama" class="span4 col-sm-4 control-label"> Unit </label>
+                    <div class="span8 col-sm-8"><?php echo $row->task_unit; ?></div>
+                </div>  
+				<div class="row-form">
                     <label for="inputNama" class="span4 col-sm-4 control-label"> Duration </label>
                     <div class="span8 col-sm-8"><?php echo $row->task_sch_duration." hour(s)   / ".$row->task_sch_duration_minute." minute(s)"; ?></div>
                 </div>  
@@ -191,7 +195,7 @@
                                 <th width="10%">Status</th>
                                 <th width="10%">Assign</th>
                                 <th width="10%">Point</th>
-                                <th width="10%">Start </th>
+                                <th width="10%">Duration</th>
                                 <th width="10%">Finish</th>
                             </tr>
                         </thead>
@@ -208,7 +212,7 @@
 								<td><?php echo $rc->task_status;?></td>
 								<td><?php echo $rc->task_taken_by;?></td>
 								<td><?php echo $rc->task_point;?></td>
-								<td><?php echo $rc->task_sch_start;?></td>
+								<td><?php echo $rc->task_sch_duration_minute." min";?></td>
 								<td><?php echo $rc->task_sch_finish;?></td>
 							</tr>
 							<?php } ?>

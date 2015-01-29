@@ -115,6 +115,20 @@ class Task_model extends CI_Model
 		return $query->result();
 	}
 	
+	public function get_category_unit_by_task_id($task_id)
+	{
+		$query = "  SELECT * FROM task LEFT JOIN task_category ON task_unit = tc_unit WHERE task_id = $task_id ";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
+	public function get_user_category_unit_by_task_id($task_id)
+	{
+		$query = "  SELECT * FROM task LEFT JOIN task_category ON task_unit = tc_unit LEFT JOIN task_access ON tc_category = tac_category LEFT JOIN user_identity ON ui_nipp = tac_nipp WHERE task_id = $task_id ";
+		$query = $this->db->query($query);
+		return $query->result();
+	}
+	
 	public function get_user_list()
 	{
 		$query = " SELECT * FROM user_identity ";

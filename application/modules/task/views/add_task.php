@@ -40,7 +40,6 @@
                           <input type="text" class="form-control" placeholder="Task Name" name="task_name">
                         </div>
                     </div>
-					<?php /*
 					<div class="row-form">
                         <label for="inputNama" class="span2 col-sm-2 control-label"> Unit </label>
                         <div class="span4 col-sm-4">
@@ -52,7 +51,7 @@
 							</select>
 						</div>
                     </div>
-					
+					<?php /*
 					<div class="row-form">
 						<label for="inputUnit" class="span2 col-sm-2 control-label">Category</label>
 						<div class="span4 col-sm-6">

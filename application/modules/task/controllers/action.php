@@ -68,6 +68,8 @@ class Action extends CI_Controller {
 			$data['parent_task'] = $this->task_model->get_task_by_task_id($data['parent_id']);
 			$data['result'] = $this->task_model->get_task($ui_nipp,0,$data['parent_id'],0,$limit,$offset);
 			$data['list_user'] = $this->task_model->get_user_list();
+			$data['list_category_unit_selected'] = $this->task_model->get_category_unit_by_task_id( $data['parent_id'] );
+			$data['list_user_category_unit_selected'] = $this->task_model->get_user_category_unit_by_task_id( $data['parent_id'] );
 			$this->load->view("add_task_child",$data);
 		}
 		elseif($data['main_field'] == "message"){
@@ -216,7 +218,7 @@ class Action extends CI_Controller {
 			'task_master_id' => $this->input->post('task_master_id'),
 			'task_status' => 'taken',
 			'task_name' => $this->input->post('task_name'),
-			//'task_unit' => $this->input->post('task_unit'),
+			'task_unit' => $this->input->post('task_unit'),
 			//'task_category' => $category,
 			//'task_skill' => $skill,
 			//'task_skill_point' => $skillpoint,
@@ -1014,7 +1016,14 @@ class Action extends CI_Controller {
 		$data['ui_nama'] = $ui_nama;
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
-	
+		
+		$this->load->library('user_agent');
+		if ($this->agent->is_browser()){ $agent = $this->agent->browser().' '.$this->agent->version();}
+		elseif ($this->agent->is_robot()){ $agent = $this->agent->robot();}
+		elseif ($this->agent->is_mobile()){	$agent = $this->agent->mobile();}
+		else{ $agent = 'Unidentified User Agent'; }
+		$agent .= "$agent".$this->agent->platform(); // Platform info (Windows, Linux, Mac, etc.)
+
 		if($this->uri->segment(4) == 'in'){ 
 			$data = array(
 				"abs_in"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
@@ -1027,6 +1036,8 @@ class Action extends CI_Controller {
 				"abs_skype"	=>	$this->input->post('abs_skype'),
 				"abs_listrik"	=>	$this->input->post('abs_listrik'),
 				"abs_plan"	=>	$this->input->post('abs_plan'),
+				"abs_ip_in"	=>	$_SERVER['REMOTE_ADDR'],
+				"abs_agent_in"	=>	$agent,
 				"abs_update_by"	=>	$ui_nama,
 				"abs_update_on"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
 			);
@@ -1035,6 +1046,8 @@ class Action extends CI_Controller {
 			$data = array(
 				"abs_out"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
 				"abs_report"	=>	$this->input->post('abs_plan'),
+				"abs_ip_out"	=>	$_SERVER['REMOTE_ADDR'],
+				"abs_agent_out"	=>	$agent,
 				"abs_update_by"	=>	$ui_nama,
 				"abs_update_on"	=>	mdate("%Y-%m-%d %H:%i:%s",time()),
 			);
@@ -1108,12 +1121,14 @@ class Action extends CI_Controller {
 		$ui_nipp = $session_data['ui_nipp'];
 		$data['ui_nipp'] = $ui_nipp;
 		
+		if($this->input->post("rep_start") == ""){redirect("task/detail/task/".$this->input->post('task_id')."/error_rep_start");}
+		if(strtotime($this->input->post("rep_finish")) < strtotime($this->input->post("rep_start"))){redirect("task/detail/task/".$this->input->post('task_id')."/error_rep_finish");}
 		$duration_minute = (strtotime($this->input->post('rep_finish')) - strtotime($this->input->post('rep_start'))) / 60;
 		$data = array(
-			"tr_task_id"	=> $this->input->post('task_id'),	
-			"tr_assignment_status"	=> "assigned",	
-			"tr_progress_status"	=> "progress",	
-			"tr_controlling_status"	=> "unconfirm",	
+			"tr_task_id"			=> 	$this->input->post('task_id'),	
+			"tr_assignment_status"	=> 	"assigned",	
+			"tr_progress_status"	=> 	"progress",	
+			"tr_controlling_status"	=> 	"unconfirm",	
 			"tr_detail"				=>	$this->input->post("detail"),
 			"tr_start_on"			=>	$this->input->post("rep_start"),
 			"tr_finish_on"			=>	$this->input->post("rep_finish"),

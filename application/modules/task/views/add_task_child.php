@@ -83,14 +83,22 @@
 							<select name="task_unit" id="unit" class="form-control">
 								<option value="">select unit</option>
 								<?php foreach($list_unit as $lu){ ?>
-								<option value="<?php echo $lu->vu_name; ?>"><?php echo strtoupper( $lu->vu_name ) ?></option>
+								<option value="<?php echo $lu->vu_name; ?>" <?php if($row_parent->task_unit == $lu->vu_name){echo "SELECTED";}?>><?php echo strtoupper( $lu->vu_name ) ?></option>
 								<?php } ?>
 							</select>
 						</div>
-                    	<label for="inputUnit" class="span2 col-sm-2 control-label">Category</label>
+                    	<label for="inputUnit" class="span2 col-sm-2 control-label">Category <?php ?></label>
 						<div class="span4 col-sm-6">
+							<!--
 							<select  name="task_category" id="category" class="form-control">
 								<option value="">select category</option>
+							</select>
+							-->
+							<select name="task_category" id="category" class="form-control">
+								<!--<option value="">select category</option>-->
+								<?php foreach($list_category_unit_selected as $lu){ ?>
+								<option value="<?php echo $lu->tc_category.'|'.$lu->tc_skill.'|'.$lu->tc_point.'|'.$lu->tc_duration ?>"><?php echo strtoupper( $lu->tc_category ) ?></option>
+								<?php } ?>
 							</select>
 						</div>
 					</div>
@@ -111,8 +119,18 @@
 						</div>
 						<label for="inputNama" class="span2 col-sm-2 control-label"> Assign To  </label>
                         <div class="span2 col-sm-offset-4 col-sm-6">			
+							<!-- 
 							<select  name="assign" id="assign" class="form-control">
 								<option value="">OPEN</option>
+							</select>
+							-->
+							<select  name="assign" id="assign" class="form-control">
+								<option value="">OPEN</option>
+								<?php 
+								if ( $list_user_category_unit_selected ) foreach ( $list_user_category_unit_selected as $access_items ) {
+									echo '<option value="'.$access_items->ui_id.'|'.$this->encrypt->decode($access_items->ui_nama).'">'.$this->encrypt->decode($access_items->ui_nama).'</option>';
+								}
+								?>
 							</select>
 						</div>
 						<div class="span2 col-sm-offset-4 col-sm-6">			

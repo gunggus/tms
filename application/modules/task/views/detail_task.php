@@ -39,7 +39,9 @@
 				$assigned_name = $row->task_taken_by;
 				$parent_id = $row->task_parent_id;
  				$target_duration_minute = $row->task_sch_duration_minute;
- 				$var_point = $row->tc_point;
+ 				$target_start = $row->task_sch_start;
+ 				$target_finish = $row->task_sch_finish;
+				$var_point = $row->tc_point;
  				$var_point_duration_minute = 60 * $row->tc_duration;
 				?>
 				<div class="row-form">
@@ -126,7 +128,7 @@
 				</div>  
 				<div class="row-form">
                     <label for="inputNama" class="span2 col-sm-2 control-label"> Status </label>
-                    <div class="span4 col-sm-4"><?php echo "<b>".$row->task_status."</b>";if($row->task_closed == 'yes'){ echo "<b>[CLOSED]</b>";}  ?></div>
+                    <div class="span4 col-sm-4"><?php if($row->task_status == "taken"){echo "assigned";}else{echo "<b>".$row->task_status."</b>";}if($row->task_closed == 'yes'){ echo "<b>[CLOSED]</b>";}  ?></div>
 					<?php
 					$current = mdate("%Y-%m-%d %H:%i:%s");
 					if(($row->task_status == "open" OR $row->task_status == "reopen") AND ($row->task_sch_start < $current) )
@@ -290,9 +292,9 @@
                             </tr>
 							<tr>
 								<th>Assignment</th>
-								<th>Progress</th>
+								<th>Status</th>
 								<th>Controlling</th>
-								<th>Result</th>
+								<th>Project</th>
 							</tr>
                         </thead>
                         <tbody>
@@ -310,10 +312,7 @@
 							?>
 						    <tr>
                                 <td><?php echo $no; ?></td>
-                            	<td><?php echo $rep->tr_assignment_status; ?></td>
-								<td><?php echo $rep->tr_progress_status; ?></td>
-								<td><?php echo $rep->tr_controlling_status; ?></td>
-								<td><?php echo $rep->tr_result_status; ?></td>
+                                <td><?php echo $rep->tr_assigned_by; ?></td>
 							    <td><?php 
 									echo $rep->tr_detail."<br/><br/>";
 									if($rep->tr_response != ""){ 
@@ -325,7 +324,10 @@
                                 <td><?php echo mdate("%d-%m-%Y %H:%i:%s",strtotime($rep->tr_start_on)); ?></td>
                                 <td><?php echo mdate("%d-%m-%Y %H:%i:%s",strtotime($rep->tr_finish_on)); ?></td>
                                 <td><?php echo $rep->tr_duration." min"; ?></td>
-                                <td><?php echo $rep->tr_assigned_by; ?></td>
+                            	<td><?php echo $rep->tr_assignment_status; ?></td>
+								<td><?php echo $rep->tr_progress_status; ?></td>
+								<td><?php if($rep->tr_controlling_status == "confirm"){ echo "checked";}else{ echo "unchecked";} ?></td>
+								<td><?php echo $rep->tr_result_status; ?></td>
 							</tr>
 							
 							<?php 
@@ -533,7 +535,7 @@
                                 <th width="10%">Status</th>
                                 <th width="10%">Assign</th>
                                 <th width="10%">Point</th>
-                                <th width="10%">Start </th>
+                                <th width="10%">Duration</th>
                                 <th width="10%">Finish</th>
                             </tr>
                         </thead>
@@ -550,7 +552,7 @@
 								<td><?php echo $rc->task_status;?></td>
 								<td><?php echo $rc->task_taken_by;?></td>
 								<td><?php echo $rc->task_point;?></td>
-								<td><?php echo $rc->task_sch_start;?></td>
+								<td><?php echo $rc->task_sch_duration_minute." min";?></td>
 								<td><?php echo $rc->task_sch_finish;?></td>
 							</tr>
 							<?php } ?>
@@ -584,6 +586,8 @@
                     <div class="row-form">
                         <div class="span2">
 							<input type="hidden" name="task_id" value="<?php echo $task_id;?>">
+							<input type="hidden" name="sch_start" value="<?php echo $target_start;?>">
+							<input type="hidden" name="sch_finish" value="<?php echo $target_finish;?>">
 							<input type="hidden" name="assigned" value="<?php echo $assigned_id;?>">
 							<input type="hidden" name="assigned_by" value="<?php echo $assigned_name;?>">
 							<span class="top title">Start On:</span>
