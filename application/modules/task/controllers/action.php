@@ -1122,6 +1122,7 @@ class Action extends CI_Controller {
 		$data['ui_nipp'] = $ui_nipp;
 		
 		if($this->input->post("rep_start") == ""){redirect("task/detail/task/".$this->input->post('task_id')."/error_rep_start");}
+		if(strtotime($this->input->post("rep_finish")) == ""){redirect("task/detail/task/".$this->input->post('task_id')."/error_rep_finish");}
 		if(strtotime($this->input->post("rep_finish")) < strtotime($this->input->post("rep_start"))){redirect("task/detail/task/".$this->input->post('task_id')."/error_rep_finish");}
 		$duration_minute = (strtotime($this->input->post('rep_finish')) - strtotime($this->input->post('rep_start'))) / 60;
 		$data = array(

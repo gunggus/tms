@@ -75,11 +75,20 @@ form{margin: 0px;}
         /* body navigation */
         .body .navigation{padding: 10px 0px 25px; float: right; margin: 0px; list-style: none; display: block; position: relative;}
             .body .navigation li{margin-left: 3px; margin-bottom: 3px; display: block; float: left;}
-            .body .navigation .button{width: 90px; height: 90px; display: block; padding: 5px;
+            /*.body .navigation .button{width: 90px; height: 90px; display: block; padding: 5px;
                                       background: #009AD7; text-decoration: none; position: relative;}
-                .body .navigation .button .icon{display: block; width: 44px; height: 44px; border: 3px solid #FFF; margin: 15px 20px 12px;
+            */
+			.body .navigation .button{width: 77px;  display: block; padding: 5px;
+                                      -moz-border-radius: 11%; -webkit-border-radius: 11%; border-radius: 11%; background: #009AD7; 
+									  -webkit-box-shadow: inset 0px 0px 4px rgba(0,255,255,.9); box-shadow: inset 0px 0px 4px rgba(0,255,255,.9);
+									  text-decoration: none; position: relative;}
+            	/*
+				.body .navigation .button .icon{display: block; width: 44px; height: 44px; border: 3px solid #FFF; margin: 15px 20px 12px;
                                                 -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; text-align: center;}
-                    .body .navigation .button .icon [class^="ico-"]{font-size: 27px; color: #FFF; line-height: 45px;}                                                        
+                */
+					.body .navigation .button .icon{display: block; width: 22px; height: 44px; 
+                                                -moz-border-radius: 50%; -webkit-border-radius: 50%; border-radius: 50%; text-align: center;}
+                	.body .navigation .button .icon [class^="ico-"]{font-size: 27px; color: #FFF; line-height: 45px;}                                                        
                 .body .navigation .button .name{font-size: 12px; color: #FFF; line-height: 13px;}
                 .body .navigation .button .arrow{position: absolute; left: 5px; top: 5px; width: 16px; height: 16px; background: url('../img/arrow_white.png') left top no-repeat;}                    
             .body .navigation .button:hover{-moz-box-shadow: inset 0px 0px 4px rgba(255,255,255,.9); -webkit-box-shadow: inset 0px 0px 4px rgba(255,255,255,.9); box-shadow: inset 0px 0px 4px rgba(255,255,255,.9);}
@@ -91,9 +100,9 @@ form{margin: 0px;}
             .body .navigation li.active .arrow{background: url('../img/arrow_white_active.png') left top no-repeat;}
             .body .navigation li.active .sub{display: block;}
                     
-            .body .navigation .user{margin-left: 0px; display: block; float: left; clear: both;}
+            .body .navigation .user{margin-left: 0px; display: block; float: left; color: #333; clear: both;}
                 .body .navigation .user img{margin-right: 10px; border-left: 3px solid #009AD7; float: left;}
-                    .body .navigation .user a{display: block; float: left; text-decoration: none;}
+                    .body .navigation .user a{display: block; float: left; color: #333; text-decoration: none;}
                         .body .navigation .user a span{font-size: 14px; color: #333; line-height: 16px; display: block; clear: both;}
                         .body .navigation .user a .sm{font-size: 11px; color: #666; line-height: 13px; display: block; clear: both;}
             
@@ -368,7 +377,8 @@ div.tagsinput div input{line-height: 20px; height: 20px; font-size: 11px; margin
         /* set clear fix to row-form element */
         * html .row-form{ height: 1%; overflow: visible; } /* ie 6 */
         *+html .row-form{ min-height: 1%; } /* ie 7 */
-        .row-form:after{clear: both; content: "."; display: block; height: 0; visibility: hidden; font-size: 0; }
+        .row-form:after{clear: both; content: "."; height: 0; visibility: hidden; font-size: 0; }
+        /*.row-form:after{clear: both; content: "."; display: block; height: 0; visibility: hidden; font-size: 0; }*/
         /* eof set */
         
     .row-form{padding: 10px 15px; vertical-align: baseline; }

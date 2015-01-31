@@ -31,12 +31,12 @@
 		  <?php if($this->uri->segment(3) == 'closed_task'){$style_closed ="style='font-weight:bold'";}?>
 		  <?php if($this->uri->segment(3) == 'my_task'){$style_mytask ="style='font-weight:bold'";}?>
 		  <?php if($this->uri->segment(3) == 'my_complete'){$style_mycomplete ="style='font-weight:bold'";}?>
-		  <div class="span1" align="center"> <?php echo anchor("task/manage/parent_task","TASK","$style_parent"); ?> </div>
-		  <div class="span1" align="center"> <?php echo anchor("task/manage/task","ACTUATING","$style_all"); ?> </div>
+		  <div class="span1" align="center"> <?php echo anchor("task/manage/parent_task","PLAN","$style_parent"); ?> </div>
+		  <div class="span2" align="center"> <?php echo anchor("task/manage/task","IMPLEMENTATION","$style_all"); ?> </div>
           <div class="span1" align="center"> <?php echo anchor("task/manage/open","OPEN","$style_open"); ?> </div>
-          <div class="span1" align="center"> <?php echo anchor("task/manage/taken","PROGRESS","$style_taken"); ?> </div>
+          <div class="span2" align="center"> <?php echo anchor("task/manage/taken","PROGRESS","$style_taken"); ?> </div>
           <div class="span1" align="center"> <?php echo anchor("task/manage/complete","COMPLETE","$style_complete"); ?> </div>
-          <div class="span1" align="center"> <?php echo anchor("task/manage/closed_task","CLOSED","$style_closed"); ?> </div>
+          <div class="span2" align="center"> <?php echo anchor("task/manage/closed_task","CLOSED","$style_closed"); ?> </div>
           <div class="span1" align="center"> <?php echo anchor("task/manage/my_task","MY TASK","$style_mytask"); ?> </div>
           <!-- widget -->
           <div class="block">
@@ -57,17 +57,9 @@
 							<tr>
 								<td>No</td>
 								<td>Task</td>
-								<!--
-								<td>Unit</td>
-								<td>Category</td>
-								<td>Skill</td>
-								<td>Point</td>
-								-->
 								<td>Target Start</td>
 								<td>Target Finish</td>
 								<td>Target Duration <br> (in hours)</td>
-								<?php if($this->uri->segment(3) == 'task'){echo "<td>Status</td>";} ?>
-								<td>By</td>
 							</tr>
 						</thead>
                   	    <tbody>
@@ -85,31 +77,15 @@
 							<tr>
 								<td <?php echo "$bg";?>><?php echo $i;?></td>
 								<td <?php echo "$bg";?>><?php echo anchor("task/detail/task/".$row->task_id,strtoupper($row->task_name));?></td>
-								<!--
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_unit);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_category);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_skill);?></td>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_point);?></td>
-								-->
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_start);?></td>
 								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_sch_finish);?></td>
 								<td <?php echo "$bg";?>><?php echo number_format($row->task_sch_duration,0,'.',',');?></td>
-								<?php if($this->uri->segment(3) == 'task'){?>
-								<td <?php echo "$bg";?>><?php echo strtoupper($row->task_status);?></td>
-								<?php } ?>
-								<td <?php echo "$bg";?>>
-									<?php 
-										if($row->task_status == 'open'){echo strtoupper($row->task_created_by);}
-										if($row->task_status == 'taken'){echo strtoupper($row->task_taken_by);}
-										if($row->task_status == 'complete'){echo strtoupper($row->task_complete_by);}
-									?>
-								</td>
 							</tr>
 							<?php } ?>
 						</tbody>
 						<tfoot>
 							<tr>
-								<td colspan="11"> <?php echo $this->pagination->create_links();?> </td>
+								<td colspan="5"> <?php echo $this->pagination->create_links();?> </td>
 							</tr>
 						</tfoot>						
                     </table>

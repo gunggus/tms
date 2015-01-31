@@ -27,7 +27,7 @@
             <!-- wigget content -->
             <div class="data-fluid"  style="background:#DDFF99;">
         		<div class="head blue">
-                    <h2>Detail Task</h2>
+                    <h2>Detail Plan</h2>
 					<ul class="buttons">
                         <li><a href="#" onClick="source('table_default'); return false;"><div class="icon"><span class="ico-info"></span></div></a></li>
                     </ul>                              
@@ -40,11 +40,11 @@
 				$parent_id = $row->task_parent_id;
  				?>
 				<div class="row-form">
-                    <label for="inputNama" class="span4 col-sm-4 control-label"> Task </label>
+                    <label for="inputNama" class="span4 col-sm-4 control-label"> TASK </label>
                     <div class="span8 col-sm-8"><?php echo "<b>".strtoupper($row->task_name)."</b>"; ?></div>
 				</div>  
 				<div class="row-form">
-                    <label for="inputNama" class="span4 col-sm-4 control-label"> Status </label>
+                    <label for="inputNama" class="span4 col-sm-4 control-label"> STATUS </label>
                     <div class="span2 col-sm-2"><?php echo "<b>".$row->task_status."</b>"; if($row->task_closed == 'yes'){ echo "<b>[CLOSED]</b>";} ?></div>
 					<?php 
 					$current = mdate("%Y-%m-%d %H:%i:%s");
@@ -52,7 +52,7 @@
 					{ 
 						if($stuck_task > 2){
 							echo " &nbsp;&nbsp;";	
-							echo "<div class='span6' align='right'>";
+							echo "<div class='span4' align='right'>";
 							echo '<a href="#bModal" role="button" class="btn" data-toggle="modal">take</a>';
 							echo '<!-- Bootrstrap modal -->
 									<div align="center" id="bModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -72,7 +72,7 @@
 							echo "</div>";
 						}else{
 							echo " &nbsp;&nbsp;";	
-							echo "<div class='span6' align='right'>";
+							echo "<div class='span4' align='right'>";
 							echo form_open("task/action/take"); echo form_hidden("task_id",$row->task_id);echo form_submit("submit","take","class='btn'");echo form_close();
 							echo "</div>";
 						}
@@ -82,23 +82,23 @@
 					
 				</div>
 				<div class="row-form">
-                    <label for="inputNama" class="span4 col-sm-4 control-label"> Unit </label>
+                    <label for="inputNama" class="span4 col-sm-4 control-label"> UNIT </label>
                     <div class="span8 col-sm-8"><?php echo $row->task_unit; ?></div>
                 </div>  
 				<div class="row-form">
-                    <label for="inputNama" class="span4 col-sm-4 control-label"> Duration </label>
+                    <label for="inputNama" class="span4 col-sm-4 control-label"> DURATION </label>
                     <div class="span8 col-sm-8"><?php echo $row->task_sch_duration." hour(s)   / ".$row->task_sch_duration_minute." minute(s)"; ?></div>
                 </div>  
 				<div class="row-form">
-                    <label for="inputNama" class="span4 col-sm-4 control-label"> Target Start </label>
+                    <label for="inputNama" class="span4 col-sm-4 control-label"> TARGET START </label>
                     <div class="span8 col-sm-8"><?php echo $row->task_sch_start;?></div>
                 </div>  
 				<div class="row-form">
-                    <label for="inputNama" class="span4 col-sm-4 control-label"> Target Finish </label>
+                    <label for="inputNama" class="span4 col-sm-4 control-label"> TARGET FINISH </label>
                     <div class="span8 col-sm-8"><?php echo $row->task_sch_finish; ?></div>
                 </div>  
 				<div class="row-form">
-                    <label for="inputNama" class="span4 col-sm-4 control-label"> Desc </label>
+                    <label for="inputNama" class="span4 col-sm-4 control-label"> DESC </label>
                     <div class="span8 col-sm-8"><?php echo $row->task_description; ?></div>
                 </div>  
 				<?php }	?> 
@@ -110,58 +110,6 @@
 			</div>
 			
 			
-			<!-- Discussion -->
-			<div class="row-fluid" style="background:#FAED9B;">
-			  <div class="block">
-            
-				<!-- wigget content -->
-				<div class="data-fluid">
-					<div class="head blue">
-						<h2>Discussion</h2>
-						<ul class="buttons">
-							<li><a href="#" onClick="source('table_default'); return false;"><div class="icon"><span class="ico-info"></span></div></a></li>
-						</ul>                              
-					</div>                
-					<div class="data dark npr npb">
-						<div class="messages scroll" style="height: 555px; overflow-y: scroll;">	
-						<?php 
-							foreach($discussion as $dis){ 
-							if($dis->td_update_by == $ui_nama){$class = "item blue";}
-							else{$class = "item dblue out";}
-						?>
-							<div class="<?php echo $class; ?>">
-								<div class="arrow"></div>
-								<div class="text">
-								<?php 
-									echo $dis->td_text; 
-									echo "<br/>";
-									if($dis->td_attach == "yes"){echo anchor("task/detail/attachment/".$dis->td_id,"attachment");} 
-								?>
-								</div>
-								<div class="date"><?php echo $dis->td_update_by."  ".$dis->td_update_on; ?></div>
-							</div>
-						<?php } ?>
-						</div>
-					</div>    
-					<div class="toolbar dark">
-						<?php echo form_open_multipart("task/detail/discussion/$task_id");?>
-						<div>
-							<input type="file" name="file" />                              
-						</div>					
-						<div class="input-prepend input-append">
-							<span class="add-on dblue"><span class="icon-envelope icon-white"></span></span>
-							<input class="span9" type="text" name="text" />                              
-							<button class="btn dblue" type="submit">Send  <span class="icon-arrow-next icon-white"></span></button>
-						</div>
-						<?php echo form_close();?>	
-					</div>
-				</div>
-				<!-- widget content -->
-				
-				</div>
-				<!-- widget -->          
-			</div>
-			<!-- End of  Discussion-->
 			
 		</div>
 		
@@ -228,7 +176,61 @@
         </div>
         <!-- col -->
         <!-- end of child task -->
-			  
+		
+
+		<!-- Discussion -->
+			<div class="row-fluid">
+			  <div class="block">
+            
+				<!-- wigget content -->
+				<div class="data-fluid">
+					<div class="head blue">
+						<h2>Discussion</h2>
+						<ul class="buttons">
+							<li><a href="#" onClick="source('table_default'); return false;"><div class="icon"><span class="ico-info"></span></div></a></li>
+						</ul>                              
+					</div>                
+					<div class="data dark npr npb">
+						<div class="messages scroll" style="height: 333px; overflow-y: scroll;">	
+						<?php 
+							foreach($discussion as $dis){ 
+							if($dis->td_update_by == $ui_nama){$class = "item blue";}
+							else{$class = "item dblue out";}
+						?>
+							<div class="<?php echo $class; ?>">
+								<div class="arrow"></div>
+								<div class="text">
+								<?php 
+									echo $dis->td_text; 
+									echo "<br/>";
+									if($dis->td_attach == "yes"){echo anchor("task/detail/attachment/".$dis->td_id,"attachment");} 
+								?>
+								</div>
+								<div class="date"><?php echo $dis->td_update_by."  ".$dis->td_update_on; ?></div>
+							</div>
+						<?php } ?>
+						</div>
+					</div>    
+					<div class="toolbar dark">
+						<?php echo form_open_multipart("task/detail/discussion/$task_id");?>
+						<div>
+							<input type="file" name="file" />                              
+						</div>					
+						<div class="input-prepend input-append">
+							<span class="add-on dblue"><span class="icon-envelope icon-white"></span></span>
+							<input class="span9" type="text" name="text" />                              
+							<button class="btn dblue" type="submit">Send  <span class="icon-arrow-next icon-white"></span></button>
+						</div>
+						<?php echo form_close();?>	
+					</div>
+				</div>
+				<!-- widget content -->
+				
+				</div>
+				<!-- widget -->          
+			</div>
+			<!-- End of  Discussion-->
+				
 			  
 		<!-- history status -->	
 		<!-- col -->

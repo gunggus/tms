@@ -32,7 +32,8 @@
         
         <!-- col -->
         <div class="span8 col-lg-8">
-		  <?php $style_all = ""; $style_open = ""; $style_taken = ""; $style_complete = ""; $style_closed = "";$style_mytask = "";?>	
+		  <?php $style_parent = ""; $style_all = ""; $style_open = ""; $style_taken = ""; $style_complete = ""; $style_closed = "";$style_mytask = "";?>	
+          <?php if($this->uri->segment(3) == 'parent_task'){$style_parent = "style='font-weight:bold'";}?>
           <?php if($this->uri->segment(3) == 'task'){$style_all = "style='font-weight:bold'";}?>
 		  <?php if($this->uri->segment(3) == 'open'){$style_open = "style='font-weight:bold'";}?>
 		  <?php if($this->uri->segment(3) == 'taken'){$style_taken = "style='font-weight:bold'";}?>
@@ -40,12 +41,13 @@
 		  <?php if($this->uri->segment(3) == 'closed_task'){$style_closed ="style='font-weight:bold'";}?>
 		  <?php if($this->uri->segment(3) == 'my_task'){$style_mytask ="style='font-weight:bold'";}?>
 		  <?php if($this->uri->segment(3) == 'my_complete'){$style_mycomplete ="style='font-weight:bold'";}?>
-		  <div class="span2"> <?php echo anchor("task/manage/task","ALL TASK","$style_all"); ?> </div>
-          <div class="span2"> <?php echo anchor("task/manage/open","OPEN","$style_open"); ?> </div>
-          <div class="span2"> <?php echo anchor("task/manage/taken","PROGRESS","$style_taken"); ?> </div>
-          <div class="span2"> <?php echo anchor("task/manage/complete","COMPLETE","$style_complete"); ?> </div>
-          <div class="span2"> <?php echo anchor("task/manage/closed_task","CLOSED","$style_closed"); ?> </div>
-          <div class="span2"> <?php echo anchor("task/manage/my_task","MY TASK","$style_mytask"); ?> </div>
+		  <div class="span1" align="center"> <?php echo anchor("task/manage/parent_task","PLAN","$style_parent"); ?> </div>
+		  <div class="span2" align="center"> <?php echo anchor("task/manage/task","IMPLEMENTATION","$style_all"); ?> </div>
+          <div class="span1" align="center"> <?php echo anchor("task/manage/open","OPEN","$style_open"); ?> </div>
+          <div class="span2" align="center"> <?php echo anchor("task/manage/taken","PROGRESS","$style_taken"); ?> </div>
+          <div class="span1" align="center"> <?php echo anchor("task/manage/complete","COMPLETE","$style_complete"); ?> </div>
+          <div class="span2" align="center"> <?php echo anchor("task/manage/closed_task","CLOSED","$style_closed"); ?> </div>
+          <div class="span1" align="center"> <?php echo anchor("task/manage/my_task","MY TASK","$style_mytask"); ?> </div>
           <!-- widget -->
           <div class="block">
             <div class="head purple">
